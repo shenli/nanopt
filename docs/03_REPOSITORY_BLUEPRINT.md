@@ -6,11 +6,7 @@
 nanopt/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   └── workflows/
-│       ├── ci.yml
-│       ├── docs.yml
-│       └── gpu-reference.yml
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── CITATION.cff

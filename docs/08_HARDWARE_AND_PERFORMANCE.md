@@ -249,7 +249,7 @@ A contributor must provide:
 3. calibration evidence for every required stage;
 4. a full pipeline run or a documented reduced support level;
 5. peak-memory and throughput records;
-6. CI/schema validation;
+6. local quality and schema validation;
 7. a support-table update that accurately states what passed.
 
 A GPU with the same nominal VRAM is not automatically compatible: architecture, BF16 behavior, driver, memory bandwidth, and desktop reservation can change results.

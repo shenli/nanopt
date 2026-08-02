@@ -41,6 +41,7 @@ nav:
       - Installation: getting-started/installation.md
       - Configuration: getting-started/configuration.md
       - Environment diagnosis: getting-started/doctor.md
+      - Publishing documentation: getting-started/publishing-docs.md
   - Foundations:
       - MathJax smoke test: foundations/mathjax-smoke.md
   - Reference:
@@ -51,6 +52,7 @@ nav:
           - Project identity: adr/0000-project-identity.md
           - Foundation boundaries: adr/0001-foundation-boundaries.md
           - Artifact writes: adr/0002-run-artifact-writes.md
+          - Local validation: adr/0003-local-validation.md
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
   - Project plans:
@@ -64,7 +66,7 @@ nav:
       - Agent environment: 07_AGENT_ENVIRONMENT.md
       - Hardware and performance: 08_HARDWARE_AND_PERFORMANCE.md
       - Evaluation and reporting: 09_EVALUATION_AND_REPORTING.md
-      - Testing, CI, and security: 10_TESTING_CI_AND_SECURITY.md
+      - Testing and security: 10_TESTING_CI_AND_SECURITY.md
       - Documentation curriculum: 11_DOCUMENTATION_CURRICULUM.md
       - Implementation roadmap: 12_IMPLEMENTATION_ROADMAP.md
       - Research and references: 14_RESEARCH_AND_REFERENCES.md

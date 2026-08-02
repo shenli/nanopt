@@ -51,6 +51,7 @@ artifacts/tmp/
 source_materials/
 
 # Local handoff packaging metadata and seed copies superseded by the M1 repository.
+AGENT_START_HERE.md
 NANOPT_MASTER_PLAN.md
 PACKAGE_INVENTORY.md
 PROMPT_FOR_CODING_AGENT.md

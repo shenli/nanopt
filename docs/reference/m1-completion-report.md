@@ -18,8 +18,7 @@ losses, data generation, evaluation, or training implementation.
   manifest lifecycle, and the initial run-directory contract.
 - Isolated JSON structured-logging baseline.
 - MkDocs Material site, MathJax configuration and smoke page, formula lint, and strict build.
-- Ruff, mypy, pytest/coverage, pre-commit, schema checks, CPU CI, docs CI, and protected manual GPU
-  diagnostics workflow.
+- Ruff, mypy, pytest/coverage, pre-commit, schema checks, and documented local CPU/docs validation.
 - English README, contribution guide, security policy, code of conduct, citation metadata, ADRs, and
   publication checklist.
 
@@ -28,6 +27,7 @@ losses, data generation, evaluation, or training implementation.
 - ADR-0000 records the repository/distribution/import/CLI identity and Apache-2.0 license.
 - ADR-0001 keeps hardware, model, and experiment profiles typed and namespaced.
 - ADR-0002 uses atomic document replacement and append-only event streams.
+- ADR-0003 makes local validation the project gate and removes GitHub Actions.
 - Checkout profiles are bundled into the wheel so installed config resolution is independent of the
   caller's working directory.
 
@@ -52,7 +52,7 @@ Results:
 - total statement/branch coverage report: 87%;
 - 15 package source files passed strict mypy;
 - seven JSON schemas validated and ten public YAML profiles parsed and type-checked;
-- 31 Markdown files passed formula lint;
+- the complete documentation tree passed formula lint;
 - strict documentation build passed;
 - source distribution and universal wheel built;
 - the wheel contains all canonical profiles and resolved `base_eval` from outside the checkout;

@@ -80,14 +80,14 @@ milestones:
       - typed config resolver with provenance
       - nanopt doctor
       - artifact/run-context skeleton
-      - CPU CI and strict docs CI
+      - local CPU and strict docs validation
     tests:
       - package build and import
       - config precedence and unknown-key rejection
       - doctor JSON schema
       - formula lint and docs build
     exit_criteria:
-      - clean install and all CPU CI green
+      - clean install and all local CPU/docs checks green
 
   - id: M2
     name: core_math_model_and_data

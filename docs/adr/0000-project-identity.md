@@ -31,5 +31,5 @@ publish or reserve a PyPI project and does not establish trademark availability.
 
 ## Validation
 
-CI builds the `nanopt` wheel, imports `nanopt`, and runs the `nanopt` entry point. The publication
-checklist blocks upload until the name and metadata are rechecked.
+The local release gate builds the `nanopt` wheel, imports `nanopt`, and runs the `nanopt` entry point.
+The publication checklist blocks upload until the name and metadata are rechecked.

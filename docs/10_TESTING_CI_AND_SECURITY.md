@@ -1,4 +1,4 @@
-# Testing, CI, and Security
+# Testing and Security
 
 ## 1. Test pyramid
 
@@ -71,7 +71,7 @@ Recommended properties:
 
 ## 3. Documentation tests
 
-The documentation build runs with strict warnings. CI must fail on:
+The documentation build runs with strict warnings. The local validation gate must fail on:
 
 - malformed internal links;
 - missing referenced source files;
@@ -90,7 +90,7 @@ A lint script should scan Markdown and exempt only pages that intentionally show
 
 ## 4. Static analysis
 
-Required in CI:
+Required before a milestone commit or release:
 
 - Ruff formatting and linting;
 - type checking for the main package;
@@ -102,37 +102,28 @@ Required in CI:
 
 Avoid enforcing an arbitrary high total coverage percentage. Require high coverage for `core`, config, parser/verifier, and schemas, and test every documented algorithm branch.
 
-## 5. CI workflows
+## 5. Local validation policy
 
-### `ci.yml`
+NanoPT does not use GitHub Actions. Maintainers run the documented checks locally before every
+milestone commit and record the exact commands and results in the milestone completion report.
 
-Runs on normal hosted Linux runners:
+The required local gate is:
 
-- dependency lock check;
-- formatting/lint/type checks;
-- CPU unit and integration tests;
-- package build;
-- schema checks.
+```bash
+uv sync --frozen --extra dev --extra docs
+uv run ruff format --check .
+uv run ruff check .
+uv run mypy src/nanopt
+uv run pytest --cov=nanopt --cov-report=term-missing
+uv run python scripts/validate_schemas.py
+uv run python scripts/lint_formulas.py docs
+uv run mkdocs build --strict
+uv build
+```
 
-### `docs.yml`
-
-- strict docs build;
-- formula lint;
-- link validation for internal links;
-- publish preview/deployment only from trusted branches.
-
-### `gpu-reference.yml`
-
-Manual or protected-branch workflow for a self-hosted reference GPU. Never execute untrusted public pull-request code on a persistent self-hosted runner.
-
-Safe policy:
-
-- workflow dispatch restricted to maintainers;
-- checkout only a reviewed commit SHA;
-- ephemeral or isolated runner preferred;
-- no long-lived repository or cloud secrets available to training code;
-- upload signed/checksummed evidence bundle;
-- destroy or clean the workspace after completion.
+GPU smoke and reference validation run only on an explicitly selected local machine. Never execute
+unreviewed pull-request code on a persistent GPU host. Store checksummed evidence only after the
+complete validation protocol passes.
 
 ## 6. Agent-environment security tests
 
@@ -209,4 +200,4 @@ Before a release:
 - dependency audit reviewed;
 - model and dataset licenses documented;
 - SECURITY.md includes a reporting process and threat model;
-- self-hosted GPU workflow cannot run arbitrary PR code.
+- no unreviewed contribution is executed on a persistent GPU host.

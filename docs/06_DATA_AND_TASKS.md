@@ -173,7 +173,7 @@ Required splits:
 - `test_compositional`: held-out operation combinations or equation templates;
 - `test_range`: larger or shifted operand ranges;
 - `test_format_attack`: prompts and outputs designed to stress parsing and reward hacking;
-- `smoke`: tiny deterministic subset for CI and local debugging.
+- `smoke`: tiny deterministic subset for the local validation gate and debugging.
 
 Use canonical hashes to assert no overlap across protected splits. Store a split manifest with counts per family and difficulty.
 

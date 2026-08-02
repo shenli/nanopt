@@ -20,8 +20,8 @@ environments. v0.1 evaluates that environment; it does not train an agent policy
 ## Current status
 
 NanoPT is pre-alpha. Milestone 1 provides the package, CLI, typed configuration resolution,
-environment diagnosis, run-artifact lifecycle, documentation skeleton, and CPU CI. Training and
-model-loading implementations are intentionally not present yet.
+environment diagnosis, run-artifact lifecycle, documentation skeleton, and local CPU validation.
+Training and model-loading implementations are intentionally not present yet.
 
 The only proposed reference profile is one NVIDIA RTX 4070 Ti SUPER with 16 GB VRAM on Linux
 x86-64. This profile is **not validated**. No memory, runtime, performance, or hardware-support
@@ -56,9 +56,9 @@ environment is usable for the reference pipeline.
   unrestricted agent shell access, and production RLHF abstractions.
 - Public repository content is English, and hardware support is evidence-backed.
 
-The detailed milestone contract is in
-[`AGENT_START_HERE.md`](AGENT_START_HERE.md) and
-[`docs/13_ACCEPTANCE_CRITERIA.md`](docs/13_ACCEPTANCE_CRITERIA.md).
+The detailed milestone contract is in the
+[`implementation roadmap`](docs/12_IMPLEMENTATION_ROADMAP.md) and
+[`acceptance criteria`](docs/13_ACCEPTANCE_CRITERIA.md).
 
 ## Development
 
