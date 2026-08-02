@@ -20,10 +20,14 @@ def canonical_json(value: Any) -> bytes:
 
 
 def sha256_bytes(value: bytes) -> str:
+    """Return the lowercase SHA-256 digest used in artifact manifests."""
+
     return hashlib.sha256(value).hexdigest()
 
 
 def sha256_file(path: Path) -> str:
+    """Hash a file incrementally so large checkpoints are never loaded into memory."""
+
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -32,6 +36,8 @@ def sha256_file(path: Path) -> str:
 
 
 def _atomic_write(path: Path, content: bytes) -> None:
+    """Write beside the destination, flush it, then atomically replace the old file."""
+
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     temporary = Path(temporary_name)
@@ -40,6 +46,8 @@ def _atomic_write(path: Path, content: bytes) -> None:
             handle.write(content)
             handle.flush()
             os.fsync(handle.fileno())
+        # The temporary file shares the destination directory, so os.replace stays on one
+        # filesystem and provides the atomic replacement guarantee we need for manifests.
         os.replace(temporary, path)
     finally:
         if temporary.exists():
@@ -69,11 +77,13 @@ def append_jsonl(path: Path, value: Mapping[str, Any]) -> None:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     line = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n"
+    encoded = line.encode()
     descriptor = os.open(path, os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o644)
     try:
-        written = os.write(descriptor, line.encode())
-        if written != len(line.encode()):
-            raise OSError(f"short JSONL write: wrote {written} of {len(line.encode())} bytes")
+        # One os.write keeps a record together when several writers append to the same file.
+        written = os.write(descriptor, encoded)
+        if written != len(encoded):
+            raise OSError(f"short JSONL write: wrote {written} of {len(encoded)} bytes")
         os.fsync(descriptor)
     finally:
         os.close(descriptor)

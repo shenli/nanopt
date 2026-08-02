@@ -13,3 +13,16 @@ dependencies. They do not imply reference-GPU support. CUDA and the exact refere
 checked separately by `nanopt doctor` and later calibration runs.
 
 Tests marked `gpu`, `network`, or `reference` are never prerequisites for the normal CPU test job.
+
+## Validate Milestone 1
+
+Run the complete local gate from the repository root:
+
+```bash
+./scripts/run_m1_gate.sh
+```
+
+The command syncs the locked development environment, then checks formatting, linting, types,
+tests and coverage, schemas, documentation formulas, the strict documentation build, and package
+construction. It exits immediately if a check fails and prints `M1 local gate passed.` only after
+all checks succeed.

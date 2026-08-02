@@ -28,7 +28,11 @@ def record_leaves(
     source: str,
     source_prefix: str = "",
 ) -> ProvenanceMap:
-    """Return provenance entries for every scalar or list leaf in ``value``."""
+    """Return provenance entries for every scalar or list leaf in ``value``.
+
+    Lists stay whole because NanoPT only supports scalar CLI overrides. Recording list indices
+    would imply that individual elements can participate in precedence when they cannot.
+    """
 
     entries: ProvenanceMap = {}
     if isinstance(value, Mapping):

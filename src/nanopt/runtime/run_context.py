@@ -32,6 +32,8 @@ def make_run_id(stage: str, config: dict[str, Any], now: datetime | None = None)
 
 
 def _dataset_ids(result: ResolutionResult) -> list[str]:
+    """Extract either a training dataset or an agent task suite from the experiment union."""
+
     experiment = result.config.experiment.model_dump(mode="python")
     data = experiment.get("data")
     if isinstance(data, dict) and isinstance(data.get("dataset"), str):
@@ -59,6 +61,8 @@ class RunContext:
         *,
         failure: dict[str, Any] | None = None,
     ) -> None:
+        """Transition lifecycle timestamps and persist the complete manifest atomically."""
+
         self.manifest["status"] = status
         if status == "running" and self.manifest["started_at"] is None:
             self.manifest["started_at"] = utc_now()
@@ -83,6 +87,8 @@ def create_run_context(
     if Path(selected_run_id).name != selected_run_id or selected_run_id in {".", ".."}:
         raise ValueError("run_id must be a single path-safe component")
     run_dir = artifacts_root / selected_run_id
+    # exist_ok=False turns an accidental run-ID collision into a visible error instead of
+    # mixing metrics and checkpoints from two runs.
     run_dir.mkdir(parents=True, exist_ok=False)
     for directory in ("checkpoints", "cache", "plots"):
         (run_dir / directory).mkdir()
@@ -94,6 +100,8 @@ def create_run_context(
     write_yaml(provenance_path, serialize_provenance(result.provenance))
     write_json(environment_path, collect_environment())
 
+    # The manifest is created before a model is loaded. Fields that require expensive work
+    # start as null/unresolved and are filled by later milestones as evidence becomes known.
     source = result.config.model.source
     manifest: dict[str, Any] = {
         "schema_version": 1,

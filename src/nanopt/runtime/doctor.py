@@ -18,6 +18,8 @@ from nanopt.config.models import HardwareProfile
 
 
 class DoctorModel(BaseModel):
+    """Strict base for the stable machine-readable doctor report."""
+
     model_config = ConfigDict(extra="forbid")
 
 
@@ -99,6 +101,8 @@ def _dependencies() -> dict[str, DependencyStatus]:
 
 
 def _driver_version(torch_module: Any) -> str | None:
+    """Ask PyTorch first and fall back to the NVIDIA CLI across PyTorch versions."""
+
     cuda = getattr(torch_module, "cuda", None)
     if cuda is None:
         return None
@@ -127,6 +131,8 @@ def _driver_version(torch_module: Any) -> str | None:
 
 
 def _cuda_status(torch_module: Any | None) -> CudaStatus:
+    """Normalize optional and version-dependent PyTorch CUDA APIs into one schema."""
+
     if torch_module is None:
         return CudaStatus(
             available=False,
@@ -153,6 +159,8 @@ def _cuda_status(torch_module: Any | None) -> CudaStatus:
         try:
             free_bytes, total_bytes = cuda.mem_get_info(index)
         except (AttributeError, RuntimeError):
+            # Older runtimes expose capacity but not current free memory. Zero means unknown,
+            # not that the device is necessarily full.
             total_bytes = int(properties.total_memory)
             free_bytes = 0
         major, minor = cuda.get_device_capability(index)
@@ -201,6 +209,8 @@ def _docker_status() -> DockerStatus:
 
 
 def _profile_match(profile: HardwareProfile | None, cuda: CudaStatus) -> ProfileMatch:
+    """Compare observed hardware with the requested evidence-backed profile."""
+
     if profile is None:
         return ProfileMatch(requested_id=None, matched=False, support_status=None, reasons=[])
     reasons: list[str] = []
@@ -265,6 +275,8 @@ def collect_doctor_report(
     if profile and match.matched and profile.support_status != "validated":
         messages.append(f"hardware profile {profile.id} is {profile.support_status}")
 
+    # Exit-code precedence matters to automation: an explicit strict mismatch is more
+    # specific than the general "unusable" result produced by missing CUDA.
     if strict_profile and profile and not match.matched:
         status: Literal["usable", "warning", "unusable", "profile_mismatch"] = "profile_mismatch"
         exit_code: Literal[0, 2, 3, 4] = 4

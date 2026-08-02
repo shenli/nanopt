@@ -62,9 +62,16 @@ The detailed milestone contract is in the
 
 ## Development
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). The standard CPU checks are:
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). From the repository root, run the complete M1 gate with:
 
 ```bash
+./scripts/run_m1_gate.sh
+```
+
+The script stops at the first failure. It runs the following checks in order:
+
+```bash
+uv sync --frozen --extra dev --extra docs
 uv run ruff format --check .
 uv run ruff check .
 uv run mypy src/nanopt

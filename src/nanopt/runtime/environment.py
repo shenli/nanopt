@@ -13,6 +13,8 @@ from urllib.parse import urlsplit, urlunsplit
 
 
 def package_version(package: str) -> str | None:
+    """Return installed distribution metadata without importing the package."""
+
     try:
         return importlib.metadata.version(package)
     except importlib.metadata.PackageNotFoundError:
@@ -35,12 +37,16 @@ def _git(args: list[str], cwd: Path) -> str | None:
 
 
 def _sanitize_remote(remote: str | None) -> str | None:
+    """Remove usernames and embedded credentials while preserving repository identity."""
+
     if not remote:
         return None
     if re.match(r"^[^/@:]+@[^:]+:", remote):
+        # Convert SCP-style ``user@host:path`` into ``host:path``.
         return re.sub(r"^[^/@:]+@", "", remote)
     parts = urlsplit(remote)
     if parts.scheme and parts.hostname:
+        # Rebuild URL remotes from parsed safe components, deliberately dropping userinfo.
         hostname = parts.hostname
         if parts.port:
             hostname = f"{hostname}:{parts.port}"

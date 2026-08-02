@@ -36,7 +36,11 @@ ProfileModel = TypeVar("ProfileModel", bound=BaseModel)
 
 
 def default_config_root() -> ReadablePath:
-    """Locate checkout profiles first, then profiles bundled in the installed wheel."""
+    """Locate checkout profiles first, then profiles bundled in the installed wheel.
+
+    This order lets contributors edit ``configs/`` and see changes immediately while installed
+    users receive the exact same profile layout embedded in the wheel.
+    """
 
     checkout_root = Path.cwd() / "configs"
     if checkout_root.is_dir():
@@ -73,6 +77,8 @@ def load_model(path: ReadablePath, model: type[ProfileModel]) -> ProfileModel:
 
 
 class ExperimentEnvelope(StrictModel):
+    """Give Pydantic a field on which to apply the experiment stage discriminator."""
+
     experiment: ExperimentProfile
 
 
@@ -83,6 +89,7 @@ class ConfigRepository:
         self.root = root or default_config_root()
 
     def _path(self, category: str, profile_id: str) -> ReadablePath:
+        # Profile IDs become filenames, so reject separators and traversal before joining paths.
         if not profile_id or any(part in profile_id for part in ("/", "\\", "..")):
             raise ConfigError(f"invalid profile id: {profile_id!r}")
         return self.root.joinpath(category, f"{profile_id}.yaml")

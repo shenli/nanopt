@@ -21,6 +21,8 @@ class JsonFormatter(logging.Formatter):
         }
         event = getattr(record, "event", None)
         fields = getattr(record, "fields", None)
+        # Callers attach these through logging's ``extra`` argument. Keeping them optional
+        # preserves compatibility with ordinary logger.info("message") calls.
         if event is not None:
             value["event"] = str(event)
         if fields is not None:
@@ -44,5 +46,6 @@ def make_structured_logger(
     handler = logging.StreamHandler(stream)
     handler.setFormatter(JsonFormatter())
     logger.addHandler(handler)
+    # Propagation would duplicate records or inherit application-wide formatting.
     logger.propagate = False
     return logger

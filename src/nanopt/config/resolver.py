@@ -44,6 +44,8 @@ def parse_override(expression: str) -> tuple[str, Scalar]:
 
 
 def _apply_scalar_override(target: dict[str, Any], path: str, value: Scalar) -> None:
+    """Replace one existing scalar without silently creating configuration keys."""
+
     components = path.split(".")
     cursor: dict[str, Any] = target
     for component in components[:-1]:
@@ -77,6 +79,9 @@ def resolve_config(
     """
 
     repo = repository or ConfigRepository()
+
+    # Resolution precedence, from weakest to strongest, is:
+    # named profiles -> selected recipe-stage overrides -> CLI overrides.
     recipe = repo.recipe(recipe_id) if recipe_id else None
     if recipe is not None:
         hardware_id = hardware_id or recipe.hardware
@@ -129,6 +134,7 @@ def resolve_config(
         )
 
     if recipe_stage is not None:
+        # Recipe-stage paths are relative to the experiment namespace by design.
         for path, value in recipe_stage.overrides.items():
             _apply_scalar_override(cast(dict[str, Any], raw["experiment"]), path, value)
             provenance[f"experiment.{path}"] = ProvenanceEntry(
@@ -137,6 +143,8 @@ def resolve_config(
 
     for expression in overrides:
         path, value = parse_override(expression)
+        # An explicit namespace can target any profile. For ergonomic CLI usage, an
+        # unprefixed path means "experiment", where most run-to-run tuning happens.
         if path.startswith("hardware."):
             namespace, relative = "hardware", path.removeprefix("hardware.")
         elif path.startswith("model."):

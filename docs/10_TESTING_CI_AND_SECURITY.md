@@ -110,6 +110,12 @@ milestone commit and record the exact commands and results in the milestone comp
 The required local gate is:
 
 ```bash
+./scripts/run_m1_gate.sh
+```
+
+That wrapper stops at the first failure and runs these commands from the repository root:
+
+```bash
 uv sync --frozen --extra dev --extra docs
 uv run ruff format --check .
 uv run ruff check .

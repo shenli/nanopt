@@ -1,4 +1,9 @@
-"""Strict Pydantic models for NanoPT configuration profiles."""
+"""Strict Pydantic models for NanoPT configuration profiles.
+
+These classes are intentionally declarative: each class mirrors one conceptual block in a YAML
+profile. Keeping the schema visible in ordinary Python makes the allowed configuration surface
+easy to inspect without learning a separate configuration framework.
+"""
 
 from __future__ import annotations
 
@@ -15,6 +20,7 @@ class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
 
 
+# Hardware profiles describe capabilities and evidence, not runtime policy guesses.
 class PlatformConfig(StrictModel):
     os: str
     architecture: str
@@ -80,6 +86,7 @@ class HardwareProfile(StrictModel):
         return self
 
 
+# Model profiles pin loading and adapter behavior independently of an experiment.
 class ModelSourceConfig(StrictModel):
     provider: Literal["huggingface"]
     model_id: str
@@ -132,6 +139,7 @@ class ModelProfile(StrictModel):
     notes: list[str] = Field(default_factory=list)
 
 
+# Evaluation profiles separate deterministic scoring from sampled qualitative output.
 class BaseEvalDataConfig(StrictModel):
     dataset: str
     splits: list[str]
@@ -180,6 +188,7 @@ class BaseEvalExperiment(StrictModel):
     artifacts: BaseArtifactsConfig
 
 
+# SFT profiles define completion-only data and optimizer behavior.
 class TrainDataConfig(StrictModel):
     dataset: str
     train_split: str
@@ -235,6 +244,7 @@ class SftExperiment(StrictModel):
     status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
 
 
+# DPO profiles make policy/reference roles and sequence reduction explicit.
 class DpoDataConfig(StrictModel):
     dataset: str
     train_split: str
@@ -298,6 +308,7 @@ class DpoExperiment(StrictModel):
     status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
 
 
+# GRPO profiles expose rollout, reward, advantage, and optimization choices separately.
 class GrpoDataConfig(StrictModel):
     dataset: str
     prompt_pool_split: str
@@ -389,6 +400,7 @@ class GrpoExperiment(StrictModel):
     notes: list[str] = Field(default_factory=list)
 
 
+# The toy PPO lab is deliberately isolated from the reference Qwen training pipeline.
 class ToyEnvironmentConfig(StrictModel):
     type: Literal["tiny_sequence_environment"]
     horizon: int = Field(gt=0)
@@ -427,6 +439,7 @@ class TeachingLabExperiment(StrictModel):
     scope: ToyScopeConfig
 
 
+# Agent evaluation profiles encode sandbox limits as data that can be audited.
 class AgentTasksConfig(StrictModel):
     suite: str
     split: str
@@ -489,6 +502,7 @@ ExperimentProfile = Annotated[
 ]
 
 
+# Recipes compose named experiments; they do not hide their stages in trainer callbacks.
 class RecipeStage(StrictModel):
     id: str
     command: Literal["eval", "train_sft", "train_dpo", "train_grpo", "report_build"]
