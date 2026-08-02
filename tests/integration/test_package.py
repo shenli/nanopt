@@ -1,0 +1,10 @@
+from __future__ import annotations
+
+import importlib.metadata
+
+import nanopt
+
+
+def test_import_and_distribution_versions_match() -> None:
+    assert nanopt.__version__ == "0.1.0.dev0"
+    assert importlib.metadata.version("nanopt") == nanopt.__version__

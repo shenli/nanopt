@@ -1,0 +1,64 @@
+schema_version: 1
+id: math_grpo
+stage: grpo
+seed: 42
+data:
+  dataset: arithmetic_rl_v1
+  prompt_pool_split: train
+  validation_split: validation
+  max_prompt_length: 256
+policy:
+  initialize_from_stage: dpo
+  policy_adapter_name: grpo
+  reference_adapter_stage: dpo
+rollout:
+  prompt_batch_size: 1
+  group_size: 4
+  max_completion_length: 128
+  temperature: 1.0
+  top_p: 1.0
+  top_k: null
+  stop_on_eos: true
+  store_old_logprobs_dtype: float32
+reward:
+  parser: strict_answer_v1
+  verifier: exact_answer_v1
+  components:
+    correctness: 1.0
+    format: 0.1
+    length_penalty: 0.0
+advantage:
+  mode: group_zscore
+  population_std: true
+  epsilon: 1.0e-4
+optimization:
+  iterations: 500
+  update_epochs: 1
+  minibatch_completions: 4
+  gradient_accumulation_steps: 8
+  learning_rate: 1.0e-6
+  weight_decay: 0.0
+  warmup_ratio: 0.03
+  scheduler: cosine
+  clip_epsilon: 0.2
+  loss_normalization: token_mean
+  kl_beta: 0.0
+  kl_estimator: k3
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+  compute_dtype: bfloat16
+  optimizer: adamw
+  log_every_iterations: 1
+  eval_every_iterations: 50
+  save_every_iterations: 100
+evaluation:
+  experiment: base_eval
+  reward_hacking_suite: true
+artifacts:
+  save_adapter_only: true
+  save_trajectories: true
+  save_reward_examples: true
+status: proposed_unvalidated
+notes:
+  - The reference training sampler is untruncated at temperature one so stored old log probabilities match the behavior distribution.
+  - All iteration and batch values require calibration and pilot runs before validation.

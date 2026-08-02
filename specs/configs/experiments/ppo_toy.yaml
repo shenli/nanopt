@@ -1,0 +1,23 @@
+schema_version: 1
+id: ppo_toy
+stage: teaching_lab
+seed: 42
+environment:
+  type: tiny_sequence_environment
+  horizon: 8
+policy:
+  type: tiny_causal_model
+  hidden_size: 64
+  layers: 2
+algorithm:
+  gamma: 1.0
+  gae_lambda: 0.95
+  clip_epsilon: 0.2
+  update_epochs: 4
+  minibatch_size: 32
+  value_loss_coefficient: 0.5
+  entropy_coefficient: 0.01
+  max_grad_norm: 1.0
+scope:
+  part_of_reference_qwen_pipeline: false
+  cpu_supported: true

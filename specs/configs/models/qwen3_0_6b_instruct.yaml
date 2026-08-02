@@ -1,0 +1,24 @@
+schema_version: 1
+id: qwen3_0_6b_instruct
+source:
+  provider: huggingface
+  model_id: Qwen/Qwen3-0.6B
+  revision: null
+  tokenizer_revision: null
+  trust_remote_code: false
+loading:
+  dtype: bfloat16
+  low_cpu_mem_usage: true
+  use_safetensors: true
+renderer:
+  type: tokenizer_chat_template
+  enable_thinking: false
+  add_generation_prompt: true
+usage:
+  official_pipeline_start: false
+  allowed_for:
+    - agent_environment_plumbing
+    - tool_protocol_debugging
+    - optional_comparison
+notes:
+  - This post-trained sibling is not the starting checkpoint of the Base -> SFT -> DPO -> GRPO reference path.

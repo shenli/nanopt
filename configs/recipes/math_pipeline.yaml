@@ -1,0 +1,47 @@
+schema_version: 1
+id: math_pipeline
+description: Official Base -> SFT -> DPO -> GRPO/RLVR learning path
+hardware: rtx_4070_ti_super_16gb
+model: qwen3_0_6b_base
+stages:
+  - id: base
+    command: eval
+    experiment: base_eval
+    input_checkpoint: base_model
+  - id: sft
+    command: train_sft
+    experiment: math_sft
+    input_checkpoint: base_model
+  - id: sft_eval
+    command: eval
+    experiment: base_eval
+    input_checkpoint: sft
+  - id: dpo
+    command: train_dpo
+    experiment: math_dpo
+    input_checkpoint: sft
+  - id: dpo_eval
+    command: eval
+    experiment: base_eval
+    input_checkpoint: dpo
+  - id: grpo
+    command: train_grpo
+    experiment: math_grpo
+    input_checkpoint: dpo
+  - id: grpo_eval
+    command: eval
+    experiment: base_eval
+    input_checkpoint: grpo
+  - id: report
+    command: report_build
+    compare:
+      - base
+      - sft
+      - dpo
+      - grpo
+stage_policy:
+  independently_resumable: true
+  fail_fast: true
+  require_calibration_before_training: true
+  protected_test_evaluation_after_recipe_freeze: true
+status: proposed_unvalidated

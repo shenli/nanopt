@@ -1,0 +1,37 @@
+schema_version: 1
+id: math_sft
+stage: sft
+seed: 42
+data:
+  dataset: arithmetic_sft_v1
+  train_split: train
+  validation_split: validation
+  max_sequence_length: 512
+  completion_only: true
+training:
+  micro_batch_size: 4
+  gradient_accumulation_steps: 8
+  max_steps: null
+  epochs: 2
+  learning_rate: 2.0e-4
+  weight_decay: 0.0
+  warmup_ratio: 0.03
+  scheduler: cosine
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+  compute_dtype: bfloat16
+  optimizer: adamw
+  log_every_optimizer_steps: 5
+  eval_every_optimizer_steps: 100
+  save_every_optimizer_steps: 250
+adapter:
+  inherit_from: null
+  name: sft
+  trainable: true
+evaluation:
+  experiment: base_eval
+artifacts:
+  save_adapter_only: true
+  save_optimizer_state: true
+  save_samples: true
+status: proposed_unvalidated

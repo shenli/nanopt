@@ -1,0 +1,62 @@
+# Python and build outputs
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+site/
+.venv/
+
+# IDE and operating-system files
+.DS_Store
+.vscode/
+.idea/
+
+# Credentials and local caches
+.env
+.env.*
+!.env.example
+.cache/
+.uv-cache/
+.huggingface/
+
+# Runtime artifacts
+artifacts/runs/
+artifacts/cache/
+artifacts/tmp/
+*.log
+
+# Root-level outputs from the documented foundation CLI examples
+/doctor*.json
+/resolved_config*.yaml
+
+# Models and generated datasets
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.arrow
+
+# Agent workspaces
+.agent-workspaces/
+.agent-verifier-workspaces/
+
+# Private handoff context; never publish or stage this directory.
+source_materials/
+
+# Local handoff packaging metadata and seed copies superseded by the M1 repository.
+NANOPT_MASTER_PLAN.md
+PACKAGE_INVENTORY.md
+PROMPT_FOR_CODING_AGENT.md
+SHA256SUMS.txt
+WEB_RESEARCH_SNAPSHOT.md
+repo_seed/
+
+# Keep compact, reviewed reference summaries only.
+!artifacts/reference/.gitkeep

@@ -1,0 +1,141 @@
+# Acceptance Criteria
+
+This document is the release contract for NanoPT v0.1. A feature is not complete because its code exists; it must pass the relevant behavioral, reproducibility, documentation, and hardware gates.
+
+## 1. Repository-wide gates
+
+- [ ] Public repository content is English, excluding proper names, quoted source titles, and intentionally multilingual test fixtures.
+- [ ] Package installs from `uv.lock` in a clean Linux environment.
+- [ ] `nanopt --help`, `nanopt doctor`, and `nanopt config resolve` work without downloading a model.
+- [ ] Ruff, type checking, CPU tests, package build, schema validation, and strict docs build pass.
+- [ ] No required golden-path command depends on notebooks, hosted telemetry, paid APIs, or private credentials.
+- [ ] README claims distinguish proposed, smoke-tested, and validated behavior.
+- [ ] Every reference result links to an evidence manifest and immutable commit/model revision.
+- [ ] No secret, absolute personal path, or hidden-test content appears in committed artifacts.
+
+## 2. Mathematical correctness gates
+
+- [ ] Causal token shifting matches hand-computable fixtures.
+- [ ] Prompt, padding, and post-EOS tokens are excluded by masks.
+- [ ] Core reductions fail clearly on zero active tokens.
+- [ ] Log-softmax and loss reductions use the documented precision.
+- [ ] DPO sign, margin, beta, masking, and cache-parity tests pass.
+- [ ] Group-relative advantages match hand calculations and sum to approximately zero.
+- [ ] All-equal reward groups yield zero advantages.
+- [ ] PPO/GRPO clipping tests cover positive and negative advantages.
+- [ ] Sampler log probabilities match a direct forward pass in the reference sampling mode.
+- [ ] Loss-normalization variants have separate tests and names.
+- [ ] Optional KL estimator matches its formula and non-negativity expectations within numerical tolerance.
+
+## 3. Data gates
+
+- [ ] Generated data validates against versioned schemas.
+- [ ] Identical generator config/seed produces identical content fingerprint.
+- [ ] No canonical task hash overlaps protected splits.
+- [ ] Every trusted answer is independently re-evaluated from the AST.
+- [ ] Every chosen preference passes the strict verifier.
+- [ ] Every rejected preference fails the intended criterion.
+- [ ] Preference audit reports length and rejection-type distributions.
+- [ ] Parser attack suite has zero cases where an incorrect trusted answer receives correctness reward.
+- [ ] Dataset cards explain scope, generation, limitations, and license.
+
+## 4. Baseline/evaluation gates
+
+- [ ] Base model evaluation saves example-level outputs and aggregate metrics.
+- [ ] Deterministic and sampled generation modes are separately configured.
+- [ ] pass@k implementation passes fixtures.
+- [ ] Confidence intervals and task counts accompany headline accuracy metrics.
+- [ ] Reports separate parser failure from wrong answer.
+- [ ] Same evaluator version is used across checkpoint comparisons.
+- [ ] Regression selection is deterministic and reproducible.
+
+## 5. SFT gates
+
+- [ ] Only intended LoRA parameters are trainable.
+- [ ] Prompt-only tokens contribute zero SFT loss.
+- [ ] A tiny repeated-batch test lowers completion loss.
+- [ ] Checkpoint save/load preserves logits within tolerance.
+- [ ] Resume from a clean optimizer boundary passes its fixture.
+- [ ] Reference SFT calibration stays below the hard VRAM budget.
+- [ ] Full SFT run completes on the target hardware without source edits.
+- [ ] Protected evaluation demonstrates that the model learned the answer protocol and did not merely reduce teacher-forced loss.
+
+## 6. DPO gates
+
+- [ ] Frozen SFT reference cache is complete and fingerprinted.
+- [ ] Cached and live reference values agree on a sample.
+- [ ] DPO starts from an exact SFT policy copy.
+- [ ] A tiny controlled update increases the chosen margin.
+- [ ] Full DPO run completes on the target hardware.
+- [ ] Held-out preference loss/margin improves relative to the SFT policy.
+- [ ] Rejection-type breakdown shows no single unacknowledged shortcut dominates.
+- [ ] Protected task accuracy and parse rate regressions are reviewed and documented.
+
+## 7. GRPO gates
+
+- [ ] Every rollout stores exact token IDs, action masks, old log probabilities, finish reason, and rewards.
+- [ ] Training consumes stored tokens without decode/re-tokenize.
+- [ ] Group-size invariant `G >= 2` is enforced.
+- [ ] Degenerate-group fraction is logged.
+- [ ] Non-finite rewards, advantages, ratios, losses, and gradients are detected.
+- [ ] Full calibration covers generation, verification, scoring, backward, and optimizer phases.
+- [ ] Full GRPO run completes on the reference hardware.
+- [ ] The report identifies the exact advantage, clipping, normalization, and KL variants.
+- [ ] Protected held-out expected reward or exact-answer accuracy improves over the DPO parent on at least one primary target split.
+- [ ] Any regression on an anchor/generalization split is quantified and judged against a threshold frozen before the final reference run.
+- [ ] Reward-hacking suite remains sound after training.
+
+The project should define numeric release targets in a versioned `reference_targets.yaml` after pilot runs and before final reference tuning. Once frozen for a release candidate, those targets cannot be loosened without an ADR and a new candidate.
+
+## 8. End-to-end pipeline gates
+
+- [ ] One documented command sequence runs Base → SFT → DPO → GRPO as independently resumable stages.
+- [ ] Pipeline manifest records every child run and checkpoint hash.
+- [ ] A fresh clone can rebuild the final comparison report from saved artifacts.
+- [ ] Model and tokenizer revisions are immutable in the evidence bundle.
+- [ ] Protected test data is not used for training, reward shaping, or final hyperparameter selection.
+- [ ] Total wall time and phase-specific VRAM peaks are measured, not estimated.
+- [ ] Failed/retried stages and deviations are disclosed.
+
+## 9. Hardware-validation gates
+
+- [ ] `nanopt doctor` identifies the RTX 4070 Ti SUPER and records actual VRAM/driver/runtime.
+- [ ] BF16 support is checked at runtime.
+- [ ] Model load, evaluation, SFT, DPO, and GRPO calibrations pass.
+- [ ] Full pipeline stays below the profile hard memory budget.
+- [ ] No hidden manual source change is needed between stages.
+- [ ] Evidence bundle contains configs, manifests, metrics, reports, and checksums.
+- [ ] Profile status changes to `validated` in the same reviewed commit/release that contains evidence.
+
+## 10. Agent-environment gates
+
+- [ ] Every task has an immutable initial snapshot and deterministic reset hash.
+- [ ] A scripted oracle solves every task and hidden verifier passes.
+- [ ] Model cannot supply arbitrary shell commands.
+- [ ] Path traversal, symlink escape, test modification, output overflow, timeout, and network attempts are blocked or safely contained.
+- [ ] Public tests and hidden verifier use separate workspaces.
+- [ ] Hidden test source never appears in model observations or public artifacts.
+- [ ] Trajectory records include task/environment/model versions, actions, results, budgets, and final score.
+- [ ] Docker reference backend runs non-root with no network/GPU and documented resource limits.
+- [ ] Environment report states that v0.1 evaluates agents but does not train them.
+
+## 11. Documentation gates
+
+- [ ] Every chapter follows the standard chapter template where applicable.
+- [ ] All formulas render correctly with MathJax.
+- [ ] No malformed raw formula delimiters remain.
+- [ ] Every lab command has been run in its claimed environment tier.
+- [ ] Source links favor primary papers, official reports, and official repositories.
+- [ ] The course distinguishes source-supported facts, project design decisions, and unvalidated hypotheses.
+- [ ] Small-scale simplifications are explicitly mapped to industrial systems.
+- [ ] README provides a short path; detailed theory stays in docs.
+
+## 12. Release decision
+
+A release candidate receives one of three outcomes:
+
+- **Pass:** every required gate passes.
+- **Pass with disclosed limitation:** only a non-core optional feature fails, and the claim is removed or narrowed.
+- **Fail:** any mathematical, data leakage, verifier, security, reproducibility, or supported-hardware gate fails.
+
+A failed core gate must not be converted into documentation wording that implies completion.

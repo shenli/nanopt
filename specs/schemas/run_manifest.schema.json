@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/run_manifest.schema.json",
+  "title": "NanoPT Run Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "stage",
+    "status",
+    "created_at",
+    "git",
+    "config",
+    "environment_file",
+    "model",
+    "data"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "pipeline_run_id": {"type": ["string", "null"]},
+    "parent_run_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "stage": {
+      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "teaching_lab", "pipeline"]
+    },
+    "status": {
+      "enum": ["created", "running", "completed", "failed", "interrupted", "tainted"]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "started_at": {"type": ["string", "null"], "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": {"type": "string"},
+        "dirty": {"type": "boolean"},
+        "tag": {"type": ["string", "null"]},
+        "remote": {"type": ["string", "null"]}
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolved_file", "sha256"],
+      "properties": {
+        "resolved_file": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "provenance_file": {"type": ["string", "null"]}
+      }
+    },
+    "environment_file": {"type": "string"},
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "resolved_revision", "tokenizer_revision"],
+      "properties": {
+        "model_id": {"type": "string"},
+        "resolved_revision": {"type": "string"},
+        "tokenizer_revision": {"type": "string"},
+        "chat_template_sha256": {"type": ["string", "null"]},
+        "base_parameter_count": {"type": ["integer", "null"], "minimum": 0},
+        "trainable_parameter_count": {"type": ["integer", "null"], "minimum": 0},
+        "adapter_name": {"type": ["string", "null"]},
+        "adapter_sha256": {"type": ["string", "null"]}
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_ids", "fingerprints"],
+      "properties": {
+        "dataset_ids": {"type": "array", "items": {"type": "string"}},
+        "fingerprints": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        },
+        "protected_splits_used_for_training": {"type": "boolean", "const": false}
+      }
+    },
+    "checkpoint": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string"},
+        "sha256": {"type": "string"},
+        "parent_checkpoint_sha256": {"type": ["string", "null"]}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind"],
+        "properties": {
+          "path": {"type": "string"},
+          "kind": {"type": "string"},
+          "sha256": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "failure": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"type": "string"},
+        "message": {"type": "string"},
+        "phase": {"type": ["string", "null"]},
+        "traceback_file": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

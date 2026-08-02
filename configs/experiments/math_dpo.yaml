@@ -1,0 +1,43 @@
+schema_version: 1
+id: math_dpo
+stage: dpo
+seed: 42
+data:
+  dataset: arithmetic_preferences_v1
+  train_split: train
+  validation_split: validation
+  max_prompt_length: 256
+  max_completion_length: 256
+  sequence_logprob_reduction: sum
+reference:
+  checkpoint_stage: sft
+  mode: precomputed
+  cache_dtype: float32
+  cache_validation_sample_size: 64
+policy:
+  initialize_from_stage: sft
+  adapter_name: dpo
+training:
+  pair_micro_batch_size: 2
+  gradient_accumulation_steps: 8
+  epochs: 1
+  learning_rate: 5.0e-6
+  beta: 0.1
+  weight_decay: 0.0
+  warmup_ratio: 0.03
+  scheduler: cosine
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+  compute_dtype: bfloat16
+  optimizer: adamw
+  concatenate_chosen_rejected: true
+  log_every_optimizer_steps: 5
+  eval_every_optimizer_steps: 100
+  save_every_optimizer_steps: 250
+evaluation:
+  experiment: base_eval
+  preference_breakdown: true
+artifacts:
+  save_adapter_only: true
+  save_reference_cache_manifest: true
+status: proposed_unvalidated

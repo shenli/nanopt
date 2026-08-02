@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/hardware_evidence.schema.json",
+  "title": "NanoPT Hardware Validation Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "hardware_profile_id",
+    "validation_status",
+    "git_commit",
+    "gpu",
+    "software",
+    "stage_runs",
+    "evidence_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "hardware_profile_id": {"type": "string"},
+    "validation_status": {"enum": ["smoke_tested", "validated", "failed"]},
+    "validated_at": {"type": ["string", "null"], "format": "date-time"},
+    "git_commit": {"type": "string"},
+    "git_dirty": {"type": "boolean", "const": false},
+    "gpu": {
+      "type": "object",
+      "required": ["name", "count", "total_vram_bytes", "compute_capability"],
+      "properties": {
+        "name": {"type": "string"},
+        "count": {"const": 1},
+        "total_vram_bytes": {"type": "integer", "minimum": 1},
+        "compute_capability": {"type": "string"},
+        "driver_version": {"type": "string"}
+      }
+    },
+    "software": {
+      "type": "object",
+      "required": ["python", "pytorch", "cuda_runtime", "transformers", "peft"],
+      "properties": {
+        "python": {"type": "string"},
+        "pytorch": {"type": "string"},
+        "cuda_runtime": {"type": "string"},
+        "transformers": {"type": "string"},
+        "peft": {"type": "string"}
+      }
+    },
+    "stage_runs": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["stage", "run_id", "status", "peak_reserved_bytes", "wall_clock_seconds"],
+        "properties": {
+          "stage": {"enum": ["base_eval", "sft", "dpo", "grpo", "agent_evaluation"]},
+          "run_id": {"type": "string"},
+          "status": {"enum": ["completed", "failed"]},
+          "peak_allocated_bytes": {"type": "integer", "minimum": 0},
+          "peak_reserved_bytes": {"type": "integer", "minimum": 0},
+          "wall_clock_seconds": {"type": "number", "minimum": 0},
+          "manifest_sha256": {"type": "string"}
+        }
+      }
+    },
+    "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

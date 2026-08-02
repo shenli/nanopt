@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/doctor_report.schema.json",
+  "title": "NanoPT Doctor Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "exit_code",
+    "os",
+    "architecture",
+    "python_version",
+    "pytorch_version",
+    "dependencies",
+    "cuda",
+    "tf32_available",
+    "huggingface_cache",
+    "docker",
+    "profile",
+    "messages"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"enum": ["usable", "warning", "unusable", "profile_mismatch"]},
+    "exit_code": {"enum": [0, 2, 3, 4]},
+    "os": {"type": "string"},
+    "architecture": {"type": "string"},
+    "python_version": {"type": "string"},
+    "pytorch_version": {"type": ["string", "null"]},
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["required", "installed", "version"],
+        "properties": {
+          "required": {"type": "boolean"},
+          "installed": {"type": "boolean"},
+          "version": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "cuda": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "runtime_version", "driver_version", "device_count", "gpus"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "runtime_version": {"type": ["string", "null"]},
+        "driver_version": {"type": ["string", "null"]},
+        "device_count": {"type": "integer", "minimum": 0},
+        "gpus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["index", "name", "total_vram_bytes", "free_vram_bytes", "compute_capability", "bf16_supported"],
+            "properties": {
+              "index": {"type": "integer", "minimum": 0},
+              "name": {"type": "string"},
+              "total_vram_bytes": {"type": "integer", "minimum": 0},
+              "free_vram_bytes": {"type": "integer", "minimum": 0},
+              "compute_capability": {"type": "string"},
+              "bf16_supported": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "tf32_available": {"type": "boolean"},
+    "huggingface_cache": {"type": "string"},
+    "docker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable_found", "daemon_reachable", "version"],
+      "properties": {
+        "executable_found": {"type": "boolean"},
+        "daemon_reachable": {"type": "boolean"},
+        "version": {"type": ["string", "null"]}
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested_id", "matched", "support_status", "reasons"],
+      "properties": {
+        "requested_id": {"type": ["string", "null"]},
+        "matched": {"type": "boolean"},
+        "support_status": {"type": ["string", "null"]},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "messages": {"type": "array", "items": {"type": "string"}}
+  }
+}

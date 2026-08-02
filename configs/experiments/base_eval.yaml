@@ -1,0 +1,31 @@
+schema_version: 1
+id: base_eval
+stage: evaluation
+seed: 42
+data:
+  dataset: arithmetic_v1
+  splits:
+    - test_iid
+    - test_compositional
+    - test_range
+    - test_format_attack
+  max_prompt_length: 256
+generation:
+  deterministic:
+    do_sample: false
+    max_new_tokens: 128
+  sampled:
+    do_sample: true
+    temperature: 1.0
+    top_p: 1.0
+    num_samples_per_prompt: 4
+    max_new_tokens: 128
+evaluation:
+  parser: strict_answer_v1
+  verifier: exact_answer_v1
+  confidence_interval: paired_bootstrap
+  bootstrap_samples: 2000
+artifacts:
+  save_token_ids: true
+  save_logprobs: true
+  save_all_examples: true

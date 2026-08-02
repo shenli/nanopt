@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/evaluation_result.schema.json",
+  "title": "NanoPT Example-Level Evaluation Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "result_id",
+    "run_id",
+    "checkpoint_id",
+    "task_id",
+    "split",
+    "generation_config_sha256",
+    "response_text",
+    "parser_status",
+    "verifier_status",
+    "reward_components"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "result_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "checkpoint_id": {"type": "string"},
+    "task_id": {"type": "string"},
+    "split": {"type": "string"},
+    "sample_index": {"type": "integer", "minimum": 0},
+    "seed": {"type": "integer"},
+    "generation_config_sha256": {"type": "string"},
+    "prompt_token_ids": {"type": ["array", "null"], "items": {"type": "integer"}},
+    "completion_token_ids": {"type": ["array", "null"], "items": {"type": "integer"}},
+    "response_text": {"type": "string"},
+    "parser_status": {"enum": ["valid", "invalid", "error"]},
+    "parsed_answer": {"type": ["string", "null"]},
+    "verifier_status": {"enum": ["correct", "incorrect", "not_run", "error"]},
+    "reward_components": {"type": "object", "additionalProperties": {"type": "number"}},
+    "finish_reason": {"type": ["string", "null"]},
+    "generation_seconds": {"type": ["number", "null"], "minimum": 0},
+    "metadata": {"type": "object"}
+  }
+}

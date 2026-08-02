@@ -1,0 +1,74 @@
+site_name: NanoPT
+site_description: Nano Post-Training — an executable white-box course from SFT to agent environments
+site_url: https://shenli.github.io/nanopt/
+repo_url: https://github.com/shenli/nanopt
+repo_name: shenli/nanopt
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
+      - Environment diagnosis: getting-started/doctor.md
+  - Foundations:
+      - MathJax smoke test: foundations/mathjax-smoke.md
+  - Reference:
+      - CLI: reference/cli.md
+      - Artifact contract: reference/artifacts.md
+      - Acceptance criteria: 13_ACCEPTANCE_CRITERIA.md
+      - Decisions:
+          - Project identity: adr/0000-project-identity.md
+          - Foundation boundaries: adr/0001-foundation-boundaries.md
+          - Artifact writes: adr/0002-run-artifact-writes.md
+      - Publication checklist: reference/publication-checklist.md
+      - M1 completion report: reference/m1-completion-report.md
+  - Project plans:
+      - Vision and scope: 00_VISION_AND_SCOPE.md
+      - Product requirements: 01_PRODUCT_REQUIREMENTS.md
+      - Technical architecture: 02_TECHNICAL_ARCHITECTURE.md
+      - Repository blueprint: 03_REPOSITORY_BLUEPRINT.md
+      - Configuration and CLI specification: 04_CONFIGURATION_AND_CLI.md
+      - Algorithm specifications: 05_ALGORITHM_SPECIFICATIONS.md
+      - Data and tasks: 06_DATA_AND_TASKS.md
+      - Agent environment: 07_AGENT_ENVIRONMENT.md
+      - Hardware and performance: 08_HARDWARE_AND_PERFORMANCE.md
+      - Evaluation and reporting: 09_EVALUATION_AND_REPORTING.md
+      - Testing, CI, and security: 10_TESTING_CI_AND_SECURITY.md
+      - Documentation curriculum: 11_DOCUMENTATION_CURRICULUM.md
+      - Implementation roadmap: 12_IMPLEMENTATION_ROADMAP.md
+      - Research and references: 14_RESEARCH_AND_REFERENCES.md
+      - Source synthesis: 15_SOURCE_SYNTHESIS.md
+      - Architectural decisions: 16_ARCHITECTURAL_DECISIONS.md
+      - Risks and open questions: 17_RISKS_AND_OPEN_QUESTIONS.md
+      - Initial issue backlog: 18_INITIAL_ISSUE_BACKLOG.md

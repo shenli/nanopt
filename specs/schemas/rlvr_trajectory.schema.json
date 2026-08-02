@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/rlvr_trajectory.schema.json",
+  "title": "NanoPT RLVR Grouped Rollout",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trajectory_id",
+    "run_id",
+    "iteration",
+    "task_id",
+    "prompt",
+    "completions"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "trajectory_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "iteration": {"type": "integer", "minimum": 0},
+    "task_id": {"type": "string"},
+    "prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["messages", "token_ids"],
+      "properties": {
+        "messages": {"type": "array", "items": {"$ref": "#/$defs/message"}},
+        "token_ids": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "attention_mask": {"type": "array", "items": {"type": "integer", "enum": [0, 1]}}
+      }
+    },
+    "group_reward_mean": {"type": "number"},
+    "group_reward_std": {"type": "number", "minimum": 0},
+    "advantage_mode": {"enum": ["group_zscore", "group_centered"]},
+    "completions": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "completion_index",
+          "token_ids",
+          "action_mask",
+          "old_logprobs",
+          "decoded_text",
+          "finish_reason",
+          "reward",
+          "reward_components",
+          "advantage",
+          "parser_status",
+          "verifier_status"
+        ],
+        "properties": {
+          "completion_index": {"type": "integer", "minimum": 0},
+          "token_ids": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+          "action_mask": {"type": "array", "items": {"type": "integer", "enum": [0, 1]}},
+          "old_logprobs": {"type": "array", "items": {"type": "number"}},
+          "reference_logprobs": {
+            "type": ["array", "null"],
+            "items": {"type": "number"}
+          },
+          "decoded_text": {"type": "string"},
+          "finish_reason": {"enum": ["eos", "max_length", "error"]},
+          "reward": {"type": "number"},
+          "reward_components": {
+            "type": "object",
+            "additionalProperties": {"type": "number"}
+          },
+          "advantage": {"type": "number"},
+          "parser_status": {"enum": ["valid", "invalid", "error"]},
+          "parsed_answer": {"type": ["string", "null"]},
+          "verifier_status": {"enum": ["correct", "incorrect", "not_run", "error"]},
+          "generation_seconds": {"type": ["number", "null"], "minimum": 0}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content"],
+      "properties": {
+        "role": {"enum": ["system", "user", "assistant", "tool"]},
+        "content": {"type": "string"}
+      }
+    }
+  }
+}

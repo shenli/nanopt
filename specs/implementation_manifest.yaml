@@ -1,0 +1,259 @@
+schema_version: 1
+project:
+  repository_name: nanopt
+  prose_name: NanoPT
+  full_name: Nano Post-Training
+  language: English
+  type: executable_course_and_reference_implementation
+  initial_release: v0.1
+  license_recommendation: Apache-2.0
+  license_status: confirmed
+
+mission:
+  summary: >-
+    Build a readable, testable post-training course and implementation that runs
+    Base -> SFT -> DPO -> GRPO/RLVR on one validated consumer GPU, and includes
+    a secure, resettable MiniSWE agent environment for rollout and evaluation.
+  primary_model: Qwen/Qwen3-0.6B-Base
+  reference_hardware: rtx_4070_ti_super_16gb
+
+hard_constraints:
+  - Public repository code, comments, documentation, reports, and governance are English.
+  - Python import package and CLI command are nanopt.
+  - Initial validated hardware target is one RTX 4070 Ti SUPER with 16 GB VRAM.
+  - Core SFT, DPO, and GRPO math and loops are implemented in NanoPT code.
+  - Transformers and PEFT may provide model/tokenizer and LoRA infrastructure.
+  - TRL is optional parity material, not the required implementation path.
+  - No Ray, DeepSpeed, vLLM, FlashAttention, or distributed runtime in v0.1 golden path.
+  - No arbitrary shell tool in the v0.1 agent environment.
+  - Generated rollout token IDs must not be decoded and re-tokenized for training.
+  - Hardware support claims require a committed evidence bundle.
+
+v0_1_required_features:
+  - typed configuration and provenance
+  - environment doctor
+  - stage-specific calibration
+  - exact synthetic arithmetic task generator
+  - strict parser and deterministic verifier
+  - base model evaluation
+  - completion-only LoRA SFT
+  - controlled preference-pair construction
+  - DPO with cached SFT reference log probabilities
+  - synchronous GRPO/RLVR with grouped completions
+  - exact rollout token and old-log-probability capture
+  - fixed held-out evaluation and regression reports
+  - MiniSWE task suite and structured tool protocol
+  - Docker-backed no-network sandbox and separate hidden verifier
+  - MkDocs course with MathJax and executable labs
+
+v0_1_out_of_scope:
+  - multi_gpu_or_multi_node_training
+  - production_distributed_rlhf
+  - asynchronous_policy_optimization
+  - vllm_colocated_rollouts
+  - full_model_ppo_on_qwen3_0_6b
+  - learned_reward_model_in_reference_pipeline
+  - agent_policy_optimization
+  - unrestricted_shell_or_browser
+  - million_token_trajectories
+  - broad_assistant_quality_claims
+
+milestones:
+  - id: M0
+    name: publication_preflight
+    depends_on: []
+    deliverables:
+      - verify GitHub repository name
+      - verify PyPI distribution name
+      - confirm license
+      - create ADR template and security contact
+    exit_criteria:
+      - naming and license decision recorded
+
+  - id: M1
+    name: repository_foundation
+    depends_on: [M0]
+    deliverables:
+      - src-layout Python package
+      - uv dependency lock
+      - CLI skeleton
+      - typed config resolver with provenance
+      - nanopt doctor
+      - artifact/run-context skeleton
+      - CPU CI and strict docs CI
+    tests:
+      - package build and import
+      - config precedence and unknown-key rejection
+      - doctor JSON schema
+      - formula lint and docs build
+    exit_criteria:
+      - clean install and all CPU CI green
+
+  - id: M2
+    name: core_math_model_and_data
+    depends_on: [M1]
+    deliverables:
+      - token log probabilities and masks
+      - masked reductions entropy KL DPO advantages clipping
+      - Qwen3 loader and renderer
+      - LoRA adapter lifecycle
+      - arithmetic AST generator and split builder
+      - strict parser and verifier
+    tests:
+      - hand-computable math fixtures
+      - renderer boundary tests
+      - data reproducibility and leakage tests
+      - parser attack tests
+    exit_criteria:
+      - core formulas and data fingerprints validated on CPU
+
+  - id: M3
+    name: generation_evaluation_and_reporting
+    depends_on: [M2]
+    deliverables:
+      - exact synchronous sampler
+      - deterministic and sampled evaluation
+      - pass@k and confidence intervals
+      - example-level result schema
+      - Markdown and HTML reports
+      - load/eval calibration
+    tests:
+      - sampler score parity
+      - pass@k fixtures
+      - report fixture build
+    exit_criteria:
+      - base model smoke evaluation is inspectable end to end
+
+  - id: M4
+    name: sft
+    depends_on: [M3]
+    deliverables:
+      - completion-only collator
+      - readable SFT loop
+      - checkpoint and resume
+      - SFT calibration config report and chapter
+    tests:
+      - prompt mask gradient exclusion
+      - tiny repeated-batch loss reduction
+      - checkpoint round trip and resume fixture
+    exit_criteria:
+      - target-GPU SFT stage completes and learns output protocol
+
+  - id: M5
+    name: preferences_and_dpo
+    depends_on: [M4]
+    deliverables:
+      - controlled rejection generators
+      - preference audit
+      - reference-log-probability cache
+      - readable DPO loop
+      - DPO evaluation report and chapter
+    tests:
+      - chosen/rejected verifier contract
+      - cache invalidation and live parity
+      - tiny update raises chosen margin
+    exit_criteria:
+      - target-GPU DPO stage completes with held-out preference improvement
+
+  - id: M6
+    name: grpo_rlvr
+    depends_on: [M5]
+    deliverables:
+      - grouped rollout records
+      - group-relative advantage modes
+      - clipped policy loss and normalization modes
+      - optional frozen reference scoring
+      - synchronous GRPO loop
+      - reward-hacking suite and course chapter
+    tests:
+      - advantage and clipping invariants
+      - exact token/logprob persistence
+      - controlled update probability direction
+      - parser/verifier exception separation
+    exit_criteria:
+      - target-GPU GRPO stage completes with protected held-out learning evidence
+
+  - id: M7
+    name: pipeline_and_hardware_validation
+    depends_on: [M6]
+    deliverables:
+      - independently resumable pipeline recipe
+      - parent/child manifests
+      - full comparison report
+      - reference evidence bundle and checksums
+    tests:
+      - fresh-environment full pipeline
+      - report rebuild from artifacts
+      - protected split and lineage audit
+    exit_criteria:
+      - hardware profile may be marked validated only after all release gates pass
+
+  - id: M8
+    name: mini_swe_agent_environment
+    depends_on: [M2, M3]
+    deliverables:
+      - original task suite
+      - structured tools and protocol
+      - fake and Docker sandbox backends
+      - separate hidden verifier
+      - budgets resets and trajectories
+      - agent evaluation report and course chapters
+    tests:
+      - scripted oracle solves all tasks
+      - deterministic reset and replay
+      - security and isolation suite
+    exit_criteria:
+      - environment is reproducible and secure under documented threat model
+
+  - id: M9
+    name: curriculum_completion
+    depends_on: [M7, M8]
+    deliverables:
+      - all v0.1 chapters and labs
+      - primary-source reading guides
+      - troubleshooting and systems simulations
+    exit_criteria:
+      - every claimed lab has execution evidence
+
+  - id: M10
+    name: v0_1_release
+    depends_on: [M9]
+    deliverables:
+      - final dependency/model pins
+      - release candidate validation
+      - package/docs release
+      - evidence-linked README
+    exit_criteria:
+      - every required acceptance gate passes
+
+recommended_pull_requests:
+  - PR01_scaffold_config_doctor_docs_ci
+  - PR02_core_math_renderer_and_synthetic_data
+  - PR03_sampler_eval_and_reporter
+  - PR04_sft_vertical_slice
+  - PR05_preference_data_and_dpo
+  - PR06_grpo_rlvr
+  - PR07_pipeline_and_reference_validation
+  - PR08_mini_swe_environment
+  - PR09_course_completion_and_release
+
+required_artifacts_per_run:
+  - resolved_config.yaml
+  - run_manifest.json
+  - environment.json
+  - metrics.jsonl
+  - events.jsonl
+  - samples.jsonl
+  - checkpoints/
+  - report.md
+  - report.html
+
+grpo_additional_artifacts:
+  - trajectories.jsonl
+  - reward_examples.jsonl
+
+validation_rule:
+  statement: >-
+    Proposed hyperparameters, runtimes, VRAM values, and quality targets are not
+    validated until measured on the reference machine and linked from an immutable
+    evidence manifest.

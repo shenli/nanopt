@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/task.schema.json",
+  "title": "NanoPT Verifiable Task",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "task_version",
+    "family",
+    "prompt",
+    "target",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "task_id": {"type": "string"},
+    "task_version": {"type": "string"},
+    "family": {"type": "string"},
+    "difficulty": {"type": ["integer", "number", "string"]},
+    "prompt": {"type": "string"},
+    "canonical_ast": {"type": ["object", "null"]},
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["answer_type", "canonical_answer"],
+      "properties": {
+        "answer_type": {"enum": ["integer", "rational", "string", "tests"]},
+        "canonical_answer": {"type": ["string", "null"]}
+      }
+    },
+    "split": {
+      "enum": ["train", "validation", "test_iid", "test_compositional", "test_range", "test_format_attack", "smoke"]
+    },
+    "verifier": {
+      "type": ["object", "null"],
+      "properties": {
+        "type": {"type": "string"},
+        "version": {"type": "string"}
+      },
+      "required": ["type", "version"]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generator_version", "seed"],
+      "properties": {
+        "generator_version": {"type": "string"},
+        "seed": {"type": "integer"},
+        "source_task_id": {"type": ["string", "null"]},
+        "license": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

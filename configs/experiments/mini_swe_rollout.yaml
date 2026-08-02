@@ -1,0 +1,39 @@
+schema_version: 1
+id: mini_swe_rollout
+stage: agent_evaluation
+seed: 42
+tasks:
+  suite: mini_swe_v1
+  split: smoke
+policy:
+  checkpoint: null
+  max_new_tokens_per_turn: 256
+  temperature: 0.7
+  top_p: 0.95
+  max_turns: 10
+environment:
+  backend: docker
+  network: none
+  run_as_non_root: true
+  expose_gpu: false
+  tool_budget: 12
+  test_run_budget: 4
+  wall_clock_timeout_seconds: 300
+  memory_limit_mib: 1024
+  pids_limit: 128
+tools:
+  - list_files
+  - read_file
+  - search
+  - apply_patch
+  - run_tests
+  - finish
+verification:
+  public_tests: true
+  hidden_tests: true
+  separate_workspace: true
+artifacts:
+  save_trajectory: true
+  save_final_patch: true
+  save_hidden_summary_only: true
+status: proposed_unvalidated

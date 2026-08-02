@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/agent_trajectory.schema.json",
+  "title": "NanoPT Agent Trajectory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trajectory_id",
+    "run_id",
+    "task_id",
+    "task_version",
+    "environment_version",
+    "initial_snapshot_sha256",
+    "steps",
+    "finish_reason",
+    "verification"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "trajectory_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "task_id": {"type": "string"},
+    "task_version": {"type": "string"},
+    "environment_version": {"type": "string"},
+    "model_checkpoint_id": {"type": ["string", "null"]},
+    "initial_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_index",
+          "observation",
+          "model_response",
+          "action_parse_status",
+          "budget_before",
+          "budget_after"
+        ],
+        "properties": {
+          "step_index": {"type": "integer", "minimum": 0},
+          "observation": {"type": "object"},
+          "model_response": {"type": "string"},
+          "model_token_ids": {
+            "type": ["array", "null"],
+            "items": {"type": "integer", "minimum": 0}
+          },
+          "action_parse_status": {"enum": ["valid", "invalid", "error"]},
+          "action": {"type": ["object", "null"]},
+          "tool_result": {"type": ["object", "null"]},
+          "budget_before": {"type": "object"},
+          "budget_after": {"type": "object"},
+          "workspace_state_sha256": {"type": ["string", "null"]},
+          "model_seconds": {"type": ["number", "null"], "minimum": 0},
+          "tool_seconds": {"type": ["number", "null"], "minimum": 0},
+          "policy_violations": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "finish_reason": {
+      "enum": ["model_finish", "budget_exhausted", "timeout", "sandbox_failure", "policy_failure", "error"]
+    },
+    "final_workspace_sha256": {"type": ["string", "null"]},
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public", "hidden", "final_score"],
+      "properties": {
+        "public": {"type": "object"},
+        "hidden": {"type": "object"},
+        "final_score": {"type": "number"},
+        "policy_violation_penalty": {"type": "number"}
+      }
+    }
+  }
+}

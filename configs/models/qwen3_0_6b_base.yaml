@@ -1,0 +1,37 @@
+schema_version: 1
+id: qwen3_0_6b_base
+source:
+  provider: huggingface
+  model_id: Qwen/Qwen3-0.6B-Base
+  revision: null
+  tokenizer_revision: null
+  trust_remote_code: false
+loading:
+  dtype: bfloat16
+  low_cpu_mem_usage: true
+  use_safetensors: true
+renderer:
+  type: tokenizer_chat_template
+  enable_thinking: false
+  add_generation_prompt: true
+adapter:
+  method: lora
+  rank: 16
+  alpha: 32
+  dropout: 0.0
+  bias: none
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+checks:
+  min_transformers_version: '4.51.0'
+  assert_target_modules_exist: true
+  record_chat_template_hash: true
+notes:
+  - Resolve and record immutable model/tokenizer revisions for every run.
+  - Reference releases should pin the revisions validated by the hardware evidence run.
