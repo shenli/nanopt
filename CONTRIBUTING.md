@@ -29,6 +29,10 @@ Keep algorithm entry points readable from top to bottom. Prefer small named func
 intermediate values over callbacks, factories, or compressed expressions. Tests for core math
 should use tiny hand-computable examples and explain the expected result.
 
+Repository-specific instructions for coding agents are kept in [`AGENTS.md`](AGENTS.md). They also
+define the rule that implementation, hand-computable tests, and learner-facing tutorials move
+together in one change.
+
 ## Pull requests
 
 Keep pull requests milestone-sized. Describe scope and non-scope, architecture decisions, commands

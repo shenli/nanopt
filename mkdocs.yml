@@ -44,6 +44,7 @@ nav:
       - Publishing documentation: getting-started/publishing-docs.md
   - Foundations:
       - MathJax smoke test: foundations/mathjax-smoke.md
+      - Tokens, masks, and log probabilities: foundations/tokens-masks-logprobs.md
   - Reference:
       - CLI: reference/cli.md
       - Artifact contract: reference/artifacts.md

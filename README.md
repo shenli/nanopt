@@ -21,7 +21,9 @@ environments. v0.1 evaluates that environment; it does not train an agent policy
 
 NanoPT is pre-alpha. Milestone 1 provides the package, CLI, typed configuration resolution,
 environment diagnosis, run-artifact lifecycle, documentation skeleton, and local CPU validation.
-Training and model-loading implementations are intentionally not present yet.
+Milestone 2 is in progress; its first slice adds completion masks, FP32 masked reductions, causal
+token log probabilities, hand-computable tests, and a CPU lab. Training and model loading are not
+implemented yet.
 
 The only proposed reference profile is one NVIDIA RTX 4070 Ti SUPER with 16 GB VRAM on Linux
 x86-64. This profile is **not validated**. No memory, runtime, performance, or hardware-support
