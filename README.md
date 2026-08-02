@@ -31,7 +31,8 @@ claim should be inferred until a complete evidence bundle passes the release pro
 
 ## Foundation quick start
 
-Use Python 3.11 or 3.12:
+Review the [course prerequisites](docs/getting-started/prerequisites.md), then use Python 3.11 or
+3.12:
 
 ```bash
 uv sync --extra dev --extra docs

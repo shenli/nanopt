@@ -140,15 +140,16 @@ nanopt/
 │       └── ...
 │
 ├── labs/
-│   ├── 00_tokens_and_masks.py
-│   ├── 01_logprob_by_hand.py
-│   ├── 02_sft_vertical_slice.py
-│   ├── 03_dpo_vertical_slice.py
-│   ├── 04_grpo_advantages.py
-│   ├── 05_reward_hacking.py
-│   ├── 06_ppo_toy.py
-│   ├── 07_agent_environment.py
-│   └── 08_partial_rollout_simulation.py
+│   ├── 00_prerequisites.py
+│   ├── 01_tokens_and_masks.py
+│   ├── 02_logprob_by_hand.py
+│   ├── 03_sft_vertical_slice.py
+│   ├── 04_dpo_vertical_slice.py
+│   ├── 05_grpo_advantages.py
+│   ├── 06_reward_hacking.py
+│   ├── 07_ppo_toy.py
+│   ├── 08_agent_environment.py
+│   └── 09_partial_rollout_simulation.py
 │
 ├── scripts/
 │   ├── smoke_cpu.sh

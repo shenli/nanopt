@@ -92,7 +92,7 @@ sum convention; it does not silently length-normalize the value.
 Run the CPU lab from the repository root:
 
 ```bash
-uv run python labs/00_tokens_and_masks.py
+uv run python labs/01_tokens_and_masks.py
 ```
 
 The lab prints both masks, all selected causal token log probabilities, and the expected and actual
