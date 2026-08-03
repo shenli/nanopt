@@ -511,7 +511,19 @@ ExperimentProfile = Annotated[
 # Recipes compose named experiments; they do not hide their stages in trainer callbacks.
 class RecipeStage(StrictModel):
     id: str
-    command: Literal["eval", "train_sft", "train_dpo", "train_grpo", "report_build"]
+    command: Literal[
+        "calibrate_load",
+        "calibrate_eval",
+        "calibrate_sft",
+        "calibrate_dpo",
+        "calibrate_grpo",
+        "eval",
+        "data_preferences",
+        "train_sft",
+        "train_dpo",
+        "train_grpo",
+        "report_build",
+    ]
     experiment: str | None = None
     input_checkpoint: str | None = None
     compare: list[str] | None = None

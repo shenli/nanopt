@@ -12,6 +12,7 @@ nanopt train sft
 nanopt train dpo
 nanopt train grpo
 nanopt eval run [--adapter ADAPTER_DIR]
+nanopt pipeline run --tasks TASKS --recipe math_pipeline
 nanopt report build RUN_DIR
 nanopt artifacts inspect RUN_DIR
 ```
@@ -45,8 +46,12 @@ calculation, exact-token collation, backward, clipping, and an optimizer step. `
 alternates fresh grouped rollouts with synchronous updates and writes exact trajectories before
 training consumes them. Both require `--tasks` and `--dpo-adapter`.
 
+`nanopt pipeline run` executes the calibrated Base-to-GRPO recipe as hash-linked child runs. Use
+`--run-id ID --resume` to verify and skip completed stages; retained failures are retried as a new
+numbered attempt rather than overwritten.
+
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.
 
-Pipeline and agent commands are added with their later vertical slices. The CLI does
-not advertise placeholders that silently do nothing.
+Agent commands are added with their later vertical slice. The CLI does not advertise placeholders
+that silently do nothing.

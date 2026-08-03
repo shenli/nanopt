@@ -27,6 +27,7 @@ site/
 
 # Runtime artifacts
 artifacts/runs/
+artifacts/pipelines/
 artifacts/cache/
 artifacts/tmp/
 *.log

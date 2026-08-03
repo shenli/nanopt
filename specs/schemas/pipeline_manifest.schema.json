@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/pipeline_manifest.schema.json",
+  "title": "NanoPT Pipeline Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "pipeline_run_id", "recipe_id", "status", "created_at", "git",
+    "hardware_id", "model_id", "task_file_sha256", "split_manifest_sha256",
+    "dataset_fingerprint", "protected_splits_used_for_training", "stages",
+    "failures_and_retries", "phase_peak_reserved_bytes", "comparison_artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "pipeline_run_id": {"type": "string", "minLength": 1},
+    "recipe_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["created", "running", "completed", "failed"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "started_at": {"type": ["string", "null"], "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "git": {"type": "object"},
+    "hardware_id": {"type": "string"},
+    "model_id": {"type": "string"},
+    "task_file_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "split_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "dataset_fingerprint": {"type": "string", "minLength": 1},
+    "protected_splits_used_for_training": {"const": false},
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "kind", "status", "input_checkpoint_sha256", "output_checkpoint_sha256",
+          "output_path", "attempts"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "kind": {"enum": ["calibration", "evaluation", "data", "training", "report"]},
+          "status": {"enum": ["pending", "running", "completed", "failed"]},
+          "input_checkpoint_sha256": {"type": ["string", "null"]},
+          "output_checkpoint_sha256": {"type": ["string", "null"]},
+          "output_path": {"type": ["string", "null"]},
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "attempt", "run_id", "run_directory", "child_manifest_sha256",
+                "artifact_sha256", "started_at", "finished_at", "wall_seconds", "status",
+                "failure"
+              ],
+              "properties": {
+                "attempt": {"type": "integer", "minimum": 1},
+                "run_id": {"type": "string"},
+                "run_directory": {"type": ["string", "null"]},
+                "child_manifest_sha256": {"type": ["string", "null"]},
+                "artifact_sha256": {"type": ["string", "null"]},
+                "started_at": {"type": "string", "format": "date-time"},
+                "finished_at": {"type": "string", "format": "date-time"},
+                "wall_seconds": {"type": "number", "minimum": 0},
+                "status": {"enum": ["completed", "failed"]},
+                "failure": {"type": ["string", "null"]}
+              }
+            }
+          }
+        }
+      }
+    },
+    "failures_and_retries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stage_id", "attempt", "failure", "retry_run_id"],
+        "properties": {
+          "stage_id": {"type": "string"},
+          "attempt": {"type": "integer", "minimum": 1},
+          "failure": {"type": "string"},
+          "retry_run_id": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "total_wall_seconds": {"type": ["number", "null"], "minimum": 0},
+    "phase_peak_reserved_bytes": {
+      "type": "object", "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "final_checkpoint_sha256": {"type": ["string", "null"]},
+    "comparison_artifacts": {
+      "type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    }
+  }
+}

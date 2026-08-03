@@ -62,6 +62,8 @@ nav:
       - Advantages and clipping: grpo-rlvr/advantages-and-clipping.md
       - Exact rollouts and rewards: grpo-rlvr/exact-rollouts-and-rewards.md
       - Synchronous GRPO: grpo-rlvr/synchronous-grpo.md
+  - Pipeline:
+      - End-to-end recipe and lineage: pipeline/end-to-end-recipe.md
   - Reference:
       - CLI: reference/cli.md
       - Artifact contract: reference/artifacts.md
@@ -75,6 +77,7 @@ nav:
           - SFT schedule and checkpoints: adr/0005-sft-schedule-and-checkpoints.md
           - Preferences and reference cache: adr/0006-controlled-preferences-and-reference-cache.md
           - Synchronous exact-token GRPO: adr/0007-synchronous-exact-token-grpo.md
+          - Resumable hash-linked pipeline: adr/0008-resumable-hash-linked-pipeline.md
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
       - M2 completion report: reference/m2-completion-report.md

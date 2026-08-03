@@ -115,7 +115,8 @@
         "mode": {"enum": ["deterministic", "sampled"]},
         "device": {"enum": ["cpu", "cuda"]},
         "task_count": {"type": "integer", "minimum": 1},
-        "representative": {"type": "boolean"}
+        "representative": {"type": "boolean"},
+        "peak_reserved_bytes": {"type": "integer", "minimum": 0}
       }
     },
     "training": {

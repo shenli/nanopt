@@ -32,3 +32,9 @@ safe identifiers, aggregate metrics, and relative artifact links only; response 
 Evaluation manifests record three data-lineage values: the complete generated-dataset fingerprint,
 the task JSONL checksum, and the split-manifest checksum. Evaluation refuses a task file whose
 counts or canonical hashes differ from its sibling `dataset_manifest.json`.
+
+An end-to-end run adds a parent `pipeline_manifest.json`. It stores every logical stage and retained
+attempt, the child run-manifest hash, input/output checkpoint hashes, wall time, phase memory peak,
+and failure/retry disclosure. Resume re-hashes completed children and outputs before skipping them.
+The final `comparison.json`, `report.md`, and `report.html` are rebuildable from child artifacts
+without loading a model.

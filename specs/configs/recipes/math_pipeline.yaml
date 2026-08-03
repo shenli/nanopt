@@ -1,12 +1,24 @@
 schema_version: 1
 id: math_pipeline
-description: Official Base -> SFT -> DPO -> GRPO/RLVR learning path
+description: Official calibrated Base -> SFT -> DPO -> GRPO/RLVR learning path
 hardware: rtx_4070_ti_super_16gb
 model: qwen3_0_6b_base
 stages:
-  - id: base
+  - id: load_calibration
+    command: calibrate_load
+    experiment: base_eval
+    input_checkpoint: base_model
+  - id: eval_calibration
+    command: calibrate_eval
+    experiment: base_eval
+    input_checkpoint: base_model
+  - id: base_eval
     command: eval
     experiment: base_eval
+    input_checkpoint: base_model
+  - id: sft_calibration
+    command: calibrate_sft
+    experiment: math_sft
     input_checkpoint: base_model
   - id: sft
     command: train_sft
@@ -16,6 +28,13 @@ stages:
     command: eval
     experiment: base_eval
     input_checkpoint: sft
+  - id: preferences
+    command: data_preferences
+    input_checkpoint: dataset
+  - id: dpo_calibration
+    command: calibrate_dpo
+    experiment: math_dpo
+    input_checkpoint: sft
   - id: dpo
     command: train_dpo
     experiment: math_dpo
@@ -24,11 +43,19 @@ stages:
     command: eval
     experiment: base_eval
     input_checkpoint: dpo
+  - id: grpo_calibration
+    command: calibrate_grpo
+    experiment: math_grpo
+    input_checkpoint: dpo
   - id: grpo
     command: train_grpo
     experiment: math_grpo
     input_checkpoint: dpo
   - id: grpo_eval
+    command: eval
+    experiment: base_eval
+    input_checkpoint: grpo
+  - id: grpo_eval_repeat
     command: eval
     experiment: base_eval
     input_checkpoint: grpo

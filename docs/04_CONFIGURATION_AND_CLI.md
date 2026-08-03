@@ -182,11 +182,24 @@ Each command creates a run ID unless `--run-dir` is supplied for resume.
 
 ```bash
 nanopt pipeline run \
+  --tasks artifacts/data/arithmetic_v1/tasks.jsonl \
   --recipe math_pipeline \
-  --hardware rtx_4070_ti_super_16gb
+  --artifacts-root artifacts/pipelines \
+  --run-id reference
 ```
 
 The recipe is a sequence of independently resumable stages. It must not collapse all stages into one process. Each stage gets its own run manifest and the pipeline gets a parent manifest.
+
+Resume verifies the saved child-manifest and checkpoint hashes before skipping work:
+
+```bash
+nanopt pipeline run \
+  --tasks artifacts/data/arithmetic_v1/tasks.jsonl \
+  --recipe math_pipeline \
+  --artifacts-root artifacts/pipelines \
+  --run-id reference \
+  --resume
+```
 
 ### 6.6 Agent command
 
