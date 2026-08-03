@@ -66,7 +66,8 @@ set +e
 "${package_venv}/bin/nanopt" doctor --json "${evidence_root}/package-doctor.json"
 doctor_status=$?
 set -e
-if [[ ${doctor_status} -ne 0 && ${doctor_status} -ne 2 ]]; then
+# Exit 3 is the documented result when a complete installation has no usable CUDA device.
+if [[ ${doctor_status} -ne 0 && ${doctor_status} -ne 2 && ${doctor_status} -ne 3 ]]; then
   echo "Installed-wheel doctor smoke failed with exit ${doctor_status}." >&2
   exit "${doctor_status}"
 fi
