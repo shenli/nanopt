@@ -109,15 +109,15 @@ The project should define numeric release targets in a versioned `reference_targ
 
 ## 10. Agent-environment gates
 
-- [ ] Every task has an immutable initial snapshot and deterministic reset hash.
-- [ ] A scripted oracle solves every task and hidden verifier passes.
-- [ ] Model cannot supply arbitrary shell commands.
-- [ ] Path traversal, symlink escape, test modification, output overflow, timeout, and network attempts are blocked or safely contained.
-- [ ] Public tests and hidden verifier use separate workspaces.
-- [ ] Hidden test source never appears in model observations or public artifacts.
-- [ ] Trajectory records include task/environment/model versions, actions, results, budgets, and final score.
-- [ ] Docker reference backend runs non-root with no network/GPU and documented resource limits.
-- [ ] Environment report states that v0.1 evaluates agents but does not train them.
+- [x] Every task has an immutable initial snapshot and deterministic reset hash.
+- [x] A scripted oracle solves every task and hidden verifier passes.
+- [x] Model cannot supply arbitrary shell commands.
+- [x] Path traversal, symlink escape, test modification, output overflow, timeout, and network attempts are blocked or safely contained.
+- [x] Public tests and hidden verifier use separate workspaces.
+- [x] Hidden test source never appears in model observations or public artifacts.
+- [x] Trajectory records include task/environment/model versions, actions, results, budgets, and final score.
+- [x] Docker reference backend runs non-root with no network/GPU and documented resource limits.
+- [x] Environment report states that v0.1 evaluates agents but does not train them.
 
 ## 11. Documentation gates
 

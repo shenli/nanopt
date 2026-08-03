@@ -11,6 +11,8 @@ reference-GPU base evaluation. Milestone 4 adds completion-only LoRA SFT and pro
 evidence. Milestones 5 and 6 add controlled DPO and exact-token GRPO. Milestone 7 joins the complete
 path with hash-linked, independently resumable stages and validates the reference GPU. Start with
 the [prerequisites](getting-started/prerequisites.md), then follow the course in navigation order.
+Milestone 8 adds the five-task MiniSWE environment, structured tools, isolated verification,
+deterministic replay, and a validated hardened-Docker reference path.
 
 ## Status vocabulary
 
@@ -20,3 +22,5 @@ the [prerequisites](getting-started/prerequisites.md), then follow the course in
 
 The RTX 4070 Ti SUPER configuration is validated for the pinned Base → SFT → DPO → GRPO reference
 path. The [M7 report](reference/m7-completion-report.md) states the exact scope and evidence.
+The [M8 report](reference/m8-completion-report.md) documents the separate agent-environment scope,
+including its unsuccessful but retained base-model baseline.

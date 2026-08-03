@@ -14,8 +14,8 @@ Qwen/Qwen3-0.6B-Base
 → reproducible evaluation and regression reports
 ```
 
-A separate MiniSWE subsystem will teach resettable, allow-listed, stateful coding-agent
-environments. v0.1 evaluates that environment; it does not train an agent policy in it.
+A separate MiniSWE subsystem teaches resettable, allow-listed, stateful coding-agent environments.
+v0.1 evaluates that environment; it does not train an agent policy in it.
 
 ## Current status
 
@@ -36,6 +36,10 @@ run improved protected exact accuracy from DPO's 84.1% to 88.6%, with gains on c
 range splits, while storing all sampled IDs and old log probabilities before optimization.
 Milestone 7 completes the independently resumable, hash-linked end-to-end recipe. A fresh locked
 environment reproduced all 15 stages in 222.7 seconds with zero retries and a 7.41 GiB peak.
+Milestone 8 completes the secure MiniSWE environment. Its Docker oracle solved 5/5 original tasks,
+all five trajectories replayed exactly, and the retained capped Qwen baseline scored 0.3 after two
+invalid JSON actions. Security probes confirmed non-root execution with no network, GPU, Docker
+socket, capabilities, privilege escalation, or writable container root.
 
 | Checkpoint | Protected exact accuracy | Parse rate |
 | --- | ---: | ---: |
@@ -48,6 +52,10 @@ The NVIDIA RTX 4070 Ti SUPER 16 GB Linux x86-64 profile is **validated** for thi
 path. See the [M7 completion report](docs/reference/m7-completion-report.md) and compact
 [reference evidence](docs/reference/evidence/m7-reference-pipeline-92564f3.json). This measured
 claim does not generalize automatically to other 16 GB GPUs.
+
+The separate agent-environment validation is documented in the
+[M8 completion report](docs/reference/m8-completion-report.md) and compact
+[reference evidence](docs/reference/evidence/m8-reference-agent-9e3daa1.json).
 
 ## Foundation quick start
 
