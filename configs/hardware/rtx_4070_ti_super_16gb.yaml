@@ -31,4 +31,5 @@ validation:
   validated_at: null
 notes:
   - All memory values are proposed until a complete evidence run passes.
+  - The product label is 16 GB; CUDA/PyTorch may reserve part of that capacity before reporting it.
   - Desktop/display usage can reduce available VRAM and must be reported by nanopt doctor.

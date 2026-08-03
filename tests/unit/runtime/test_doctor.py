@@ -40,6 +40,18 @@ class FakeTorch:
     cuda = FakeCuda()
 
 
+class DriverReservedCuda(FakeCuda):
+    def get_device_properties(self, index: int) -> SimpleNamespace:
+        assert index == 0
+        # Measured through PyTorch on the reference card. The product is sold as
+        # 16 GB, but the CUDA runtime does not expose every byte to applications.
+        return SimpleNamespace(name="NVIDIA GeForce RTX 4070 Ti SUPER", total_memory=16_714_694_656)
+
+
+class DriverReservedTorch(FakeTorch):
+    cuda = DriverReservedCuda()
+
+
 def test_cpu_only_report_is_machine_readable(project_root: Path) -> None:
     report = collect_doctor_report(
         torch_module=SimpleNamespace(
@@ -66,6 +78,12 @@ def test_matching_unvalidated_gpu_returns_warning(project_root: Path) -> None:
     assert hardware_reasons == []
     assert report.cuda.gpus[0].bf16_supported
     assert report.tf32_available
+
+
+def test_profile_match_allows_measured_driver_reserved_vram(project_root: Path) -> None:
+    profile = ConfigRepository(project_root / "configs").hardware("rtx_4070_ti_super_16gb")
+    report = collect_doctor_report(profile, torch_module=DriverReservedTorch())
+    assert "reported total VRAM is below the nominal profile capacity" not in report.profile.reasons
 
 
 def test_strict_profile_mismatch_has_dedicated_exit(project_root: Path) -> None:

@@ -54,6 +54,10 @@ driver. [ADR-0004](../adr/0004-reference-pytorch-wheel.md) records the resulting
 CUDA 12.6 platform pin. This is a useful example of why dependency locks and `doctor` checks are
 part of the experiment, not merely installation housekeeping.
 
+The corrected probe also showed why the hardware matcher allows a small difference between a
+board's marketed capacity and the bytes PyTorch exposes after driver/runtime reservations. Recipe
+memory limits remain explicit and stricter than this product-identity check.
+
 The script refuses a dirty checkout, creates a unique ignored directory under `artifacts/tmp/`, and
 runs the locked environment sync, hardware diagnosis, deterministic data generation, real model
 load, two-example calibration, and full deterministic baseline. It then runs

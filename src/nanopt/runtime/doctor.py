@@ -235,7 +235,10 @@ def _profile_match(profile: HardwareProfile | None, cuda: CudaStatus) -> Profile
             reasons.append(
                 f"compute capability is {gpu.compute_capability}, expected {expected_capability}"
             )
-        minimum_bytes = int(profile.accelerator.nominal_total_vram_gib * 1024**3 * 0.98)
+        # CUDA may reserve part of a board's marketed capacity before PyTorch reports
+        # ``total_memory``. Match the product profile with a small allowance, while the
+        # separate memory budget continues to enforce the capacity needed by recipes.
+        minimum_bytes = int(profile.accelerator.nominal_total_vram_gib * 1024**3 * 0.95)
         if gpu.total_vram_bytes < minimum_bytes:
             reasons.append("reported total VRAM is below the nominal profile capacity")
         if profile.precision.require_bf16_runtime_check and not gpu.bf16_supported:
