@@ -1,0 +1,89 @@
+{
+  "calibration": {
+    "cache_entries": 18,
+    "cache_parity_max_abs_error": 0.0,
+    "cache_sha256": "29e200ec13f6d3885a86afd51e3d868eecb1455eb02045b29c1940c31f3a5410",
+    "dpo_adapter_sha256": "80673a3f72860e3bb2c022ca44007d12235fe90b07d32bff4ed69bc7d4f43cd8",
+    "final_reward_accuracy": 0.75,
+    "final_validation_loss": 0.6815324909985065,
+    "final_validation_margin": 26.63790237903595,
+    "initial_validation_loss": 0.6931471824645996,
+    "initial_validation_margin": 26.40209698677063,
+    "optimizer_steps": 2,
+    "peak_reserved_bytes": 2053111808,
+    "representative": false,
+    "run_id": "calibration-dpo",
+    "sft_adapter_sha256": "67ecddc8970ec838f567bcb9f416b1d54475d4524d6739b9d8dce9485f2c953e",
+    "token_length_ratio": 1.1120507399577166
+  },
+  "dataset": {
+    "fingerprint": "83225e59551f147cdd90e854570dec56dd386a96b7c9175c514bd0033d7315ff",
+    "records": 128
+  },
+  "evaluation": {
+    "dpo": {
+      "accuracy": 0.8409090909090909,
+      "parse_rate": 0.9545454545454546,
+      "representative": true,
+      "run_id": "dpo-eval",
+      "samples_sha256": "c9eb0e9a71d5e58a3f28e6b71cc447f410737c3e53a9f80897a6a193670400a6",
+      "summary_sha256": "38d57dc2d079d997d358c17c52e30e2b3ef162a7b862484a02bd2a333679f078",
+      "task_count": 44
+    },
+    "sft": {
+      "accuracy": 0.8636363636363636,
+      "parse_rate": 0.9545454545454546,
+      "representative": true,
+      "run_id": "sft-eval",
+      "samples_sha256": "1eccb576c76cc66545ed9c7a7b2ba2f12815e6909242948c8c0e2b9cbf552655",
+      "summary_sha256": "c4ef84a5d74dcd3032c28329f37391c480a3871e76ae8bba4555e8ab12d189fe",
+      "task_count": 44
+    }
+  },
+  "git_commit": "e8ef422ea3ca10ab7a9b3fb90daf8cf61c0edc68",
+  "hardware": {
+    "driver_version": "560.35.03",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "profile": "rtx_4070_ti_super_16gb",
+    "runtime_version": "12.6"
+  },
+  "preferences": {
+    "audit_sha256": "fd9befe3c646a2deadd6169517e639dfcd7ab074011644216b761d6318516568",
+    "character_length_ratio": 1.1456939348154542,
+    "fingerprint": "35c4c2f4977d8330d52dcc5be8e08dafa07a4dcd7ee436af070616fc2ae498f1",
+    "pairs": 80,
+    "preferences_sha256": "39e0550d16e862468d5343c85d2e9c36dc1f2d9c2f58afaf744f962ae670ed0a",
+    "rejection_type_counts": {
+      "malformed_answer": 27,
+      "trailing_content": 26,
+      "wrong_answer": 27
+    }
+  },
+  "schema_version": 1,
+  "status": "m5_reference_dpo_passed",
+  "targets": {
+    "maximum_cache_parity_error": 1e-05,
+    "maximum_protected_regression": 0.1,
+    "token_length_ratio": [
+      0.75,
+      1.35
+    ]
+  },
+  "training": {
+    "cache_entries": 80,
+    "cache_parity_max_abs_error": 0.0,
+    "cache_sha256": "f692c680c49fd7fa3cd0c04d30eefd3818cf131aabfafe12369c74a38475dca2",
+    "dpo_adapter_sha256": "b5bb5a8b7421f283a457533d6185e64fedc95d30dab536f082042833cd9036ab",
+    "final_reward_accuracy": 1.0,
+    "final_validation_loss": 0.6260702535510063,
+    "final_validation_margin": 27.79166555404663,
+    "initial_validation_loss": 0.6931471824645996,
+    "initial_validation_margin": 26.382902026176453,
+    "optimizer_steps": 4,
+    "peak_reserved_bytes": 4020240384,
+    "representative": true,
+    "run_id": "dpo",
+    "sft_adapter_sha256": "67ecddc8970ec838f567bcb9f416b1d54475d4524d6739b9d8dce9485f2c953e",
+    "token_length_ratio": 1.0876436781609196
+  }
+}

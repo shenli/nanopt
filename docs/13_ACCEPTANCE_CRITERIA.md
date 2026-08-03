@@ -19,7 +19,7 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 - [ ] Prompt, padding, and post-EOS tokens are excluded by masks.
 - [ ] Core reductions fail clearly on zero active tokens.
 - [ ] Log-softmax and loss reductions use the documented precision.
-- [ ] DPO sign, margin, beta, masking, and cache-parity tests pass.
+- [x] DPO sign, margin, beta, masking, and cache-parity tests pass.
 - [ ] Group-relative advantages match hand calculations and sum to approximately zero.
 - [ ] All-equal reward groups yield zero advantages.
 - [ ] PPO/GRPO clipping tests cover positive and negative advantages.
@@ -33,9 +33,9 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 - [ ] Identical generator config/seed produces identical content fingerprint.
 - [ ] No canonical task hash overlaps protected splits.
 - [ ] Every trusted answer is independently re-evaluated from the AST.
-- [ ] Every chosen preference passes the strict verifier.
-- [ ] Every rejected preference fails the intended criterion.
-- [ ] Preference audit reports length and rejection-type distributions.
+- [x] Every chosen preference passes the strict verifier.
+- [x] Every rejected preference fails the intended criterion.
+- [x] Preference audit reports length and rejection-type distributions.
 - [ ] Parser attack suite has zero cases where an incorrect trusted answer receives correctness reward.
 - [ ] Dataset cards explain scope, generation, limitations, and license.
 
@@ -62,14 +62,14 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 
 ## 6. DPO gates
 
-- [ ] Frozen SFT reference cache is complete and fingerprinted.
-- [ ] Cached and live reference values agree on a sample.
-- [ ] DPO starts from an exact SFT policy copy.
-- [ ] A tiny controlled update increases the chosen margin.
-- [ ] Full DPO run completes on the target hardware.
-- [ ] Held-out preference loss/margin improves relative to the SFT policy.
-- [ ] Rejection-type breakdown shows no single unacknowledged shortcut dominates.
-- [ ] Protected task accuracy and parse rate regressions are reviewed and documented.
+- [x] Frozen SFT reference cache is complete and fingerprinted.
+- [x] Cached and live reference values agree on a sample.
+- [x] DPO starts from an exact SFT policy copy.
+- [x] A tiny controlled update increases the chosen margin.
+- [x] Full DPO run completes on the target hardware.
+- [x] Held-out preference loss/margin improves relative to the SFT policy.
+- [x] Rejection-type breakdown shows no single unacknowledged shortcut dominates.
+- [x] Protected task accuracy and parse rate regressions are reviewed and documented.
 
 ## 7. GRPO gates
 
