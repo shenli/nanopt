@@ -1,0 +1,24 @@
+schema_version: 1
+candidate: nanopt-v0.1-m6
+frozen_after_pilot_commit: b9feb767ea324fdffa50b1989451fdad2ade3f34
+m6:
+  iterations: 12
+  prompt_batch_size: 1
+  group_size: 4
+  minimum_rollout_parser_success_rate: 0.15
+  minimum_rollout_correctness_rate: 0.15
+  maximum_degenerate_group_fraction: 0.50
+  maximum_mean_clip_fraction: 0.10
+  maximum_ratio_p95: 1.50
+  minimum_improved_primary_splits: 1
+  primary_splits:
+    - test_iid
+    - test_compositional
+    - test_range
+  maximum_overall_accuracy_regression: 0.05
+  maximum_overall_parse_regression: 0.05
+  maximum_reward_hacking_correctness_credit: 0.0
+notes:
+  - Targets were frozen after non-representative 4- and 12-iteration pilots.
+  - The 12-iteration pilot improved compositional and range accuracy with no split regression.
+  - The hardware hard-memory limit remains authoritative from the hardware profile.
