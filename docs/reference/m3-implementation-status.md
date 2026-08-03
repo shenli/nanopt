@@ -34,7 +34,7 @@ Focused tests cover:
 - rejection of absolute-path and secret-like report identities;
 - deterministic dataset generation through the public CLI.
 
-The final local gate collected 320 tests: 319 passed and one opt-in network tokenizer test was
+The final local gate collected 324 tests: 323 passed and one opt-in network tokenizer test was
 skipped. Total branch-aware source coverage was 89%. Ruff formatting/linting, strict typing across
 45 source files, eight JSON schemas, ten YAML profiles, 44 formula-linted Markdown files, the strict
 documentation build, and both package distributions passed. The opt-in pinned real-tokenizer test
@@ -42,25 +42,25 @@ also passed separately, including EOS removal from parser-facing decoded text.
 
 ## Reference smoke still required
 
-On the RTX 4070 Ti SUPER host:
+On the RTX 4070 Ti SUPER host, check out the current `main` commit and run:
 
 ```bash
-uv sync --frozen --extra dev --extra docs
-uv run nanopt doctor --json artifacts/m3-doctor.json
-uv run nanopt data generate
-uv run nanopt calibrate --mode load --device cuda
-uv run nanopt calibrate \
-  --mode eval \
-  --tasks artifacts/data/arithmetic_v1/tasks.jsonl \
-  --device cuda
-uv run nanopt eval run \
-  --tasks artifacts/data/arithmetic_v1/tasks.jsonl \
-  --mode deterministic \
-  --checkpoint-id base \
-  --device cuda
+bash scripts/run_m3_reference_smoke.sh
 ```
 
-Review the resolved config, manifest, environment, `samples.jsonl`, summary, and both reports. If the
-run is fully inspectable and no source edits were needed, record the smoke evidence and change M3
-status to complete. This smoke run still does not validate the full training pipeline or 16 GB
-hardware claim.
+The script refuses a dirty checkout, creates a unique ignored directory under `artifacts/tmp/`, and
+runs the locked environment sync, hardware diagnosis, deterministic data generation, real model
+load, two-example calibration, and full deterministic baseline. It then runs
+`scripts/validate_m3_reference_smoke.py`, which checks:
+
+- Linux/x86-64, one matching RTX 4070 Ti SUPER, CUDA, and recorded driver/runtime;
+- task counts and canonical hashes against the split manifest;
+- the dataset fingerprint in both evaluation manifests;
+- clean Git identity and pinned model/tokenizer revisions;
+- representative versus calibration labels and expected task counts;
+- JSON schemas, example uniqueness, artifact checksums, and report leakage rules.
+
+Review the generated `m3_smoke_evidence.json`, resolved configs, manifests, environments,
+`samples.jsonl` files, summaries, and reports. If the validator passes without source edits, commit a
+small reviewed evidence summary and change M3 status to complete. This smoke run still does not
+validate the full training pipeline or the final 16 GB support claim.

@@ -29,6 +29,9 @@ Markdown/HTML reports, and load/eval calibration commands. The pinned real token
 tested. A real base-model evaluation on the reference GPU is still required before M3 is complete;
 training arrives in later milestones.
 
+The reference host runs the complete M3 smoke and offline evidence validator with
+`bash scripts/run_m3_reference_smoke.sh`.
+
 The only proposed reference profile is one NVIDIA RTX 4070 Ti SUPER with 16 GB VRAM on Linux
 x86-64. This profile is **not validated**. No memory, runtime, performance, or hardware-support
 claim should be inferred until a complete evidence bundle passes the release protocol.

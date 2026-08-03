@@ -17,7 +17,9 @@ refuses to append to a non-empty output, preventing two dataset versions from be
 
 `nanopt eval run` creates a run directory before loading the model, appends each example before
 aggregation, and builds Markdown/HTML reports. Use `--mode deterministic` for one greedy completion
-per task or `--mode sampled` for the profile's fixed sample count and seed schedule.
+per task or `--mode sampled` for the profile's fixed sample count and seed schedule. The task JSONL
+must have a sibling `dataset_manifest.json`; counts and canonical hashes are verified before model
+loading.
 
 `nanopt calibrate --mode load` exercises the exact model-loader path. `--mode eval` requires a task
 JSONL and uses an explicit small limit; its manifest labels the result non-representative.

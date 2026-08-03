@@ -1,6 +1,10 @@
 """Strict parsing, exact verification, and checkpoint-agnostic evaluation."""
 
-from nanopt.eval.io import read_arithmetic_tasks
+from nanopt.eval.io import (
+    read_arithmetic_tasks,
+    read_split_manifest,
+    validate_tasks_against_manifest,
+)
 from nanopt.eval.metrics import aggregate_results, pass_at_k, pass_at_k_by_task, wilson_interval
 from nanopt.eval.parser import ParseResult, parse_answer
 from nanopt.eval.records import EvaluationResult
@@ -19,6 +23,8 @@ __all__ = [
     "pass_at_k",
     "pass_at_k_by_task",
     "read_arithmetic_tasks",
+    "read_split_manifest",
+    "validate_tasks_against_manifest",
     "verify_task_response",
     "wilson_interval",
 ]

@@ -28,3 +28,7 @@ Evaluation writes each typed sample before it contributes to `summary.json`. The
 therefore reproduce aggregates after the model process exits. `report.md` and `report.html` contain
 safe identifiers, aggregate metrics, and relative artifact links only; response bodies remain in
 `samples.jsonl`.
+
+Evaluation manifests record three data-lineage values: the complete generated-dataset fingerprint,
+the task JSONL checksum, and the split-manifest checksum. Evaluation refuses a task file whose
+counts or canonical hashes differ from its sibling `dataset_manifest.json`.

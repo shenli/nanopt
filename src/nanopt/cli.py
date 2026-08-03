@@ -20,7 +20,11 @@ from nanopt.config.resolver import ResolutionResult, resolve_config
 from nanopt.data.arithmetic import ArithmeticGeneratorConfig, generate_tasks
 from nanopt.data.schemas import ArithmeticSplitConfig
 from nanopt.data.splits import SPLIT_ORDER, build_splits
-from nanopt.eval.io import read_arithmetic_tasks
+from nanopt.eval.io import (
+    read_arithmetic_tasks,
+    read_split_manifest,
+    validate_tasks_against_manifest,
+)
 from nanopt.eval.runner import (
     EvaluationIdentity,
     EvaluationPlan,
@@ -389,9 +393,11 @@ def _execute_evaluation(
     experiment = result.config.experiment
     if not isinstance(experiment, BaseEvalExperiment):
         raise ConfigError("evaluation execution requires an evaluation experiment")
-    tasks = [
-        task for task in read_arithmetic_tasks(tasks_path) if task.split in experiment.data.splits
-    ]
+    all_tasks = read_arithmetic_tasks(tasks_path)
+    dataset_manifest_path = tasks_path.with_name("dataset_manifest.json")
+    dataset_manifest = read_split_manifest(dataset_manifest_path)
+    validate_tasks_against_manifest(all_tasks, dataset_manifest)
+    tasks = [task for task in all_tasks if task.split in experiment.data.splits]
     if limit is not None:
         if limit <= 0:
             raise ValueError("limit must be positive")
@@ -422,6 +428,10 @@ def _execute_evaluation(
         )
         build_evaluation_report(context.run_dir)
         context.manifest["data"]["fingerprints"]["task_file_sha256"] = sha256_file(tasks_path)
+        context.manifest["data"]["fingerprints"]["split_manifest_sha256"] = sha256_file(
+            dataset_manifest_path
+        )
+        context.manifest["data"]["fingerprints"]["dataset"] = dataset_manifest.dataset_fingerprint
         context.manifest["evaluation"] = {
             "mode": mode.value,
             "device": selected_device,
@@ -523,6 +533,9 @@ def calibrate(
     model: Annotated[str, typer.Option()] = "qwen3_0_6b_base",
     experiment: Annotated[str, typer.Option()] = "base_eval",
     artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe eval calibration ID.")] = (
+        None
+    ),
     local_files_only: Annotated[bool, typer.Option()] = False,
     device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
     config_dir: Annotated[Path | None, typer.Option()] = None,
@@ -552,7 +565,7 @@ def calibrate(
             mode=EvaluationMode.deterministic,
             checkpoint_id="base-calibration",
             artifacts_root=artifacts_root,
-            run_id=None,
+            run_id=run_id,
             local_files_only=local_files_only,
             device=device,
             limit=limit,

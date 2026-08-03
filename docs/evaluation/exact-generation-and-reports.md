@@ -133,6 +133,10 @@ First create the deterministic versioned task artifact:
 uv run nanopt data generate
 ```
 
+`eval run` requires the sibling `dataset_manifest.json`. Before model loading, it verifies every
+split count and canonical task hash. The run manifest records the dataset fingerprint plus checksums
+for both the task JSONL and split manifest.
+
 On the reference machine, calibrate the real load and then a deliberately limited evaluation:
 
 ```bash
@@ -155,6 +159,13 @@ uv run nanopt eval run \
 
 Run sampled evaluation separately with `--mode sampled`; never merge deterministic and sampled
 records in one JSONL file.
+
+For the official M3 smoke, use the checked-in orchestration and evidence validator instead of
+copying individual commands:
+
+```bash
+bash scripts/run_m3_reference_smoke.sh
+```
 
 ## Reports are safe to share
 
