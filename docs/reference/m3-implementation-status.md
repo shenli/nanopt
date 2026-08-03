@@ -48,6 +48,12 @@ On the RTX 4070 Ti SUPER host, check out the current `main` commit and run:
 bash scripts/run_m3_reference_smoke.sh
 ```
 
+The first environment probe caught a real compatibility boundary before model loading: the broad
+PyTorch range had resolved a CUDA 13 wheel that could not initialize with the host's NVIDIA 560
+driver. [ADR-0004](../adr/0004-reference-pytorch-wheel.md) records the resulting PyTorch 2.7.1 /
+CUDA 12.6 platform pin. This is a useful example of why dependency locks and `doctor` checks are
+part of the experiment, not merely installation housekeeping.
+
 The script refuses a dirty checkout, creates a unique ignored directory under `artifacts/tmp/`, and
 runs the locked environment sync, hardware diagnosis, deterministic data generation, real model
 load, two-example calibration, and full deterministic baseline. It then runs

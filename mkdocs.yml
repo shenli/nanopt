@@ -65,6 +65,7 @@ nav:
           - Foundation boundaries: adr/0001-foundation-boundaries.md
           - Artifact writes: adr/0002-run-artifact-writes.md
           - Local validation: adr/0003-local-validation.md
+          - Reference PyTorch wheel: adr/0004-reference-pytorch-wheel.md
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
       - M2 completion report: reference/m2-completion-report.md

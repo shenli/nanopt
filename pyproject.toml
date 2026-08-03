@@ -26,7 +26,7 @@ dependencies = [
   "PyYAML>=6,<7",
   "rich>=13.9,<15",
   "safetensors>=0.5,<1",
-  "torch>=2.6,<3",
+  "torch==2.7.1",
   "transformers>=4.51,<6",
   "typer>=0.15,<1",
 ]
@@ -57,6 +57,18 @@ Homepage = "https://github.com/shenli/nanopt"
 Documentation = "https://shenli.github.io/nanopt/"
 Repository = "https://github.com/shenli/nanopt"
 Issues = "https://github.com/shenli/nanopt/issues"
+
+# Keep Linux reference runs on a CUDA generation supported by the checked
+# RTX 4070 host. Other platforms fall back to the normal PyPI source.
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu126", marker = "platform_system == 'Linux' and platform_machine == 'x86_64'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/nanopt"]
