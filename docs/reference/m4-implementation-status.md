@@ -24,6 +24,11 @@ generic EOS rather than Qwen's chat-turn terminator. The contract now trains thr
 excludes template tokens after it, and stops generation on that same token. This correction must be
 locally gated before a fresh reference run counts as evidence.
 
+A subsequent pilot confirmed that the model already generates correct closing answer tags before
+continuing. The evaluator now applies the task protocol's exact multi-token `</answer>` stop
+sequence, preserving those token IDs while preventing unrelated trailing generation. The clean
+reference gate must be re-run after this fixed stopping contract.
+
 Run the reference gate with:
 
 ```bash

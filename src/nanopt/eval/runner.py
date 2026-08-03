@@ -70,6 +70,7 @@ class EvaluationPlan:
             "temperature": self.sampling.temperature,
             "top_p": self.sampling.top_p,
             "eos_token_id": self.sampling.eos_token_id,
+            "stop_token_sequences": self.sampling.stop_token_sequences,
             "samples_per_task": self.samples_per_task,
             "max_prompt_tokens": self.max_prompt_tokens,
             "seed_schedule": "sha256-task-sample-v1",

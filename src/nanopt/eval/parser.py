@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from fractions import Fraction
-from typing import Literal
+from typing import Any, Literal
 
 from nanopt.data.schemas import AnswerType
 
@@ -23,6 +23,23 @@ _ANSWER_PATTERN = re.compile(r"<answer>(.*?)</answer>", flags=re.DOTALL)
 _ANSWER_TAG_LIKE = re.compile(r"<\s*/?\s*answer\b[^>]*>", flags=re.IGNORECASE)
 _INTEGER_PATTERN = re.compile(r"-?(?:0|[1-9][0-9]*)")
 _RATIONAL_PATTERN = re.compile(r"(-?(?:0|[1-9][0-9]*))/([1-9][0-9]*)")
+ANSWER_CLOSE_TAG = "</answer>"
+
+
+def answer_stop_token_ids(tokenizer: Any) -> tuple[int, ...]:
+    """Tokenize the task protocol's closing answer tag without adding special tokens."""
+
+    encode = getattr(tokenizer, "encode", None)
+    if not callable(encode):
+        raise TypeError("tokenizer must provide encode for the answer stop sequence")
+    values = encode(ANSWER_CLOSE_TAG, add_special_tokens=False)
+    if (
+        not isinstance(values, list)
+        or not values
+        or not all(isinstance(value, int) and value >= 0 for value in values)
+    ):
+        raise ValueError("tokenizer returned an invalid answer stop sequence")
+    return tuple(values)
 
 
 @dataclass(frozen=True)

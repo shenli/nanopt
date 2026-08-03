@@ -5,8 +5,18 @@ from __future__ import annotations
 import pytest
 
 from nanopt.data.arithmetic import generate_task, render_trusted_completion
-from nanopt.eval.parser import parse_answer
+from nanopt.eval.parser import answer_stop_token_ids, parse_answer
 from nanopt.eval.verifier import VerifierContractError, verify_task_response
+
+
+def test_answer_stop_sequence_uses_exact_closing_tag_tokens() -> None:
+    class Tokenizer:
+        def encode(self, text: str, *, add_special_tokens: bool) -> list[int]:
+            assert text == "</answer>"
+            assert add_special_tokens is False
+            return [5, 6, 7]
+
+    assert answer_stop_token_ids(Tokenizer()) == (5, 6, 7)
 
 
 def test_parser_accepts_one_final_canonical_integer() -> None:

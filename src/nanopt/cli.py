@@ -25,6 +25,7 @@ from nanopt.eval.io import (
     read_split_manifest,
     validate_tasks_against_manifest,
 )
+from nanopt.eval.parser import answer_stop_token_ids
 from nanopt.eval.runner import (
     EvaluationIdentity,
     EvaluationPlan,
@@ -336,6 +337,7 @@ def _evaluation_plan(
     mode: EvaluationMode,
     *,
     eos_token_id: int,
+    stop_token_sequence: tuple[int, ...],
 ) -> EvaluationPlan:
     if mode is EvaluationMode.deterministic:
         deterministic = experiment.generation.deterministic
@@ -343,6 +345,7 @@ def _evaluation_plan(
             max_new_tokens=deterministic.max_new_tokens,
             do_sample=False,
             eos_token_id=eos_token_id,
+            stop_token_sequences=(stop_token_sequence,),
         )
         samples = 1
     else:
@@ -353,6 +356,7 @@ def _evaluation_plan(
             temperature=sampled.temperature,
             top_p=sampled.top_p,
             eos_token_id=eos_token_id,
+            stop_token_sequences=(stop_token_sequence,),
         )
         samples = sampled.num_samples_per_prompt
     return EvaluationPlan(
@@ -466,7 +470,12 @@ def _execute_evaluation(
         )
         _record_loaded_model(context, loaded, renderer)
         terminal_token_id = qwen_chat_terminator_id(loaded.tokenizer)
-        plan = _evaluation_plan(experiment, mode, eos_token_id=terminal_token_id)
+        plan = _evaluation_plan(
+            experiment,
+            mode,
+            eos_token_id=terminal_token_id,
+            stop_token_sequence=answer_stop_token_ids(loaded.tokenizer),
+        )
         backend = LocalModelBackend(loaded.model, loaded.tokenizer, renderer)
         evaluate_to_artifacts(
             tasks,

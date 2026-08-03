@@ -10,7 +10,7 @@ import torch
 from torch import Tensor
 from torch.nn import functional as F
 
-FinishReason = Literal["eos", "length"]
+FinishReason = Literal["eos", "stop_sequence", "length"]
 
 
 @dataclass(frozen=True)
@@ -27,6 +27,7 @@ class SamplingConfig:
     temperature: float = 1.0
     top_p: float = 1.0
     eos_token_id: int | None = None
+    stop_token_sequences: tuple[tuple[int, ...], ...] = ()
 
     def __post_init__(self) -> None:
         if self.max_new_tokens <= 0:
@@ -37,6 +38,12 @@ class SamplingConfig:
             raise ValueError("top_p must be in (0, 1]")
         if self.eos_token_id is not None and self.eos_token_id < 0:
             raise ValueError("eos_token_id must be non-negative")
+        if any(not sequence for sequence in self.stop_token_sequences):
+            raise ValueError("stop token sequences must not be empty")
+        if any(token < 0 for sequence in self.stop_token_sequences for token in sequence):
+            raise ValueError("stop token IDs must be non-negative")
+        if len(set(self.stop_token_sequences)) != len(self.stop_token_sequences):
+            raise ValueError("stop token sequences must not contain duplicates")
 
 
 @dataclass(frozen=True)
@@ -168,6 +175,12 @@ def sample_autoregressive(
                 sequence = torch.cat((sequence, next_token.reshape(1, 1)), dim=1)
                 if config.eos_token_id is not None and token_id == config.eos_token_id:
                     finish_reason = "eos"
+                    break
+                if any(
+                    len(generated) >= len(stop) and tuple(generated[-len(stop) :]) == stop
+                    for stop in config.stop_token_sequences
+                ):
+                    finish_reason = "stop_sequence"
                     break
     finally:
         if was_training and hasattr(model, "train"):

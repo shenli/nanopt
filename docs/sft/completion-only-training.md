@@ -47,8 +47,11 @@ silently truncating a target.
 Qwen has two relevant special tokens: the tokenizer's generic `<|endoftext|>` EOS and the
 `<|im_end|>` token that actually terminates an assistant turn in the chat template. NanoPT resolves
 the latter explicitly, includes it in the SFT action mask, excludes the template newline after it,
-and uses the same ID as the generation stop token. Confusing these boundaries can produce a model
-that writes a correct answer and then continues until the length limit.
+and uses it as the chat-level generation terminator. Arithmetic evaluation also has a fixed,
+task-level token stop sequence for the exact `</answer>` closing tag. That sequence is part of the
+public answer protocol, not inferred from decoded output; the exact closing-tag IDs remain in the
+saved trajectory. Confusing these boundaries can produce a model that writes a correct answer and
+then continues until the length limit.
 
 ## The readable training step
 

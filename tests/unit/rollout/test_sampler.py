@@ -65,6 +65,21 @@ def test_sampler_logps_match_teacher_forced_scoring() -> None:
     assert result.policy_logps == pytest.approx(teacher_forced.tolist())
 
 
+def test_sampler_stops_after_complete_multi_token_protocol_sequence() -> None:
+    result = sample_autoregressive(
+        TransitionModel(),
+        torch.tensor([0]),
+        SamplingConfig(
+            max_new_tokens=4,
+            do_sample=False,
+            stop_token_sequences=((2, 3),),
+        ),
+    )
+
+    assert result.generated_token_ids == (2, 3)
+    assert result.finish_reason == "stop_sequence"
+
+
 def test_sampled_mode_uses_private_deterministic_seed() -> None:
     config = SamplingConfig(max_new_tokens=6, do_sample=True, temperature=1.3, top_p=0.9)
     first = sample_autoregressive(TransitionModel(), torch.tensor([1]), config, seed=123)
@@ -107,6 +122,8 @@ def test_sampler_rejects_nonfinite_next_token_logits() -> None:
         lambda: SamplingConfig(1, True, temperature=0),
         lambda: SamplingConfig(1, True, top_p=0),
         lambda: SamplingConfig(1, False, eos_token_id=-1),
+        lambda: SamplingConfig(1, False, stop_token_sequences=((),)),
+        lambda: SamplingConfig(1, False, stop_token_sequences=((-1,),)),
     ],
 )
 def test_sampling_config_rejects_invalid_values(config: object) -> None:

@@ -63,9 +63,10 @@ first EOS:          [0, 1, 0, 0]
 active through EOS: [1, 1, 0, 0]
 ```
 
-The sampler stops immediately after the first EOS, so its returned mask is all true. The standalone
-mask functions also handle padded batches and imported trajectories that contain positions after
-EOS.
+The sampler stops immediately after the first EOS or an explicitly configured exact token stop
+sequence, so its returned mask is all true. Stop-sequence tokens remain in the exact trajectory.
+The standalone mask functions also handle padded batches and imported trajectories that contain
+positions after EOS.
 
 ## Teacher-forced parity
 
