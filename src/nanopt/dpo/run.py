@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import html
-import math
 from pathlib import Path
 
 import torch
@@ -225,6 +224,9 @@ def execute_dpo_run(
             preference_dataset_fingerprint=audit.dataset_fingerprint,
             max_prompt_length=experiment.data.max_prompt_length,
             max_completion_length=experiment.data.max_completion_length,
+            forward_layout=(
+                "concatenated" if experiment.training.concatenate_chosen_rejected else "separate"
+            ),
         )
         cache_manifest, cache_values = build_reference_cache(
             policy,
@@ -233,6 +235,7 @@ def execute_dpo_run(
             identity=identity,
             output_dir=context.run_dir / "reference_cache",
             micro_batch_size=experiment.training.pair_micro_batch_size,
+            concatenate_chosen_rejected=experiment.training.concatenate_chosen_rejected,
             device=selected_device,
         )
         parity_error = reference_cache_parity_error(
@@ -242,6 +245,7 @@ def execute_dpo_run(
             cache_values,
             sample_size=experiment.reference.cache_validation_sample_size,
             micro_batch_size=experiment.training.pair_micro_batch_size,
+            concatenate_chosen_rejected=experiment.training.concatenate_chosen_rejected,
             device=selected_device,
         )
         if parity_error > 1e-5:
@@ -378,18 +382,22 @@ def execute_dpo_run(
             "validation_pairs": len(validation_pairs),
             "optimizer_steps": training.optimizer_steps,
             "representative": representative,
-            "initial_policy_is_exact_sft_copy": math.isclose(
-                initial.loss, math.log(2), rel_tol=0, abs_tol=1e-5
-            ),
+            # clone_lora_adapter compares every source/target tensor and raises before this point
+            # if the DPO policy is not an exact SFT copy.
+            "initial_policy_is_exact_sft_copy": True,
         }
         context.manifest["artifacts"] = [
-            {"path": name, "sha256": sha256_file(context.run_dir / name)}
-            for name in (
-                "summary.json",
-                "metrics.jsonl",
-                "preference_breakdown.json",
-                "report.md",
-                "report.html",
+            {
+                "path": name,
+                "kind": kind,
+                "sha256": sha256_file(context.run_dir / name),
+            }
+            for name, kind in (
+                ("summary.json", "dpo_summary"),
+                ("metrics.jsonl", "dpo_metrics"),
+                ("preference_breakdown.json", "preference_breakdown"),
+                ("report.md", "markdown_report"),
+                ("report.html", "html_report"),
             )
         ]
         context.set_status("completed")

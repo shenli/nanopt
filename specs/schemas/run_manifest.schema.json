@@ -68,7 +68,8 @@
         "base_parameter_count": {"type": ["integer", "null"], "minimum": 0},
         "trainable_parameter_count": {"type": ["integer", "null"], "minimum": 0},
         "adapter_name": {"type": ["string", "null"]},
-        "adapter_sha256": {"type": ["string", "null"]}
+        "adapter_sha256": {"type": ["string", "null"]},
+        "parent_adapter_sha256": {"type": ["string", "null"]}
       }
     },
     "data": {
@@ -118,22 +119,38 @@
       }
     },
     "training": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "device",
-        "train_examples",
-        "validation_examples",
-        "representative",
-        "resumed"
-      ],
-      "properties": {
-        "device": {"enum": ["cpu", "cuda"]},
-        "train_examples": {"type": "integer", "minimum": 1},
-        "validation_examples": {"type": "integer", "minimum": 1},
-        "representative": {"type": "boolean"},
-        "resumed": {"type": "boolean"}
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "device", "train_examples", "validation_examples", "representative", "resumed"
+          ],
+          "properties": {
+            "device": {"enum": ["cpu", "cuda"]},
+            "train_examples": {"type": "integer", "minimum": 1},
+            "validation_examples": {"type": "integer", "minimum": 1},
+            "representative": {"type": "boolean"},
+            "resumed": {"type": "boolean"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "device", "train_pairs", "validation_pairs", "optimizer_steps", "representative",
+            "initial_policy_is_exact_sft_copy"
+          ],
+          "properties": {
+            "device": {"enum": ["cpu", "cuda"]},
+            "train_pairs": {"type": "integer", "minimum": 1},
+            "validation_pairs": {"type": "integer", "minimum": 1},
+            "optimizer_steps": {"type": "integer", "minimum": 1},
+            "representative": {"type": "boolean"},
+            "initial_policy_is_exact_sft_copy": {"const": true}
+          }
+        }
+      ]
     },
     "failure": {
       "type": ["object", "null"],

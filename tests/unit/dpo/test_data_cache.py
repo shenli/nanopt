@@ -71,6 +71,7 @@ def _identity() -> ReferenceCacheIdentity:
         preference_dataset_fingerprint="c" * 64,
         max_prompt_length=8,
         max_completion_length=8,
+        forward_layout="concatenated",
     )
 
 
@@ -87,6 +88,7 @@ def test_reference_cache_round_trip_live_parity_and_invalidation(tmp_path: Path)
         identity=_identity(),
         output_dir=path,
         micro_batch_size=1,
+        concatenate_chosen_rejected=True,
         device=torch.device("cpu"),
     )
     loaded_manifest, loaded_values = load_reference_cache(path, expected_identity=_identity())
@@ -101,6 +103,7 @@ def test_reference_cache_round_trip_live_parity_and_invalidation(tmp_path: Path)
             values,
             sample_size=1,
             micro_batch_size=1,
+            concatenate_chosen_rejected=True,
             device=torch.device("cpu"),
         )
         == 0

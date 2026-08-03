@@ -20,8 +20,9 @@ rejected completion must produce its declared failure. Only train and validation
 
 The frozen SFT policy is scored once into an FP32 cache. Its identity binds model/tokenizer
 revisions, SFT adapter content, renderer/template, preference data, length policy, EOS policy, and
-sum reduction. The DPO policy is then created by an exact in-memory clone of the SFT adapter. A live
-cache-parity sample must pass before the first optimizer step.
+sum reduction. It also binds the chosen/rejected forward layout so the cached reference and live
+policy take the same BF16 numerical path. The DPO policy is then created by an exact in-memory clone
+of the SFT adapter. A live cache-parity sample must pass before the first optimizer step.
 
 ## Consequences
 

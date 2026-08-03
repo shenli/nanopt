@@ -43,6 +43,8 @@ Reference scoring is expensive but does not change during DPO. The single-GPU pa
 - reject-rather-than-truncate policy;
 - chat-terminator inclusion policy;
 - sequence-sum reduction.
+- concatenated or separate chosen/rejected forward layout, because BF16 kernels may not be bitwise
+  identical across batch shapes.
 
 Loading fails if any identity field or cache file hash changes. Before optimization, a deterministic
 sample is scored live again and compared to the cache. A cache is therefore not a loose speed hack;

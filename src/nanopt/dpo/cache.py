@@ -54,6 +54,7 @@ class ReferenceCacheIdentity(CacheRecord):
     truncation_policy: Literal["reject"] = "reject"
     eos_inclusion_policy: Literal["include-chat-terminator"] = "include-chat-terminator"
     sequence_logprob_reduction: Literal["sum"] = "sum"
+    forward_layout: Literal["concatenated", "separate"]
 
     @property
     def fingerprint(self) -> str:
@@ -70,9 +71,20 @@ class ReferenceCacheManifest(CacheRecord):
     cache_sha256: str
 
 
-def score_reference_batch(model: Any, batch: Any) -> tuple[torch.Tensor, torch.Tensor]:
+def score_reference_batch(
+    model: Any,
+    batch: Any,
+    *,
+    concatenate_chosen_rejected: bool,
+) -> tuple[torch.Tensor, torch.Tensor]:
     """Score chosen and rejected completions under one frozen reference policy."""
 
+    if concatenate_chosen_rejected:
+        # Import here to keep the cache record types independent from training orchestration while
+        # guaranteeing reference and policy scores use the identical BF16 forward layout.
+        from nanopt.dpo.trainer import policy_sequence_logps
+
+        return policy_sequence_logps(model, batch, concatenate_chosen_rejected=True)
     chosen_logits = model(
         input_ids=batch.chosen.input_ids,
         attention_mask=batch.chosen.attention_mask,
@@ -83,13 +95,12 @@ def score_reference_batch(model: Any, batch: Any) -> tuple[torch.Tensor, torch.T
         attention_mask=batch.rejected.attention_mask,
         use_cache=False,
     ).logits
-    chosen = completion_sequence_logps(
-        chosen_logits, batch.chosen.input_ids, batch.chosen.action_mask
+    return (
+        completion_sequence_logps(chosen_logits, batch.chosen.input_ids, batch.chosen.action_mask),
+        completion_sequence_logps(
+            rejected_logits, batch.rejected.input_ids, batch.rejected.action_mask
+        ),
     )
-    rejected = completion_sequence_logps(
-        rejected_logits, batch.rejected.input_ids, batch.rejected.action_mask
-    )
-    return chosen, rejected
 
 
 def build_reference_cache(
@@ -100,6 +111,7 @@ def build_reference_cache(
     identity: ReferenceCacheIdentity,
     output_dir: Path,
     micro_batch_size: int,
+    concatenate_chosen_rejected: bool,
     device: torch.device,
 ) -> tuple[ReferenceCacheManifest, dict[str, CachedReferenceValues]]:
     """Compute and persist complete FP32 reference scores before DPO optimization."""
@@ -120,7 +132,11 @@ def build_reference_cache(
             for start in range(0, len(examples), micro_batch_size):
                 selected = examples[start : start + micro_batch_size]
                 batch = collator(selected).to(device)
-                chosen, rejected = score_reference_batch(model, batch)
+                chosen, rejected = score_reference_batch(
+                    model,
+                    batch,
+                    concatenate_chosen_rejected=concatenate_chosen_rejected,
+                )
                 for index, example in enumerate(selected):
                     entry = ReferenceCacheEntry(
                         pair_id=example.pair.pair_id,
@@ -213,6 +229,7 @@ def reference_cache_parity_error(
     *,
     sample_size: int,
     micro_batch_size: int,
+    concatenate_chosen_rejected: bool,
     device: torch.device,
 ) -> float:
     """Return the largest absolute live/cache difference on a deterministic prefix."""
@@ -230,7 +247,11 @@ def reference_cache_parity_error(
             for start in range(0, len(selected), micro_batch_size):
                 batch_examples = selected[start : start + micro_batch_size]
                 batch = collator(batch_examples).to(device)
-                live_chosen, live_rejected = score_reference_batch(model, batch)
+                live_chosen, live_rejected = score_reference_batch(
+                    model,
+                    batch,
+                    concatenate_chosen_rejected=concatenate_chosen_rejected,
+                )
                 for index, example in enumerate(batch_examples):
                     value = cached[example.pair.pair_id]
                     differences.extend(
