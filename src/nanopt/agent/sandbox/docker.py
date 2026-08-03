@@ -61,7 +61,9 @@ class DockerSandboxBackend:
         if not trusted_command:
             raise ValueError("trusted test command must not be empty")
         resolved = workspace.resolve(strict=True)
-        mount = f"type=bind,src={resolved},dst=/workspace,rw"
+        # A bind mount is writable by default. Docker 29 rejects a bare `rw` field because
+        # `--mount` accepts either key/value pairs or the standalone `readonly` flag.
+        mount = f"type=bind,src={resolved},dst=/workspace"
         return [
             self.executable,
             "run",

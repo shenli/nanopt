@@ -26,6 +26,9 @@ def test_docker_command_contains_every_security_boundary(tmp_path: Path) -> None
         assert required in joined
     assert "--gpus" not in command
     assert "docker.sock" not in joined
+    mount = command[command.index("--mount") + 1]
+    assert mount.endswith("dst=/workspace")
+    assert ",rw" not in mount
 
 
 def test_docker_backend_requires_digest() -> None:
