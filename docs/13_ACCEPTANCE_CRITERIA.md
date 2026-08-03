@@ -20,12 +20,12 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 - [ ] Core reductions fail clearly on zero active tokens.
 - [ ] Log-softmax and loss reductions use the documented precision.
 - [x] DPO sign, margin, beta, masking, and cache-parity tests pass.
-- [ ] Group-relative advantages match hand calculations and sum to approximately zero.
-- [ ] All-equal reward groups yield zero advantages.
-- [ ] PPO/GRPO clipping tests cover positive and negative advantages.
-- [ ] Sampler log probabilities match a direct forward pass in the reference sampling mode.
-- [ ] Loss-normalization variants have separate tests and names.
-- [ ] Optional KL estimator matches its formula and non-negativity expectations within numerical tolerance.
+- [x] Group-relative advantages match hand calculations and sum to approximately zero.
+- [x] All-equal reward groups yield zero advantages.
+- [x] PPO/GRPO clipping tests cover positive and negative advantages.
+- [x] Sampler log probabilities match a direct forward pass in the reference sampling mode.
+- [x] Loss-normalization variants have separate tests and names.
+- [x] Optional KL estimator matches its formula and non-negativity expectations within numerical tolerance.
 
 ## 3. Data gates
 
@@ -36,7 +36,7 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 - [x] Every chosen preference passes the strict verifier.
 - [x] Every rejected preference fails the intended criterion.
 - [x] Preference audit reports length and rejection-type distributions.
-- [ ] Parser attack suite has zero cases where an incorrect trusted answer receives correctness reward.
+- [x] Parser attack suite has zero cases where an incorrect trusted answer receives correctness reward.
 - [ ] Dataset cards explain scope, generation, limitations, and license.
 
 ## 4. Baseline/evaluation gates
@@ -73,17 +73,17 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 
 ## 7. GRPO gates
 
-- [ ] Every rollout stores exact token IDs, action masks, old log probabilities, finish reason, and rewards.
-- [ ] Training consumes stored tokens without decode/re-tokenize.
-- [ ] Group-size invariant `G >= 2` is enforced.
-- [ ] Degenerate-group fraction is logged.
-- [ ] Non-finite rewards, advantages, ratios, losses, and gradients are detected.
-- [ ] Full calibration covers generation, verification, scoring, backward, and optimizer phases.
-- [ ] Full GRPO run completes on the reference hardware.
-- [ ] The report identifies the exact advantage, clipping, normalization, and KL variants.
-- [ ] Protected held-out expected reward or exact-answer accuracy improves over the DPO parent on at least one primary target split.
-- [ ] Any regression on an anchor/generalization split is quantified and judged against a threshold frozen before the final reference run.
-- [ ] Reward-hacking suite remains sound after training.
+- [x] Every rollout stores exact token IDs, action masks, old log probabilities, finish reason, and rewards.
+- [x] Training consumes stored tokens without decode/re-tokenize.
+- [x] Group-size invariant `G >= 2` is enforced.
+- [x] Degenerate-group fraction is logged.
+- [x] Non-finite rewards, advantages, ratios, losses, and gradients are detected.
+- [x] Full calibration covers generation, verification, scoring, backward, and optimizer phases.
+- [x] Full GRPO run completes on the reference hardware.
+- [x] The report identifies the exact advantage, clipping, normalization, and KL variants.
+- [x] Protected held-out expected reward or exact-answer accuracy improves over the DPO parent on at least one primary target split.
+- [x] Any regression on an anchor/generalization split is quantified and judged against a threshold frozen before the final reference run.
+- [x] Reward-hacking suite remains sound after training.
 
 The project should define numeric release targets in a versioned `reference_targets.yaml` after pilot runs and before final reference tuning. Once frozen for a release candidate, those targets cannot be loosened without an ADR and a new candidate.
 
