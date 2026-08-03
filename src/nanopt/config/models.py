@@ -353,7 +353,7 @@ class RewardConfig(StrictModel):
 
 class AdvantageConfig(StrictModel):
     mode: Literal["group_centered", "group_zscore"]
-    population_std: bool
+    population_std: Literal[True]
     epsilon: float = Field(gt=0)
 
 
@@ -366,7 +366,7 @@ class GrpoOptimizationConfig(StrictModel):
     weight_decay: float = Field(ge=0)
     warmup_ratio: float = Field(ge=0, lt=1)
     scheduler: Literal["cosine"]
-    clip_epsilon: float = Field(gt=0)
+    clip_epsilon: float = Field(gt=0, lt=1)
     loss_normalization: Literal["token_mean", "sequence_mean"]
     kl_beta: float = Field(ge=0)
     kl_estimator: Literal["direct", "k3"]

@@ -31,6 +31,8 @@ rate improved from 0% to 95.5% and exact-answer accuracy from 0% to 86.4% on the
 Milestone 5 completes controlled preference construction and the white-box DPO stage. Its full
 reference cache had zero live/cache error; held-out DPO loss improved from 0.693 to 0.626 while
 protected exact accuracy moved from 86.4% to 84.1%, a disclosed 2.3-point regression.
+Milestone 6's exact-token grouped rollout, verifier reward, and synchronous clipped GRPO loop are
+implemented; reference-GPU calibration and recipe pilots are in progress.
 
 The reference host reproduced the complete M3 smoke and offline evidence validator with
 `bash scripts/run_m3_reference_smoke.sh`.

@@ -21,6 +21,7 @@ import pytest
         ("labs/06_exact_generation.py", "Exact generation lab passed."),
         ("labs/07_completion_only_sft.py", "Completion-only SFT lab passed."),
         ("labs/08_controlled_preferences.py", "Controlled preference lab passed."),
+        ("labs/09_exact_rlvr_trajectory.py", "Exact RLVR trajectory lab passed."),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(

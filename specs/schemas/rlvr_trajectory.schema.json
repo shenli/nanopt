@@ -11,6 +11,9 @@
     "iteration",
     "task_id",
     "prompt",
+    "group_reward_mean",
+    "group_reward_std",
+    "advantage_mode",
     "completions"
   ],
   "properties": {
@@ -61,7 +64,7 @@
             "items": {"type": "number"}
           },
           "decoded_text": {"type": "string"},
-          "finish_reason": {"enum": ["eos", "max_length", "error"]},
+          "finish_reason": {"enum": ["eos", "protocol_stop", "max_length", "error"]},
           "reward": {"type": "number"},
           "reward_components": {
             "type": "object",

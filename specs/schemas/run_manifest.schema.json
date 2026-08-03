@@ -149,6 +149,23 @@
             "representative": {"type": "boolean"},
             "initial_policy_is_exact_sft_copy": {"const": true}
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "device", "iterations", "optimizer_steps", "trajectories", "completions",
+            "representative", "consumed_exact_stored_token_ids"
+          ],
+          "properties": {
+            "device": {"enum": ["cpu", "cuda"]},
+            "iterations": {"type": "integer", "minimum": 1},
+            "optimizer_steps": {"type": "integer", "minimum": 1},
+            "trajectories": {"type": "integer", "minimum": 1},
+            "completions": {"type": "integer", "minimum": 2},
+            "representative": {"type": "boolean"},
+            "consumed_exact_stored_token_ids": {"const": true}
+          }
         }
       ]
     },

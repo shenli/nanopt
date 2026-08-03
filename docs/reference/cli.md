@@ -7,9 +7,10 @@ nanopt doctor
 nanopt config resolve
 nanopt data generate
 nanopt data preferences
-nanopt calibrate --mode load|eval|sft|dpo
+nanopt calibrate --mode load|eval|sft|dpo|grpo
 nanopt train sft
 nanopt train dpo
+nanopt train grpo
 nanopt eval run [--adapter ADAPTER_DIR]
 nanopt report build RUN_DIR
 nanopt artifacts inspect RUN_DIR
@@ -39,8 +40,13 @@ adapter cloning, forward/backward, and one short optimization path. `nanopt trai
 configured pair set and writes the cache manifest, per-type breakdown, final adapter, and report.
 Both require `--preferences` and `--sft-adapter`.
 
+`nanopt calibrate --mode grpo` performs grouped generation, decoding and strict reward, advantage
+calculation, exact-token collation, backward, clipping, and an optimizer step. `nanopt train grpo`
+alternates fresh grouped rollouts with synchronous updates and writes exact trajectories before
+training consumes them. Both require `--tasks` and `--dpo-adapter`.
+
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.
 
-GRPO, pipeline, and agent commands are added with their later vertical slices. The CLI does
+Pipeline and agent commands are added with their later vertical slices. The CLI does
 not advertise placeholders that silently do nothing.

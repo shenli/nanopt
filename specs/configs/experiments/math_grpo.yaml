@@ -32,10 +32,10 @@ advantage:
   population_std: true
   epsilon: 1.0e-4
 optimization:
-  iterations: 500
+  iterations: 12
   update_epochs: 1
   minibatch_completions: 4
-  gradient_accumulation_steps: 8
+  gradient_accumulation_steps: 1
   learning_rate: 1.0e-6
   weight_decay: 0.0
   warmup_ratio: 0.03
@@ -49,8 +49,8 @@ optimization:
   compute_dtype: bfloat16
   optimizer: adamw
   log_every_iterations: 1
-  eval_every_iterations: 50
-  save_every_iterations: 100
+  eval_every_iterations: 12
+  save_every_iterations: 12
 evaluation:
   experiment: base_eval
   reward_hacking_suite: true

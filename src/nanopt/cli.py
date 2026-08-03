@@ -14,7 +14,12 @@ from rich.console import Console
 from rich.table import Table
 
 from nanopt.config.loader import ConfigError, ConfigRepository
-from nanopt.config.models import BaseEvalExperiment, DpoExperiment, SftExperiment
+from nanopt.config.models import (
+    BaseEvalExperiment,
+    DpoExperiment,
+    GrpoExperiment,
+    SftExperiment,
+)
 from nanopt.config.provenance import serialize_provenance
 from nanopt.config.resolver import ResolutionResult, resolve_config
 from nanopt.data.arithmetic import ArithmeticGeneratorConfig, generate_tasks
@@ -34,6 +39,7 @@ from nanopt.eval.runner import (
     LocalModelBackend,
     evaluate_to_artifacts,
 )
+from nanopt.grpo.run import execute_grpo_run
 from nanopt.models.adapters import ParameterCounts, load_lora_adapter, parameter_counts
 from nanopt.models.loading import LoadedModel, load_qwen3_base, qwen_chat_terminator_id
 from nanopt.models.renderer import ChatRenderer
@@ -77,6 +83,7 @@ class CalibrationMode(StrEnum):
     eval = "eval"
     sft = "sft"
     dpo = "dpo"
+    grpo = "grpo"
 
 
 def _version_callback(value: bool) -> None:
@@ -391,6 +398,27 @@ def _resolve_dpo(
     )
     if not isinstance(result.config.experiment, DpoExperiment):
         raise ConfigError(f"experiment {experiment!r} is not a DPO profile")
+    return result
+
+
+def _resolve_grpo(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+    overrides: tuple[str, ...] = (),
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=overrides,
+    )
+    if not isinstance(result.config.experiment, GrpoExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not a GRPO profile")
     return result
 
 
@@ -725,6 +753,51 @@ def train_dpo_command(
     console.print(f"DPO completed: [bold]{context.run_dir}[/bold]")
 
 
+@train_app.command("grpo")
+def train_grpo_command(
+    tasks: Annotated[Path, typer.Option(exists=True, dir_okay=False, help="Task JSONL file.")],
+    dpo_adapter: Annotated[
+        Path,
+        typer.Option(exists=True, file_okay=False, help="Frozen parent DPO adapter directory."),
+    ],
+    hardware: Annotated[str, typer.Option()] = "rtx_4070_ti_super_16gb",
+    model: Annotated[str, typer.Option()] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option()] = "math_grpo",
+    artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe GRPO run ID.")] = None,
+    local_files_only: Annotated[bool, typer.Option()] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    set_values: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Repeatable scalar override within the GRPO profile."),
+    ] = None,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Run fresh grouped RLVR rollouts and exact-token synchronous GRPO updates."""
+
+    try:
+        resolved = _resolve_grpo(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+            overrides=tuple(set_values or ()),
+        )
+        context = execute_grpo_run(
+            resolved,
+            tasks_path=tasks,
+            dpo_adapter_path=dpo_adapter,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            local_files_only=local_files_only,
+            device=device,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]GRPO failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"GRPO completed: [bold]{context.run_dir}[/bold]")
+
+
 @report_app.command("build")
 def report_build(
     run_dir: Annotated[Path, typer.Argument(exists=True, file_okay=False)],
@@ -758,6 +831,9 @@ def calibrate(
     experiment: Annotated[str, typer.Option()] = "base_eval",
     sft_experiment: Annotated[str, typer.Option(help="SFT profile for --mode sft.")] = "math_sft",
     dpo_experiment: Annotated[str, typer.Option(help="DPO profile for --mode dpo.")] = "math_dpo",
+    grpo_experiment: Annotated[str, typer.Option(help="GRPO profile for --mode grpo.")] = (
+        "math_grpo"
+    ),
     preferences: Annotated[
         Path | None,
         typer.Option(exists=True, dir_okay=False, help="Required preference JSONL for DPO."),
@@ -765,6 +841,10 @@ def calibrate(
     sft_adapter: Annotated[
         Path | None,
         typer.Option(exists=True, file_okay=False, help="Required SFT adapter for DPO."),
+    ] = None,
+    dpo_adapter: Annotated[
+        Path | None,
+        typer.Option(exists=True, file_okay=False, help="Required DPO adapter for GRPO."),
     ] = None,
     artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
     run_id: Annotated[str | None, typer.Option(help="Optional path-safe eval calibration ID.")] = (
@@ -777,6 +857,35 @@ def calibrate(
     """Exercise the real model load or evaluation path before a full reference run."""
 
     try:
+        if mode is CalibrationMode.grpo:
+            if tasks is None or dpo_adapter is None:
+                raise ValueError("--tasks and --dpo-adapter are required for --mode grpo")
+            grpo_resolved = _resolve_grpo(
+                hardware=hardware,
+                model=model,
+                experiment=grpo_experiment,
+                config_dir=config_dir,
+                overrides=(
+                    "rollout.group_size=2",
+                    "optimization.iterations=1",
+                    "optimization.minibatch_completions=2",
+                    "optimization.gradient_accumulation_steps=1",
+                ),
+            )
+            context = execute_grpo_run(
+                grpo_resolved,
+                tasks_path=tasks,
+                dpo_adapter_path=dpo_adapter,
+                artifacts_root=artifacts_root,
+                run_id=run_id,
+                local_files_only=local_files_only,
+                device=device,
+                iteration_limit=1,
+            )
+            console.print(
+                f"Non-representative GRPO calibration completed: [bold]{context.run_dir}[/bold]"
+            )
+            return
         if mode is CalibrationMode.dpo:
             if preferences is None or sft_adapter is None:
                 raise ValueError("--preferences and --sft-adapter are required for --mode dpo")
