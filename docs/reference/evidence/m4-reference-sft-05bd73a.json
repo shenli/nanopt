@@ -1,0 +1,47 @@
+{
+  "calibration": {
+    "adapter_sha256": "0b0a143ca3182b52638e69292d348a1f68b3bb688222d5c971ede4fe49124d75",
+    "final_validation_nll": 1.2587837848821148,
+    "initial_validation_nll": 2.0519805523802486,
+    "optimizer_steps": 1,
+    "peak_reserved_bytes": 1587544064,
+    "representative": false,
+    "run_id": "calibration-sft"
+  },
+  "dataset": {
+    "fingerprint": "83225e59551f147cdd90e854570dec56dd386a96b7c9175c514bd0033d7315ff",
+    "records": 128
+  },
+  "evaluation": {
+    "accuracy": 0.8636363636363636,
+    "parse_rate": 0.9545454545454546,
+    "protocol_stop_rate": 0.9772727272727273,
+    "representative": true,
+    "run_id": "sft-eval",
+    "samples_sha256": "afef5189f17ccefb475bddec056fcb22155ee562b50cdc37c694f0eca8a51ef6",
+    "summary_sha256": "c4ef84a5d74dcd3032c28329f37391c480a3871e76ae8bba4555e8ab12d189fe",
+    "task_count": 44
+  },
+  "git_commit": "05bd73a0236625f58b14853e1489cea1e977d43a",
+  "hardware": {
+    "driver_version": "560.35.03",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "profile": "rtx_4070_ti_super_16gb",
+    "runtime_version": "12.6"
+  },
+  "schema_version": 1,
+  "status": "m4_reference_sft_passed",
+  "targets": {
+    "minimum_accuracy": 0.05,
+    "minimum_parse_rate": 0.5
+  },
+  "training": {
+    "adapter_sha256": "67ecddc8970ec838f567bcb9f416b1d54475d4524d6739b9d8dce9485f2c953e",
+    "final_validation_nll": 0.6210524007220076,
+    "initial_validation_nll": 2.05356209131561,
+    "optimizer_steps": 4,
+    "peak_reserved_bytes": 3070230528,
+    "representative": true,
+    "run_id": "sft"
+  }
+}

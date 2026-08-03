@@ -7,9 +7,10 @@ single-GPU experiments, inspectable artifacts, and a secure stateful agent envir
 Milestone 1 is the repository foundation. Milestone 2 provides the CPU-tested mathematical core,
 model/adapter integration contracts, and deterministic synthetic data. Milestone 3 provides exact
 generation, example-first evaluation, statistical summaries, shareable reports, and a completed
-reference-GPU base evaluation. Start with the [prerequisites](getting-started/prerequisites.md),
-continue through tokens and log probabilities, then run the exact-generation lab. Training stages
-begin with the Milestone 4 SFT vertical slice.
+reference-GPU base evaluation. Milestone 4 adds completion-only LoRA SFT and protected generation
+evidence. Start with the [prerequisites](getting-started/prerequisites.md), continue through tokens
+and log probabilities, then run the exact-generation and SFT labs. Preference construction and DPO
+begin in Milestone 5.
 
 ## Status vocabulary
 

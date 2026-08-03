@@ -51,14 +51,14 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 
 ## 5. SFT gates
 
-- [ ] Only intended LoRA parameters are trainable.
-- [ ] Prompt-only tokens contribute zero SFT loss.
-- [ ] A tiny repeated-batch test lowers completion loss.
-- [ ] Checkpoint save/load preserves logits within tolerance.
-- [ ] Resume from a clean optimizer boundary passes its fixture.
-- [ ] Reference SFT calibration stays below the hard VRAM budget.
-- [ ] Full SFT run completes on the target hardware without source edits.
-- [ ] Protected evaluation demonstrates that the model learned the answer protocol and did not merely reduce teacher-forced loss.
+- [x] Only intended LoRA parameters are trainable.
+- [x] Prompt-only tokens contribute zero SFT loss.
+- [x] A tiny repeated-batch test lowers completion loss.
+- [x] Checkpoint save/load preserves logits within tolerance.
+- [x] Resume from a clean optimizer boundary passes its fixture.
+- [x] Reference SFT calibration stays below the hard VRAM budget.
+- [x] Full SFT run completes on the target hardware without source edits.
+- [x] Protected evaluation demonstrates that the model learned the answer protocol and did not merely reduce teacher-forced loss.
 
 ## 6. DPO gates
 

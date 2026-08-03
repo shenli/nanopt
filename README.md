@@ -26,7 +26,9 @@ adapter lifecycle, deterministic arithmetic generator and fingerprints, leakage-
 strict parser/verifier. Milestone 3 completes exact autoregressive sampling, deterministic/sample
 evaluation, pass@k and Wilson intervals, example-first JSONL artifacts, Markdown/HTML reports, and
 load/eval calibration. Its real base-model smoke passed on the proposed reference GPU from a clean,
-pinned checkout. Training begins with the readable SFT vertical slice in Milestone 4.
+pinned checkout. Milestone 4 completes the readable completion-only LoRA SFT slice: protected parse
+rate improved from 0% to 95.5% and exact-answer accuracy from 0% to 86.4% on the reference smoke.
+Controlled preference construction and DPO are next in Milestone 5.
 
 The reference host reproduced the complete M3 smoke and offline evidence validator with
 `bash scripts/run_m3_reference_smoke.sh`.
