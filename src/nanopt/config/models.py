@@ -165,16 +165,22 @@ class GenerationConfig(StrictModel):
 
 
 class BaseEvaluationConfig(StrictModel):
-    parser: str
-    verifier: str
-    confidence_interval: str
-    bootstrap_samples: int = Field(gt=0)
+    parser: Literal["strict_answer_v1"]
+    verifier: Literal["exact_answer_v1"]
+    confidence_interval: Literal["wilson"]
+    confidence_level: float = Field(gt=0, lt=1)
+
+    @model_validator(mode="after")
+    def require_implemented_confidence_level(self) -> BaseEvaluationConfig:
+        if self.confidence_level != 0.95:
+            raise ValueError("M3 implements only a 0.95 confidence level")
+        return self
 
 
 class BaseArtifactsConfig(StrictModel):
-    save_token_ids: bool
-    save_logprobs: bool
-    save_all_examples: bool
+    save_token_ids: Literal[True]
+    save_logprobs: Literal[True]
+    save_all_examples: Literal[True]
 
 
 class BaseEvalExperiment(StrictModel):

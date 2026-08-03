@@ -38,3 +38,5 @@ def test_pinned_qwen_tokenizer_preserves_supervised_prefix_boundary() -> None:
     assert rendered.prompt_length > 0
     assert any(rendered.action_mask)
     assert not any(rendered.action_mask[: rendered.prompt_length])
+    assert tokenizer.eos_token_id is not None
+    assert tokenizer.decode([tokenizer.eos_token_id], skip_special_tokens=True) == ""

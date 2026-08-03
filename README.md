@@ -23,8 +23,11 @@ NanoPT is pre-alpha. Milestone 1 provides the package, CLI, typed configuration 
 environment diagnosis, run-artifact lifecycle, documentation skeleton, and local CPU validation.
 Milestone 2 completes the CPU-tested mathematical core, pinned Qwen loader and exact renderer, LoRA
 adapter lifecycle, deterministic arithmetic generator and fingerprints, leakage-safe splits, and
-strict parser/verifier. The pinned real tokenizer boundary is tested; model-weight execution,
-generation, evaluation, and training arrive in later milestones.
+strict parser/verifier. Milestone 3's CPU implementation adds exact autoregressive sampling,
+deterministic/sample evaluation, pass@k and Wilson intervals, example-first JSONL artifacts,
+Markdown/HTML reports, and load/eval calibration commands. The pinned real tokenizer boundary is
+tested. A real base-model evaluation on the reference GPU is still required before M3 is complete;
+training arrives in later milestones.
 
 The only proposed reference profile is one NVIDIA RTX 4070 Ti SUPER with 16 GB VRAM on Linux
 x86-64. This profile is **not validated**. No memory, runtime, performance, or hardware-support
@@ -44,6 +47,7 @@ uv run nanopt config resolve \
   --experiment base_eval \
   --output resolved_config.yaml
 uv run nanopt doctor --json doctor.json
+uv run python labs/06_exact_generation.py
 ```
 
 `nanopt doctor` is read-only and never downloads a model. On a CPU-only or non-reference machine it

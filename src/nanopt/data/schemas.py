@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, get_args
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -93,3 +93,24 @@ class SplitManifest(DataModel):
     dataset_fingerprint: str
     counts: dict[SplitName, int]
     canonical_hashes: dict[SplitName, list[str]]
+
+
+class ArithmeticSplitConfig(DataModel):
+    """Explicit counts and seed for assigning every generated arithmetic task."""
+
+    schema_version: Literal[1] = 1
+    seed: int
+    counts: dict[SplitName, int]
+
+    @model_validator(mode="after")
+    def validate_complete_nonnegative_counts(self) -> ArithmeticSplitConfig:
+        expected = set(get_args(SplitName))
+        if set(self.counts) != expected:
+            missing = ", ".join(sorted(expected - set(self.counts))) or "none"
+            extra = ", ".join(sorted(set(self.counts) - expected)) or "none"
+            raise ValueError(
+                f"split counts must name every split; missing={missing}; extra={extra}"
+            )
+        if any(value < 0 for value in self.counts.values()):
+            raise ValueError("split counts must be nonnegative")
+        return self

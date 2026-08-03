@@ -23,8 +23,8 @@ generation:
 evaluation:
   parser: strict_answer_v1
   verifier: exact_answer_v1
-  confidence_interval: paired_bootstrap
-  bootstrap_samples: 2000
+  confidence_interval: wilson
+  confidence_level: 0.95
 artifacts:
   save_token_ids: true
   save_logprobs: true

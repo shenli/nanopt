@@ -72,6 +72,12 @@ def write_yaml(path: Path, value: Any) -> None:
     _atomic_write(path, content)
 
 
+def write_text(path: Path, value: str) -> None:
+    """Atomically replace one UTF-8 text artifact."""
+
+    _atomic_write(path, value.encode("utf-8"))
+
+
 def append_jsonl(path: Path, value: Mapping[str, Any]) -> None:
     """Append one complete JSONL record with a single operating-system write."""
 

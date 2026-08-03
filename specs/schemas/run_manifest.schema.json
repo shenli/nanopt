@@ -106,6 +106,17 @@
         }
       }
     },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "device", "task_count", "representative"],
+      "properties": {
+        "mode": {"enum": ["deterministic", "sampled"]},
+        "device": {"enum": ["cpu", "cuda"]},
+        "task_count": {"type": "integer", "minimum": 1},
+        "representative": {"type": "boolean"}
+      }
+    },
     "failure": {
       "type": ["object", "null"],
       "additionalProperties": false,

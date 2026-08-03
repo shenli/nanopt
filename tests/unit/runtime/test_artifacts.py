@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from nanopt.runtime.artifacts import append_jsonl, read_jsonl, write_json, write_yaml
+from nanopt.runtime.artifacts import append_jsonl, read_jsonl, write_json, write_text, write_yaml
 
 
 def test_atomic_document_writers_replace_complete_documents(tmp_path: Path) -> None:
@@ -14,8 +14,12 @@ def test_atomic_document_writers_replace_complete_documents(tmp_path: Path) -> N
     write_json(json_path, {"generation": 1})
     write_json(json_path, {"generation": 2})
     write_yaml(yaml_path, {"z": 1, "a": 2})
+    text_path = tmp_path / "report.md"
+    write_text(text_path, "first")
+    write_text(text_path, "second")
     assert json.loads(json_path.read_text()) == {"generation": 2}
     assert yaml_path.read_text().startswith("a: 2\n")
+    assert text_path.read_text() == "second"
     assert not list(tmp_path.glob(".state.*"))
 
 

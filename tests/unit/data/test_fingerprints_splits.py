@@ -11,7 +11,7 @@ import pytest
 
 from nanopt.data.arithmetic import ArithmeticGeneratorConfig, generate_tasks
 from nanopt.data.fingerprints import canonical_task_hash, dataset_fingerprint
-from nanopt.data.schemas import SplitName
+from nanopt.data.schemas import ArithmeticSplitConfig, SplitName
 from nanopt.data.splits import SPLIT_ORDER, build_splits
 
 
@@ -115,3 +115,12 @@ def test_dataset_fingerprint_rejects_empty_and_duplicate_ids() -> None:
         dataset_fingerprint([], generator_config=config)
     with pytest.raises(ValueError, match="duplicate task IDs"):
         dataset_fingerprint([tasks[0], tasks[0]], generator_config=config)
+
+
+def test_split_config_requires_every_named_split_and_nonnegative_counts() -> None:
+    with pytest.raises(ValueError, match="name every split"):
+        ArithmeticSplitConfig(seed=1, counts={"train": 1})  # type: ignore[arg-type]
+    counts = _counts()
+    counts["smoke"] = -1
+    with pytest.raises(ValueError, match="nonnegative"):
+        ArithmeticSplitConfig(seed=1, counts=counts)

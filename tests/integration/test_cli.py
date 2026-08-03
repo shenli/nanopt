@@ -6,6 +6,8 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from nanopt.cli import app
+from nanopt.eval.records import EvaluationResult
+from nanopt.runtime.artifacts import append_jsonl
 from nanopt.runtime.doctor import (
     CudaStatus,
     DockerStatus,
@@ -21,7 +23,11 @@ def test_help_and_version_do_not_download_models() -> None:
     version_result = runner.invoke(app, ["--version"])
     assert help_result.exit_code == 0
     assert "config" in help_result.stdout
+    assert "data" in help_result.stdout
     assert "doctor" in help_result.stdout
+    assert "eval" in help_result.stdout
+    assert "report" in help_result.stdout
+    assert "calibrate" in help_result.stdout
     assert version_result.exit_code == 0
     assert "0.1.0.dev0" in version_result.stdout
 
@@ -112,3 +118,71 @@ def test_doctor_writes_json_even_when_environment_is_unusable(
     )
     assert result.exit_code == 3
     assert json.loads(output.read_text())["status"] == "unusable"
+
+
+def test_report_build_command_uses_local_example_artifacts(tmp_path: Path) -> None:
+    result = EvaluationResult(
+        result_id="fixture-result",
+        run_id="fixture-run",
+        checkpoint_id="base",
+        task_id="fixture-task",
+        split="test_iid",
+        sample_index=0,
+        seed=1,
+        generation_config_sha256="a" * 64,
+        prompt_token_ids=[1],
+        completion_token_ids=[2],
+        response_text="<answer>1</answer>",
+        parser_status="valid",
+        parsed_answer="1",
+        verifier_status="correct",
+        reward_components={"correctness": 1.0},
+        finish_reason="eos",
+        generation_seconds=0.01,
+    )
+    append_jsonl(tmp_path / "samples.jsonl", result.model_dump(mode="json"))
+
+    command = runner.invoke(app, ["report", "build", str(tmp_path)])
+
+    assert command.exit_code == 0, command.stdout
+    assert (tmp_path / "report.md").is_file()
+    assert (tmp_path / "report.html").is_file()
+    assert (tmp_path / "summary.json").is_file()
+
+
+def test_data_generate_command_reproduces_task_file(tmp_path: Path, project_root: Path) -> None:
+    common = [
+        "data",
+        "generate",
+        "--generator-config",
+        str(project_root / "tasks/arithmetic/generator_config.yaml"),
+        "--split-config",
+        str(project_root / "tasks/arithmetic/split_config.yaml"),
+    ]
+    first = tmp_path / "first.jsonl"
+    command = runner.invoke(app, [*common, "--output", str(first)])
+    assert command.exit_code == 0, command.stdout
+    assert len(first.read_text().splitlines()) == 128
+    assert (tmp_path / "dataset_manifest.json").is_file()
+
+    second = tmp_path / "second.jsonl"
+    repeated = runner.invoke(
+        app,
+        [
+            *common,
+            "--output",
+            str(second),
+            "--manifest",
+            str(tmp_path / "second-manifest.json"),
+        ],
+    )
+    assert repeated.exit_code == 0, repeated.stdout
+    assert first.read_bytes() == second.read_bytes()
+
+    same_path = tmp_path / "same.jsonl"
+    rejected = runner.invoke(
+        app,
+        [*common, "--output", str(same_path), "--manifest", str(same_path)],
+    )
+    assert rejected.exit_code == 1
+    assert not same_path.exists()

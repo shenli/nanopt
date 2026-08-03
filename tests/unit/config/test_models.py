@@ -66,3 +66,16 @@ def test_validated_hardware_requires_evidence(tmp_path: Path, project_root: Path
     path.write_text(yaml.safe_dump(raw))
     with pytest.raises(ConfigError, match="evidence manifest"):
         ConfigRepository(tmp_path).hardware("invalid_validated")
+
+
+def test_base_evaluation_rejects_unimplemented_confidence_level(
+    tmp_path: Path, project_root: Path
+) -> None:
+    raw = yaml.safe_load((project_root / "configs/experiments/base_eval.yaml").read_text())
+    raw["id"] = "bad_confidence"
+    raw["evaluation"]["confidence_level"] = 0.9
+    path = tmp_path / "experiments" / "bad_confidence.yaml"
+    path.parent.mkdir()
+    path.write_text(yaml.safe_dump(raw))
+    with pytest.raises(ConfigError, match=r"only a 0\.95 confidence level"):
+        ConfigRepository(tmp_path).experiment("bad_confidence")

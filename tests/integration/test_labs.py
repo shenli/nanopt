@@ -18,6 +18,7 @@ import pytest
         ("labs/03_dpo_vertical_slice.py", "DPO lab passed."),
         ("labs/04_group_advantages.py", "Group-advantage lab passed."),
         ("labs/05_synthetic_arithmetic.py", "Synthetic arithmetic lab passed."),
+        ("labs/06_exact_generation.py", "Exact generation lab passed."),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(

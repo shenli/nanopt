@@ -5,9 +5,11 @@ base language model. The project connects hand-computable objectives to tested t
 single-GPU experiments, inspectable artifacts, and a secure stateful agent environment.
 
 Milestone 1 is the repository foundation. Milestone 2 provides the CPU-tested mathematical core,
-model/adapter integration contracts, and deterministic synthetic data. Start with the
-[prerequisites](getting-started/prerequisites.md), install the project, then continue to tokens,
-masks, and causal log probabilities. Generation and training are not implemented yet.
+model/adapter integration contracts, and deterministic synthetic data. Milestone 3's local
+implementation provides exact generation, example-first evaluation, statistical summaries, and
+shareable local reports. Start with the [prerequisites](getting-started/prerequisites.md), continue
+through tokens and log probabilities, then run the exact-generation lab. The reference-GPU base
+evaluation and all training stages remain pending.
 
 ## Status vocabulary
 

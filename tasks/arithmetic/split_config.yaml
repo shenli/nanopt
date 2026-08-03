@@ -1,0 +1,10 @@
+schema_version: 1
+seed: 42
+counts:
+  train: 64
+  validation: 16
+  test_iid: 12
+  test_compositional: 12
+  test_range: 12
+  test_format_attack: 8
+  smoke: 4

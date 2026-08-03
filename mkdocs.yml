@@ -50,6 +50,8 @@ nav:
       - Model rendering and LoRA: foundations/model-rendering-and-lora.md
   - Data:
       - Synthetic arithmetic: data/synthetic-arithmetic.md
+  - Evaluation:
+      - Exact generation and reports: evaluation/exact-generation-and-reports.md
   - Preferences:
       - DPO margins and loss: preferences/dpo-by-hand.md
   - GRPO and RLVR:
@@ -66,6 +68,7 @@ nav:
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
       - M2 completion report: reference/m2-completion-report.md
+      - M3 implementation status: reference/m3-implementation-status.md
   - Project plans:
       - Vision and scope: 00_VISION_AND_SCOPE.md
       - Product requirements: 01_PRODUCT_REQUIREMENTS.md

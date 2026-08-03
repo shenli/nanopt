@@ -1,21 +1,39 @@
-"""NanoPT command-line interface for the repository foundation milestone."""
+"""NanoPT command-line interface for inspectable configuration and evaluation."""
 
 from __future__ import annotations
 
 import json
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
 
+import torch
 import typer
 import yaml
 from rich.console import Console
 from rich.table import Table
 
 from nanopt.config.loader import ConfigError, ConfigRepository
+from nanopt.config.models import BaseEvalExperiment
 from nanopt.config.provenance import serialize_provenance
-from nanopt.config.resolver import resolve_config
-from nanopt.runtime.artifacts import write_json, write_yaml
+from nanopt.config.resolver import ResolutionResult, resolve_config
+from nanopt.data.arithmetic import ArithmeticGeneratorConfig, generate_tasks
+from nanopt.data.schemas import ArithmeticSplitConfig
+from nanopt.data.splits import SPLIT_ORDER, build_splits
+from nanopt.eval.io import read_arithmetic_tasks
+from nanopt.eval.runner import (
+    EvaluationIdentity,
+    EvaluationPlan,
+    LocalModelBackend,
+    evaluate_to_artifacts,
+)
+from nanopt.models.loading import LoadedModel, load_qwen3_base
+from nanopt.models.renderer import ChatRenderer
+from nanopt.reporting.builder import build_evaluation_report
+from nanopt.rollout.sampler import SamplingConfig
+from nanopt.runtime.artifacts import append_jsonl, sha256_file, write_json, write_yaml
 from nanopt.runtime.doctor import DoctorReport, collect_doctor_report
+from nanopt.runtime.run_context import RunContext, create_run_context
 from nanopt.version import __version__
 
 app = typer.Typer(
@@ -26,9 +44,25 @@ app = typer.Typer(
 )
 config_app = typer.Typer(help="Validate and deterministically resolve configuration profiles.")
 artifacts_app = typer.Typer(help="Inspect local NanoPT run artifacts.")
+data_app = typer.Typer(help="Generate and validate deterministic local task artifacts.")
+eval_app = typer.Typer(help="Run checkpoint-agnostic generation evaluation.")
+report_app = typer.Typer(help="Build local reports from inspectable run artifacts.")
 app.add_typer(config_app, name="config")
 app.add_typer(artifacts_app, name="artifacts")
+app.add_typer(data_app, name="data")
+app.add_typer(eval_app, name="eval")
+app.add_typer(report_app, name="report")
 console = Console()
+
+
+class EvaluationMode(StrEnum):
+    deterministic = "deterministic"
+    sampled = "sampled"
+
+
+class CalibrationMode(StrEnum):
+    load = "load"
+    eval = "eval"
 
 
 def _version_callback(value: bool) -> None:
@@ -44,7 +78,7 @@ def main(
         typer.Option("--version", callback=_version_callback, is_eager=True, help="Show version."),
     ] = None,
 ) -> None:
-    """Expose only implemented, inspectable M1 commands."""
+    """Expose implemented, inspectable NanoPT commands."""
 
 
 @app.command("version")
@@ -198,3 +232,332 @@ def artifacts_inspect(
         console.print(f"[red]Invalid manifest JSON:[/red] {exc}")
         raise typer.Exit(code=1) from exc
     console.print(yaml.safe_dump(value, allow_unicode=True, sort_keys=True), highlight=False)
+
+
+@data_app.command("generate")
+def data_generate(
+    generator_config: Annotated[
+        Path,
+        typer.Option(exists=True, dir_okay=False, help="Arithmetic generator YAML."),
+    ] = Path("tasks/arithmetic/generator_config.yaml"),
+    split_config: Annotated[
+        Path,
+        typer.Option(exists=True, dir_okay=False, help="Leakage-safe split YAML."),
+    ] = Path("tasks/arithmetic/split_config.yaml"),
+    output: Annotated[Path, typer.Option(help="New or empty task JSONL output.")] = Path(
+        "artifacts/data/arithmetic_v1/tasks.jsonl"
+    ),
+    manifest: Annotated[Path | None, typer.Option(help="Optional split manifest path.")] = None,
+) -> None:
+    """Generate fingerprinted arithmetic tasks and assign every task to one split."""
+
+    try:
+        generator_value = yaml.safe_load(generator_config.read_text(encoding="utf-8"))
+        split_value = yaml.safe_load(split_config.read_text(encoding="utf-8"))
+        generator = ArithmeticGeneratorConfig.model_validate(generator_value, strict=True)
+        split = ArithmeticSplitConfig.model_validate(split_value, strict=True)
+        if output.exists() and output.stat().st_size:
+            raise ValueError("output must be new or empty to prevent mixed dataset versions")
+        manifest_path = manifest or output.with_name("dataset_manifest.json")
+        if manifest_path.resolve() == output.resolve():
+            raise ValueError("manifest and task output paths must be different")
+        generated = generate_tasks(generator)
+        splits, split_manifest = build_splits(
+            generated,
+            counts=split.counts,
+            seed=split.seed,
+            generator_config=generator,
+        )
+        for name in SPLIT_ORDER:
+            for task in splits[name]:
+                append_jsonl(output, task.model_dump(mode="json", exclude_none=True))
+        write_json(manifest_path, split_manifest.model_dump(mode="json"))
+    except (OSError, TypeError, ValueError) as exc:
+        console.print(f"[red]Data generation failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(
+        f"Wrote {generator.count} tasks to [bold]{output}[/bold]; "
+        f"fingerprint {split_manifest.dataset_fingerprint}"
+    )
+
+
+def _resolve_evaluation(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+    )
+    if not isinstance(result.config.experiment, BaseEvalExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not an evaluation profile")
+    return result
+
+
+def _evaluation_plan(
+    experiment: BaseEvalExperiment,
+    mode: EvaluationMode,
+    *,
+    eos_token_id: int,
+) -> EvaluationPlan:
+    if mode is EvaluationMode.deterministic:
+        deterministic = experiment.generation.deterministic
+        sampling = SamplingConfig(
+            max_new_tokens=deterministic.max_new_tokens,
+            do_sample=False,
+            eos_token_id=eos_token_id,
+        )
+        samples = 1
+    else:
+        sampled = experiment.generation.sampled
+        sampling = SamplingConfig(
+            max_new_tokens=sampled.max_new_tokens,
+            do_sample=True,
+            temperature=sampled.temperature,
+            top_p=sampled.top_p,
+            eos_token_id=eos_token_id,
+        )
+        samples = sampled.num_samples_per_prompt
+    return EvaluationPlan(
+        sampling=sampling,
+        samples_per_task=samples,
+        base_seed=experiment.seed,
+        max_prompt_tokens=experiment.data.max_prompt_length,
+    )
+
+
+def _move_model(loaded: LoadedModel, requested_device: str) -> str:
+    if requested_device == "auto":
+        selected = "cuda" if torch.cuda.is_available() else "cpu"
+    elif requested_device in {"cpu", "cuda"}:
+        selected = requested_device
+    else:
+        raise ValueError("device must be auto, cpu, or cuda")
+    if selected == "cuda" and not torch.cuda.is_available():
+        raise ValueError("CUDA was requested but is not available")
+    loaded.model.to(selected)
+    return selected
+
+
+def _record_loaded_model(context: RunContext, loaded: LoadedModel, renderer: ChatRenderer) -> None:
+    context.manifest["model"].update(
+        {
+            "resolved_revision": loaded.model_revision,
+            "tokenizer_revision": loaded.tokenizer_revision,
+            "chat_template_sha256": renderer.chat_template_sha256,
+            "base_parameter_count": loaded.parameters.total,
+            "trainable_parameter_count": loaded.parameters.trainable,
+        }
+    )
+    context.set_status("running")
+
+
+def _record_evaluation_artifacts(context: RunContext) -> None:
+    context.manifest["artifacts"] = [
+        {
+            "path": name,
+            "kind": kind,
+            "sha256": sha256_file(context.run_dir / name),
+        }
+        for name, kind in (
+            ("samples.jsonl", "evaluation_examples"),
+            ("summary.json", "evaluation_summary"),
+            ("report.md", "markdown_report"),
+            ("report.html", "html_report"),
+        )
+    ]
+
+
+def _execute_evaluation(
+    result: ResolutionResult,
+    *,
+    tasks_path: Path,
+    mode: EvaluationMode,
+    checkpoint_id: str,
+    artifacts_root: Path,
+    run_id: str | None,
+    local_files_only: bool,
+    device: str,
+    limit: int | None,
+) -> RunContext:
+    experiment = result.config.experiment
+    if not isinstance(experiment, BaseEvalExperiment):
+        raise ConfigError("evaluation execution requires an evaluation experiment")
+    tasks = [
+        task for task in read_arithmetic_tasks(tasks_path) if task.split in experiment.data.splits
+    ]
+    if limit is not None:
+        if limit <= 0:
+            raise ValueError("limit must be positive")
+        tasks = tasks[:limit]
+    if not tasks:
+        raise ValueError("no task records match the evaluation profile splits")
+
+    context = create_run_context(result, artifacts_root=artifacts_root, run_id=run_id)
+    try:
+        context.set_status("running")
+        loaded = load_qwen3_base(result.config.model, local_files_only=local_files_only)
+        selected_device = _move_model(loaded, device)
+        renderer = ChatRenderer(
+            loaded.tokenizer,
+            enable_thinking=result.config.model.renderer.enable_thinking,
+        )
+        _record_loaded_model(context, loaded, renderer)
+        eos_token_id = int(loaded.tokenizer.eos_token_id)
+        plan = _evaluation_plan(experiment, mode, eos_token_id=eos_token_id)
+        backend = LocalModelBackend(loaded.model, loaded.tokenizer, renderer)
+        evaluate_to_artifacts(
+            tasks,
+            backend,
+            EvaluationIdentity(context.manifest["run_id"], checkpoint_id),
+            plan,
+            samples_path=context.run_dir / "samples.jsonl",
+            summary_path=context.run_dir / "summary.json",
+        )
+        build_evaluation_report(context.run_dir)
+        context.manifest["data"]["fingerprints"]["task_file_sha256"] = sha256_file(tasks_path)
+        context.manifest["evaluation"] = {
+            "mode": mode.value,
+            "device": selected_device,
+            "task_count": len(tasks),
+            "representative": limit is None,
+        }
+        _record_evaluation_artifacts(context)
+        context.set_status("completed")
+        return context
+    except Exception as exc:
+        context.set_status(
+            "failed",
+            failure={"type": type(exc).__name__, "message": str(exc), "phase": "evaluation"},
+        )
+        raise
+
+
+@eval_app.command("run")
+def eval_run(
+    tasks: Annotated[Path, typer.Option(exists=True, dir_okay=False, help="Task JSONL file.")],
+    mode: Annotated[EvaluationMode, typer.Option(help="Deterministic or sampled evaluation.")] = (
+        EvaluationMode.deterministic
+    ),
+    checkpoint_id: Annotated[str, typer.Option(help="Checkpoint identity recorded in results.")] = (
+        "base"
+    ),
+    hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Model profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option(help="Evaluation experiment profile ID.")] = (
+        "base_eval"
+    ),
+    artifacts_root: Annotated[Path, typer.Option(help="Parent directory for the new run.")] = Path(
+        "artifacts/runs"
+    ),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe run ID.")] = None,
+    local_files_only: Annotated[
+        bool, typer.Option(help="Forbid Hugging Face network access and use cached files only.")
+    ] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    config_dir: Annotated[Path | None, typer.Option(help="Override profile directory.")] = None,
+) -> None:
+    """Evaluate one checkpoint and write examples before aggregates and reports."""
+
+    try:
+        resolved = _resolve_evaluation(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+        )
+        context = _execute_evaluation(
+            resolved,
+            tasks_path=tasks,
+            mode=mode,
+            checkpoint_id=checkpoint_id,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            local_files_only=local_files_only,
+            device=device,
+            limit=None,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Evaluation failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"Evaluation completed: [bold]{context.run_dir}[/bold]")
+
+
+@report_app.command("build")
+def report_build(
+    run_dir: Annotated[Path, typer.Argument(exists=True, file_okay=False)],
+) -> None:
+    """Rebuild Markdown, HTML, and summary artifacts without loading a model."""
+
+    try:
+        artifacts = build_evaluation_report(run_dir)
+    except (OSError, TypeError, ValueError) as exc:
+        console.print(f"[red]Report build failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(
+        f"Wrote [bold]{artifacts.markdown}[/bold], [bold]{artifacts.html}[/bold], "
+        f"and [bold]{artifacts.summary}[/bold]"
+    )
+
+
+@app.command()
+def calibrate(
+    mode: Annotated[CalibrationMode, typer.Option(help="Load-only or short evaluation path.")],
+    tasks: Annotated[
+        Path | None,
+        typer.Option(exists=True, dir_okay=False, help="Required task JSONL for --mode eval."),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option(help="Explicit non-representative example limit for eval calibration."),
+    ] = 2,
+    hardware: Annotated[str, typer.Option()] = "rtx_4070_ti_super_16gb",
+    model: Annotated[str, typer.Option()] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option()] = "base_eval",
+    artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
+    local_files_only: Annotated[bool, typer.Option()] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Exercise the real model load or evaluation path before a full reference run."""
+
+    try:
+        resolved = _resolve_evaluation(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+        )
+        if mode is CalibrationMode.load:
+            loaded = load_qwen3_base(resolved.config.model, local_files_only=local_files_only)
+            selected = _move_model(loaded, device)
+            console.print(
+                f"Loaded {resolved.config.model.source.model_id} on {selected}; "
+                f"{loaded.parameters.total:,} parameters; revision {loaded.model_revision}"
+            )
+            return
+        if tasks is None:
+            raise ValueError("--tasks is required for --mode eval")
+        context = _execute_evaluation(
+            resolved,
+            tasks_path=tasks,
+            mode=EvaluationMode.deterministic,
+            checkpoint_id="base-calibration",
+            artifacts_root=artifacts_root,
+            run_id=None,
+            local_files_only=local_files_only,
+            device=device,
+            limit=limit,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Calibration failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"Non-representative calibration completed: [bold]{context.run_dir}[/bold]")
