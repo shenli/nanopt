@@ -12,7 +12,12 @@ def write_checksums(evidence_root: Path, output: Path) -> dict[str, str]:
     """Hash evidence files while excluding the disposable fresh environment and live log."""
 
     excluded_roots = {"fresh-venv"}
-    excluded_files = {output.name, "commands.log", "m7_pipeline_evidence.json"}
+    excluded_files = {
+        output.name,
+        "commands.log",
+        "m7_pipeline_evidence.json",
+        "m8_agent_evidence.json",
+    }
     checksums = {
         path.relative_to(evidence_root).as_posix(): sha256_file(path)
         for path in sorted(evidence_root.rglob("*"))

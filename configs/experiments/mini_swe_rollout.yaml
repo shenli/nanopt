@@ -13,6 +13,7 @@ policy:
   max_turns: 10
 environment:
   backend: docker
+  image: python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
   network: none
   run_as_non_root: true
   expose_gpu: false
@@ -21,6 +22,7 @@ environment:
   wall_clock_timeout_seconds: 300
   memory_limit_mib: 1024
   pids_limit: 128
+  cpu_limit: 1.0
 tools:
   - list_files
   - read_file

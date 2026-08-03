@@ -16,3 +16,10 @@ def test_all_json_schemas_are_valid(project_root: Path) -> None:
 def test_all_public_yaml_profiles_are_mappings(project_root: Path) -> None:
     for path in sorted((project_root / "configs").rglob("*.yaml")):
         assert isinstance(yaml.safe_load(path.read_text()), dict), path
+
+
+def test_all_agent_task_cards_match_public_schema(project_root: Path) -> None:
+    schema = json.loads((project_root / "specs/schemas/agent_task.schema.json").read_text())
+    validator = jsonschema.Draft202012Validator(schema)
+    for path in sorted((project_root / "tasks/mini_swe_v1").glob("*/task.yaml")):
+        validator.validate(yaml.safe_load(path.read_text()))

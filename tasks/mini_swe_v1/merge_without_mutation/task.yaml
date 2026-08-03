@@ -1,0 +1,16 @@
+schema_version: 1
+id: merge_without_mutation
+version: '1.0.0'
+split: smoke
+issue: >-
+  merge_config(defaults, overrides) must return a fresh shallow dictionary with overrides taking
+  precedence. It must never mutate either input, including when overrides is empty.
+snapshot_sha256: 0dbe6e711fc7f206e57c84e5423ac35f0dc9e93ed6031dc212182dd7d29e937e
+editable_globs: ['src/*.py']
+protected_globs: ['tests/**']
+public_test_command: [python, -m, unittest, discover, -s, tests, -v]
+hidden_test_command: [python, -m, unittest, discover, -s, .nanopt_hidden_tests, -v]
+public_tests_total: 2
+hidden_tests_total: 3
+budgets: {tool_calls: 8, test_runs: 3, turns: 8, wall_clock_seconds: 60}
+license: Apache-2.0

@@ -1,0 +1,16 @@
+schema_version: 1
+id: parse_boolean_protocol
+version: '1.0.0'
+split: smoke
+issue: >-
+  parse_bool must ignore surrounding whitespace and ASCII case, accept true/yes/1 and false/no/0,
+  raise ValueError for other strings, and raise TypeError for non-string inputs.
+snapshot_sha256: d0e56ec0c9af1b1c5453e6ed203358fa5b79120395cd372f3b8cfef0212e8170
+editable_globs: ['src/*.py']
+protected_globs: ['tests/**']
+public_test_command: [python, -m, unittest, discover, -s, tests, -v]
+hidden_test_command: [python, -m, unittest, discover, -s, .nanopt_hidden_tests, -v]
+public_tests_total: 2
+hidden_tests_total: 4
+budgets: {tool_calls: 8, test_runs: 3, turns: 8, wall_clock_seconds: 60}
+license: Apache-2.0

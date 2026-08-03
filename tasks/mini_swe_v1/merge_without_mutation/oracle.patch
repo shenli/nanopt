@@ -1,0 +1,6 @@
+--- a/src/config.py
++++ b/src/config.py
+@@ -4,2 +4,1 @@
+-    result = defaults
+-    result.update(overrides)
++    result = {**defaults, **overrides}

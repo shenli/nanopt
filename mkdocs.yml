@@ -64,6 +64,10 @@ nav:
       - Synchronous GRPO: grpo-rlvr/synchronous-grpo.md
   - Pipeline:
       - End-to-end recipe and lineage: pipeline/end-to-end-recipe.md
+  - Agents:
+      - From tool call to trajectory: agents/from-tool-call-to-trajectory.md
+      - Task authoring and verification: agents/task-authoring-and-verification.md
+      - Sandbox security and threat model: agents/security-threat-model.md
   - Reference:
       - CLI: reference/cli.md
       - Artifact contract: reference/artifacts.md
@@ -78,6 +82,7 @@ nav:
           - Preferences and reference cache: adr/0006-controlled-preferences-and-reference-cache.md
           - Synchronous exact-token GRPO: adr/0007-synchronous-exact-token-grpo.md
           - Resumable hash-linked pipeline: adr/0008-resumable-hash-linked-pipeline.md
+          - Structured MiniSWE sandbox: adr/0009-structured-mini-swe-sandbox.md
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
       - M2 completion report: reference/m2-completion-report.md

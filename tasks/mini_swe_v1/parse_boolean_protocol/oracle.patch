@@ -1,0 +1,12 @@
+--- a/src/boolean.py
++++ b/src/boolean.py
+@@ -4,4 +4,7 @@
+-    if value in {"true", "yes", "1"}:
++    if not isinstance(value, str):
++        raise TypeError("boolean value must be a string")
++    normalized = value.strip().lower()
++    if normalized in {"true", "yes", "1"}:
+         return True
+-    if value in {"false", "no", "0"}:
++    if normalized in {"false", "no", "0"}:
+         return False

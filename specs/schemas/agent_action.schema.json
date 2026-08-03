@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/agent_action.schema.json",
+  "title": "NanoPT Structured Agent Action",
+  "oneOf": [
+    {
+      "type": "object", "additionalProperties": false, "required": ["tool", "arguments"],
+      "properties": {
+        "tool": {"const": "list_files"},
+        "arguments": {
+          "type": "object", "additionalProperties": false,
+          "properties": {"path": {"type": "string"}, "max_depth": {"type": "integer", "minimum": 0, "maximum": 8}}
+        }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false, "required": ["tool", "arguments"],
+      "properties": {
+        "tool": {"const": "read_file"},
+        "arguments": {
+          "type": "object", "additionalProperties": false, "required": ["path"],
+          "properties": {
+            "path": {"type": "string"}, "start_line": {"type": "integer", "minimum": 1},
+            "end_line": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false, "required": ["tool", "arguments"],
+      "properties": {
+        "tool": {"const": "search"},
+        "arguments": {
+          "type": "object", "additionalProperties": false, "required": ["query"],
+          "properties": {"query": {"type": "string"}, "path": {"type": "string"}, "glob": {"type": "string"}}
+        }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false, "required": ["tool", "arguments"],
+      "properties": {
+        "tool": {"const": "apply_patch"},
+        "arguments": {
+          "type": "object", "additionalProperties": false, "required": ["patch"],
+          "properties": {"patch": {"type": "string", "minLength": 1, "maxLength": 65536}}
+        }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false, "required": ["tool", "arguments"],
+      "properties": {
+        "tool": {"const": "run_tests"},
+        "arguments": {"type": "object", "additionalProperties": false}
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false, "required": ["tool", "arguments"],
+      "properties": {
+        "tool": {"const": "finish"},
+        "arguments": {
+          "type": "object", "additionalProperties": false, "required": ["summary"],
+          "properties": {"summary": {"type": "string", "minLength": 1, "maxLength": 2000}}
+        }
+      }
+    }
+  ]
+}

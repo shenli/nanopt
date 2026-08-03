@@ -170,6 +170,35 @@
         }
       ]
     },
+    "agent_environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backend", "image", "docker_evidence", "network", "run_as_non_root", "expose_gpu",
+        "capabilities_dropped", "no_new_privileges", "root_filesystem_read_only",
+        "separate_hidden_workspace", "hidden_source_exposed", "policy", "representative",
+        "environment_trains_model", "task_count", "solved", "replay_checked"
+      ],
+      "properties": {
+        "backend": {"enum": ["fake", "docker"]},
+        "image": {"type": ["string", "null"]},
+        "docker_evidence": {"type": ["object", "null"]},
+        "network": {"enum": ["none", "host-test-only"]},
+        "run_as_non_root": {"type": "boolean"},
+        "expose_gpu": {"const": false},
+        "capabilities_dropped": {"type": "boolean"},
+        "no_new_privileges": {"type": "boolean"},
+        "root_filesystem_read_only": {"type": "boolean"},
+        "separate_hidden_workspace": {"const": true},
+        "hidden_source_exposed": {"const": false},
+        "policy": {"enum": ["oracle", "model"]},
+        "representative": {"type": "boolean"},
+        "environment_trains_model": {"const": false},
+        "task_count": {"type": "integer", "minimum": 1},
+        "solved": {"type": "integer", "minimum": 0},
+        "replay_checked": {"type": "boolean"}
+      }
+    },
     "failure": {
       "type": ["object", "null"],
       "additionalProperties": false,

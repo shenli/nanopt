@@ -1,0 +1,16 @@
+schema_version: 1
+id: chunk_size_validation
+version: '1.0.0'
+split: smoke
+issue: >-
+  chunks(values, size) must return consecutive lists, return an empty list for empty input, raise
+  ValueError when size is not positive, and raise TypeError when size is not an integer.
+snapshot_sha256: f5a1a335d54fd040bed24fd74f68ec57dc543628f5d6a0fdbbec56c4f2b85744
+editable_globs: ['src/*.py']
+protected_globs: ['tests/**']
+public_test_command: [python, -m, unittest, discover, -s, tests, -v]
+hidden_test_command: [python, -m, unittest, discover, -s, .nanopt_hidden_tests, -v]
+public_tests_total: 2
+hidden_tests_total: 4
+budgets: {tool_calls: 8, test_runs: 3, turns: 8, wall_clock_seconds: 60}
+license: Apache-2.0

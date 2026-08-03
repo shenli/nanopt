@@ -11,6 +11,7 @@
     "task_id",
     "task_version",
     "environment_version",
+    "policy",
     "initial_snapshot_sha256",
     "steps",
     "finish_reason",
@@ -24,6 +25,17 @@
     "task_version": {"type": "string"},
     "environment_version": {"type": "string"},
     "model_checkpoint_id": {"type": ["string", "null"]},
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "checkpoint_id", "generation"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "checkpoint_id": {"type": ["string", "null"]},
+        "generation": {"type": "object"}
+      }
+    },
     "initial_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "steps": {
       "type": "array",

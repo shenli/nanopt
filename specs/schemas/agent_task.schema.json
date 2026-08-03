@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/agent_task.schema.json",
+  "title": "NanoPT MiniSWE Task Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "version", "split", "issue", "snapshot_sha256",
+    "editable_globs", "protected_globs", "public_test_command", "hidden_test_command",
+    "public_tests_total", "hidden_tests_total", "budgets", "license"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "split": {"enum": ["smoke", "reference"]},
+    "issue": {"type": "string", "minLength": 1},
+    "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "editable_globs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "protected_globs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "public_test_command": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "hidden_test_command": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "public_tests_total": {"type": "integer", "minimum": 1},
+    "hidden_tests_total": {"type": "integer", "minimum": 1},
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_calls", "test_runs", "turns", "wall_clock_seconds"],
+      "properties": {
+        "tool_calls": {"type": "integer", "minimum": 1},
+        "test_runs": {"type": "integer", "minimum": 1},
+        "turns": {"type": "integer", "minimum": 1},
+        "wall_clock_seconds": {"type": "integer", "minimum": 1}
+      }
+    },
+    "license": {"const": "Apache-2.0"}
+  }
+}

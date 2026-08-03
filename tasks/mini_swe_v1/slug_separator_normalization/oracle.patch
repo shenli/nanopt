@@ -1,0 +1,9 @@
+--- a/src/slug.py
++++ b/src/slug.py
+@@ -1,0 +1,3 @@
++import re
++
++
+@@ -4,1 +7,1 @@
+-    return text.lower().replace(" ", "-")
++    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")

@@ -1,0 +1,1 @@
+"""Slug task package."""

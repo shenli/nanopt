@@ -38,3 +38,9 @@ attempt, the child run-manifest hash, input/output checkpoint hashes, wall time,
 and failure/retry disclosure. Resume re-hashes completed children and outputs before skipping them.
 The final `comparison.json`, `report.md`, and `report.html` are rebuildable from child artifacts
 without loading a model.
+
+An agent-evaluation run adds `trajectories.jsonl`, one typed trajectory per task under
+`agent_trajectories/`, inspectable diffs under `final_patches/`, and `replay.json` for scripted-oracle
+semantic replay. `run_manifest.json` records the sandbox/backend policy, exact container image,
+isolation flags, task-suite fingerprint, and the explicit fact that the environment did not train
+the model. Hidden verifier output and source are absent by contract.

@@ -1,0 +1,6 @@
+--- a/src/range_utils.py
++++ b/src/range_utils.py
+@@ -4,2 +4,2 @@
+     if lower > upper:
+-        lower, upper = upper, lower
++        raise ValueError("lower must not exceed upper")

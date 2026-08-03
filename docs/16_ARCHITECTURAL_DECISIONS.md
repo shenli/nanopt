@@ -136,3 +136,7 @@ These are proposed initial ADRs. The coding agent should create individual files
 
 **Consequence:** Same-VRAM devices are not automatically supported. The initial profile stayed
 unvalidated until M7 passed; its current validation is scoped to the committed evidence bundle.
+
+Implemented milestone decisions are preserved as numbered records under `docs/adr/`. The M8
+structured-tool and sandbox decision is
+[ADR-0009](adr/0009-structured-mini-swe-sandbox.md).

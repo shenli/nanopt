@@ -460,7 +460,8 @@ class AgentPolicyConfig(StrictModel):
 
 
 class AgentEnvironmentConfig(StrictModel):
-    backend: Literal["docker"]
+    backend: Literal["docker", "fake"]
+    image: str
     network: Literal["none"]
     run_as_non_root: Literal[True]
     expose_gpu: Literal[False]
@@ -469,6 +470,7 @@ class AgentEnvironmentConfig(StrictModel):
     wall_clock_timeout_seconds: int = Field(gt=0)
     memory_limit_mib: int = Field(gt=0)
     pids_limit: int = Field(gt=0)
+    cpu_limit: float = Field(gt=0)
 
 
 class AgentVerificationConfig(StrictModel):

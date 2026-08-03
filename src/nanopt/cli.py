@@ -12,8 +12,10 @@ import yaml
 from rich.console import Console
 from rich.table import Table
 
+from nanopt.agent.run import execute_agent_run
 from nanopt.config.loader import ConfigError, ConfigRepository
 from nanopt.config.models import (
+    AgentEvaluationExperiment,
     BaseEvalExperiment,
     DpoExperiment,
     GrpoExperiment,
@@ -54,6 +56,7 @@ eval_app = typer.Typer(help="Run checkpoint-agnostic generation evaluation.")
 report_app = typer.Typer(help="Build local reports from inspectable run artifacts.")
 train_app = typer.Typer(help="Run readable white-box training stages.")
 pipeline_app = typer.Typer(help="Run or resume the explicit Base-to-GRPO recipe.")
+agent_app = typer.Typer(help="Evaluate structured policies in the resettable MiniSWE environment.")
 app.add_typer(config_app, name="config")
 app.add_typer(artifacts_app, name="artifacts")
 app.add_typer(data_app, name="data")
@@ -61,6 +64,7 @@ app.add_typer(eval_app, name="eval")
 app.add_typer(report_app, name="report")
 app.add_typer(train_app, name="train")
 app.add_typer(pipeline_app, name="pipeline")
+app.add_typer(agent_app, name="agent")
 console = Console()
 
 
@@ -70,6 +74,11 @@ class CalibrationMode(StrEnum):
     sft = "sft"
     dpo = "dpo"
     grpo = "grpo"
+
+
+class AgentPolicyMode(StrEnum):
+    oracle = "oracle"
+    model = "model"
 
 
 def _version_callback(value: bool) -> None:
@@ -408,6 +417,28 @@ def _resolve_grpo(
     return result
 
 
+def _resolve_agent(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    backend: str,
+    task_split: str,
+    config_dir: Path | None,
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=(f"environment.backend={backend}", f"tasks.split={task_split}"),
+    )
+    if not isinstance(result.config.experiment, AgentEvaluationExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not an agent-evaluation profile")
+    return result
+
+
 @eval_app.command("run")
 def eval_run(
     tasks: Annotated[Path, typer.Option(exists=True, dir_okay=False, help="Task JSONL file.")],
@@ -504,6 +535,81 @@ def pipeline_run_command(
         console.print(f"[red]Pipeline failed:[/red] {exc}", highlight=False)
         raise typer.Exit(code=1) from exc
     console.print(f"Pipeline completed: [bold]{pipeline_dir}[/bold]")
+
+
+@agent_app.command("run")
+def agent_run_command(
+    tasks_root: Annotated[
+        Path,
+        typer.Option(
+            exists=True, file_okay=False, help="MiniSWE suite root containing suite.yaml."
+        ),
+    ] = Path("tasks/mini_swe_v1"),
+    policy: Annotated[AgentPolicyMode, typer.Option(help="Scripted oracle or Qwen policy.")] = (
+        AgentPolicyMode.oracle
+    ),
+    backend: Annotated[
+        str, typer.Option(help="docker (secure reference) or fake (trusted tests).")
+    ] = "docker",
+    task_split: Annotated[str, typer.Option(help="smoke, reference, or all.")] = "smoke",
+    hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Model profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option(help="Agent experiment profile ID.")] = (
+        "mini_swe_rollout"
+    ),
+    artifacts_root: Annotated[Path, typer.Option(help="Parent directory for the run.")] = Path(
+        "artifacts/runs"
+    ),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe run ID.")] = None,
+    adapter: Annotated[
+        Path | None,
+        typer.Option(exists=True, file_okay=False, help="Optional policy LoRA adapter."),
+    ] = None,
+    adapter_name: Annotated[str, typer.Option(help="Name assigned to --adapter.")] = "grpo",
+    max_tasks: Annotated[
+        int | None, typer.Option(help="Non-representative prefix limit for smoke/model runs.")
+    ] = None,
+    turn_limit: Annotated[
+        int | None, typer.Option(help="Non-representative per-task turn limit.")
+    ] = None,
+    local_files_only: Annotated[
+        bool, typer.Option(help="Forbid model downloads and use the local cache only.")
+    ] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda for model policy only.")] = "auto",
+    config_dir: Annotated[Path | None, typer.Option(help="Override profile directory.")] = None,
+) -> None:
+    """Run structured MiniSWE episodes; v0.1 evaluates policies and never trains them."""
+
+    try:
+        if backend not in {"docker", "fake"}:
+            raise ValueError("backend must be docker or fake")
+        resolved = _resolve_agent(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            backend=backend,
+            task_split=task_split,
+            config_dir=config_dir,
+        )
+        context = execute_agent_run(
+            resolved,
+            tasks_root=tasks_root,
+            policy_kind=policy.value,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            adapter_path=adapter,
+            adapter_name=adapter_name,
+            local_files_only=local_files_only,
+            device=device,
+            max_tasks=max_tasks,
+            turn_limit=turn_limit,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Agent evaluation failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"Agent evaluation completed: [bold]{context.run_dir}[/bold]")
 
 
 @train_app.command("sft")

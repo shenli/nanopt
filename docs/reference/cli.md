@@ -13,6 +13,7 @@ nanopt train dpo
 nanopt train grpo
 nanopt eval run [--adapter ADAPTER_DIR]
 nanopt pipeline run --tasks TASKS --recipe math_pipeline
+nanopt agent run --policy oracle|model --backend docker|fake
 nanopt report build RUN_DIR
 nanopt artifacts inspect RUN_DIR
 ```
@@ -50,8 +51,13 @@ training consumes them. Both require `--tasks` and `--dpo-adapter`.
 `--run-id ID --resume` to verify and skip completed stages; retained failures are retried as a new
 numbered attempt rather than overwritten.
 
+`nanopt agent run` evaluates a scripted oracle or the pinned Qwen policy in resettable MiniSWE
+tasks. `--backend docker` is the secure reference path; `--backend fake` is only for trusted local
+fixtures and CPU labs. The model never supplies test commands or arbitrary shell text. Capping tasks
+or turns labels the result non-representative. v0.1 records exact model response token IDs but never
+trains or updates the policy in this environment.
+
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.
 
-Agent commands are added with their later vertical slice. The CLI does not advertise placeholders
-that silently do nothing.
+The CLI does not advertise placeholders that silently do nothing.

@@ -1,0 +1,9 @@
+--- a/src/chunks.py
++++ b/src/chunks.py
+@@ -4,2 +4,4 @@
+-    if not values:
+-        return [[]]
++    if not isinstance(size, int):
++        raise TypeError("size must be an integer")
++    if size <= 0:
++        raise ValueError("size must be positive")

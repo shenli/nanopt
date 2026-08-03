@@ -1,0 +1,16 @@
+schema_version: 1
+id: clamp_reversed_bounds
+version: '1.0.0'
+split: smoke
+issue: >-
+  clamp(value, lower, upper) clamps ordinary values correctly, but silently swaps reversed bounds.
+  Change it to raise ValueError when lower is greater than upper. Equal bounds remain valid.
+snapshot_sha256: 17e4561a04b6d3343ae8cca6e722e66769ec6d512274bf73a2452ee8f2c6d7a7
+editable_globs: ['src/*.py']
+protected_globs: ['tests/**']
+public_test_command: [python, -m, unittest, discover, -s, tests, -v]
+hidden_test_command: [python, -m, unittest, discover, -s, .nanopt_hidden_tests, -v]
+public_tests_total: 2
+hidden_tests_total: 2
+budgets: {tool_calls: 8, test_runs: 3, turns: 8, wall_clock_seconds: 60}
+license: Apache-2.0
