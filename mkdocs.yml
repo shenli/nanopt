@@ -53,6 +53,7 @@ nav:
       - Optimization and LoRA: foundations/optimization-and-lora.md
   - Data:
       - Synthetic arithmetic: data/synthetic-arithmetic.md
+      - Synthetic arithmetic dataset card: data/dataset-card.md
   - Evaluation:
       - Exact generation and reports: evaluation/exact-generation-and-reports.md
   - Supervised fine-tuning:
@@ -106,6 +107,7 @@ nav:
           - Resumable hash-linked pipeline: adr/0008-resumable-hash-linked-pipeline.md
           - Structured MiniSWE sandbox: adr/0009-structured-mini-swe-sandbox.md
       - Publication checklist: reference/publication-checklist.md
+      - Dependency and model license audit: reference/dependency-license-audit.md
       - M1 completion report: reference/m1-completion-report.md
       - M2 completion report: reference/m2-completion-report.md
       - M3 completion report: reference/m3-completion-report.md

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/shenli/nanopt/specs/schemas/release.schema.json",
+  "title": "NanoPT release manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "tag",
+    "distribution",
+    "import_package",
+    "cli",
+    "repository",
+    "documentation",
+    "python",
+    "dependency_lock",
+    "model",
+    "reference",
+    "publication"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "v0_1_0" },
+    "version": { "const": "0.1.0" },
+    "tag": { "const": "v0.1.0" },
+    "distribution": { "const": "nanopt" },
+    "import_package": { "const": "nanopt" },
+    "cli": { "const": "nanopt" },
+    "repository": { "const": "https://github.com/shenli/nanopt" },
+    "documentation": { "type": "string", "format": "uri" },
+    "python": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum"],
+      "properties": {
+        "minimum": { "const": "3.11" },
+        "maximum": { "const": "3.12" }
+      }
+    },
+    "dependency_lock": { "const": "uv.lock" },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "model_id", "revision", "tokenizer_revision", "license"],
+      "properties": {
+        "profile": { "const": "qwen3_0_6b_base" },
+        "model_id": { "const": "Qwen/Qwen3-0.6B-Base" },
+        "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "tokenizer_revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "license": { "const": "Apache-2.0" }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hardware_profile",
+        "pipeline_recipe",
+        "retained_pipeline_evidence",
+        "retained_agent_evidence",
+        "retained_curriculum_evidence"
+      ],
+      "properties": {
+        "hardware_profile": { "const": "rtx_4070_ti_super_16gb" },
+        "pipeline_recipe": { "const": "math_pipeline" },
+        "retained_pipeline_evidence": { "type": "string" },
+        "retained_agent_evidence": { "type": "string" },
+        "retained_curriculum_evidence": { "type": "string" }
+      }
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_index",
+        "package_index_reason",
+        "generated_datasets",
+        "model_adapters",
+        "public_announcement"
+      ],
+      "properties": {
+        "package_index": { "enum": ["published", "deferred"] },
+        "package_index_reason": { "type": "string", "minLength": 1 },
+        "generated_datasets": { "enum": ["not_distributed", "release_assets", "external_repository"] },
+        "model_adapters": { "enum": ["not_distributed", "release_assets", "external_repository"] },
+        "public_announcement": { "enum": ["published", "deferred_until_repository_is_public"] }
+      }
+    }
+  }
+}

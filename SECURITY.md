@@ -9,8 +9,9 @@ fix is available.
 
 ## Supported versions
 
-NanoPT is pre-release software. Security fixes apply to the latest commit on the default branch
-until the first tagged release defines a longer support window.
+The `0.1.x` release line and the latest commit on the default branch receive security fixes. Alpha
+releases do not yet have a fixed end-of-support date; any support-policy change will be recorded in
+this file and in release notes.
 
 ## Threat model
 

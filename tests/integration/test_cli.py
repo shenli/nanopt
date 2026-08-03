@@ -30,7 +30,7 @@ def test_help_and_version_do_not_download_models() -> None:
     assert "train" in help_result.stdout
     assert "calibrate" in help_result.stdout
     assert version_result.exit_code == 0
-    assert "0.1.0.dev0" in version_result.stdout
+    assert "0.1.0" in version_result.stdout
 
 
 def test_config_resolve_writes_config_and_provenance(tmp_path: Path, project_root: Path) -> None:

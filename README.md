@@ -19,7 +19,8 @@ v0.1 evaluates that environment; it does not train an agent policy in it.
 
 ## Current status
 
-NanoPT is pre-alpha. Milestone 1 provides the package, CLI, typed configuration resolution,
+NanoPT v0.1.0 is the first complete alpha release. Milestone 1 provides the package, CLI, typed
+configuration resolution,
 environment diagnosis, run-artifact lifecycle, documentation skeleton, and local CPU validation.
 Milestone 2 completes the CPU-tested mathematical core, pinned Qwen loader and exact renderer, LoRA
 adapter lifecycle, deterministic arithmetic generator and fingerprints, leakage-safe splits, and

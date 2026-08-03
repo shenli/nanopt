@@ -23,3 +23,14 @@ def test_all_agent_task_cards_match_public_schema(project_root: Path) -> None:
     validator = jsonschema.Draft202012Validator(schema)
     for path in sorted((project_root / "tasks/mini_swe_v1").glob("*/task.yaml")):
         validator.validate(yaml.safe_load(path.read_text()))
+
+
+def test_release_manifest_matches_public_schema(project_root: Path) -> None:
+    schema = json.loads((project_root / "specs/schemas/release.schema.json").read_text())
+    release = yaml.safe_load(
+        (project_root / "configs/releases/v0_1_0.yaml").read_text(encoding="utf-8")
+    )
+
+    jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(
+        release
+    )

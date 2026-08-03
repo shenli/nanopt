@@ -213,3 +213,15 @@ Before a release:
 - model and dataset licenses documented;
 - SECURITY.md includes a reporting process and threat model;
 - no unreviewed contribution is executed on a persistent GPU host.
+
+The v0.1 release adds two executable gates without adding GitHub Actions:
+
+```bash
+./scripts/run_m10_release_gate.sh
+```
+
+That command creates a fresh Python 3.11 environment from `uv.lock`, repeats the complete local
+quality gate, builds the strict documentation site and both Python distributions, installs the
+wheel into a second isolated environment, exercises the offline CLI surface, and records archive,
+license, model-pin, reference-evidence, and public-content hashes. The reference host separately
+reruns the M7 pipeline and M8 Docker protocol from the same clean candidate commit.

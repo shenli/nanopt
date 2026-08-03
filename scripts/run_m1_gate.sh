@@ -28,6 +28,8 @@ run_step "Validate schemas and configuration files" \
   uv run python scripts/validate_schemas.py
 run_step "Validate curriculum manifest" \
   uv run python scripts/validate_m9_curriculum.py
+run_step "Validate frozen release structure" \
+  uv run python scripts/validate_m10_release.py
 run_step "Lint documentation formulas" \
   uv run python scripts/lint_formulas.py docs
 run_step "Build documentation in strict mode" uv run mkdocs build --strict

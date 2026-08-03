@@ -29,7 +29,8 @@ This is the reading and implementation reference map for NanoPT. Prefer primary 
 - Technical report: https://arxiv.org/abs/2505.09388
 - Role: official base checkpoint for the v0.1 learning path.
 - Important implementation note: the model card requires a Transformers version with Qwen3 support; record the exact resolved version and model revision.
-- License at the time of planning: Apache-2.0. Verify at implementation/release time.
+- License verified for the pinned v0.1 revision on 2026-08-03: Apache-2.0. NanoPT references the
+  model and does not redistribute its weights.
 
 ### Qwen3 0.6B post-trained sibling
 
