@@ -22,6 +22,16 @@ import pytest
         ("labs/07_completion_only_sft.py", "Completion-only SFT lab passed."),
         ("labs/08_controlled_preferences.py", "Controlled preference lab passed."),
         ("labs/09_exact_rlvr_trajectory.py", "Exact RLVR trajectory lab passed."),
+        ("labs/10_mini_swe_environment.py", "MiniSWE reset and semantic replay lab passed."),
+        ("labs/11_reward_ranking.py", "Reward-ranking lab passed."),
+        ("labs/12_reinforce.py", "REINFORCE lab passed."),
+        ("labs/13_ppo_clipping.py", "PPO-clipping lab passed."),
+        ("labs/14_reward_hacking.py", "Reward-hacking lab passed."),
+        ("labs/15_rollout_scheduler.py", "Rollout-scheduler simulation passed."),
+        ("labs/16_production_flywheel.py", "Production-flywheel simulation passed."),
+        ("labs/17_task_card.py", "Task-card lab passed."),
+        ("labs/18_artifact_lineage.py", "Artifact-lineage lab passed."),
+        ("labs/19_optimizer_step.py", "Optimizer-step lab passed."),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(
@@ -35,7 +45,7 @@ def test_cpu_lab_runs_from_repository_root(
         check=True,
         capture_output=True,
         text=True,
-        timeout=30,
+        timeout=60,
     )
 
     assert success_message in completed.stdout

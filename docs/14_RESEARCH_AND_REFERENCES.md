@@ -122,9 +122,11 @@ This is the reading and implementation reference map for NanoPT. Prefer primary 
 
 ## 7. Agent RL and long-horizon infrastructure
 
-### User-provided Kimi K3 Technical Report
+### Kimi K3 Technical Report
 
-- Local handoff source: `source_materials/k3_tech_report.pdf`
+- Official paper: https://arxiv.org/abs/2607.24653
+- Official repository: https://github.com/MoonshotAI/Kimi-K3
+- Original local handoff source: `source_materials/k3_tech_report.pdf`
 - Relevant sections in the provided report:
   - post-training method;
   - RL task synthesis and agentic environments;

@@ -1,0 +1,152 @@
+schema_version: 1
+prerequisite:
+  id: -1
+  title: Python, tensors, probability, and autograd
+  path: docs/getting-started/prerequisites.md
+  labs:
+    - tier: cpu
+      command: uv run python labs/00_prerequisites.py
+chapters:
+  - id: 0
+    title: Course map and artifact lineage
+    path: docs/course/index.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/18_artifact_lineage.py
+  - id: 1
+    title: Tokens, probabilities, and log probabilities
+    path: docs/foundations/tokens-masks-logprobs.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/01_tokens_and_masks.py
+      - tier: cpu
+        command: uv run python labs/02_logprob_by_hand.py
+  - id: 2
+    title: Optimization without unnecessary abstraction
+    path: docs/foundations/optimization-and-lora.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/19_optimizer_step.py
+  - id: 3
+    title: Evaluation before training
+    path: docs/evaluation/exact-generation-and-reports.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/06_exact_generation.py
+      - tier: reference
+        command: ./scripts/run_m3_reference_smoke.sh
+        evidence: docs/reference/evidence/m3-reference-smoke-8de4507.json
+  - id: 4
+    title: Supervised fine-tuning
+    path: docs/sft/completion-only-training.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/07_completion_only_sft.py
+      - tier: reference
+        command: ./scripts/run_m4_reference_sft.sh
+        evidence: docs/reference/evidence/m4-reference-sft-05bd73a.json
+  - id: 5
+    title: Preference data
+    path: docs/preferences/controlled-preferences.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/05_synthetic_arithmetic.py
+      - tier: cpu
+        command: uv run python labs/08_controlled_preferences.py
+  - id: 6
+    title: Reward models
+    path: docs/preferences/reward-models.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/11_reward_ranking.py
+  - id: 7
+    title: Direct Preference Optimization
+    path: docs/preferences/dpo-training.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/03_dpo_vertical_slice.py
+      - tier: reference
+        command: ./scripts/run_m5_reference_dpo.sh
+        evidence: docs/reference/evidence/m5-reference-dpo-e8ef422.json
+  - id: 8
+    title: Reinforcement-learning foundations
+    path: docs/rl/reinforcement-learning-foundations.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/12_reinforce.py
+  - id: 9
+    title: REINFORCE
+    path: docs/rl/reinforce.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/12_reinforce.py
+  - id: 10
+    title: Actor-Critic and PPO
+    path: docs/rl/ppo.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/13_ppo_clipping.py
+  - id: 11
+    title: RLVR and GRPO
+    path: docs/grpo-rlvr/synchronous-grpo.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/04_group_advantages.py
+      - tier: cpu
+        command: uv run python labs/09_exact_rlvr_trajectory.py
+      - tier: reference
+        command: ./scripts/run_m6_reference_grpo.sh
+        evidence: docs/reference/evidence/m6-reference-grpo-8a35e46.json
+  - id: 12
+    title: Reward hacking and verifier design
+    path: docs/grpo-rlvr/reward-hacking.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/14_reward_hacking.py
+  - id: 13
+    title: From single-turn RL to Agent RL
+    path: docs/agents/from-tool-call-to-trajectory.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/10_mini_swe_environment.py
+      - tier: reference
+        command: ./scripts/run_m8_reference_agent.sh
+        evidence: docs/reference/evidence/m8-reference-agent-9e3daa1.json
+  - id: 14
+    title: Building a verifiable agent environment
+    path: docs/agents/task-authoring-and-verification.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/17_task_card.py
+      - tier: reference
+        command: ./scripts/run_m8_reference_agent.sh
+        evidence: docs/reference/evidence/m8-reference-agent-9e3daa1.json
+  - id: 15
+    title: Rollout infrastructure
+    path: docs/systems/rollout-infrastructure.md
+    labs:
+      - tier: systems_simulation
+        command: uv run python labs/15_rollout_scheduler.py
+  - id: 16
+    title: Production data flywheels
+    path: docs/systems/production-flywheels.md
+    labs:
+      - tier: systems_simulation
+        command: uv run python labs/16_production_flywheel.py
+  - id: 17
+    title: Reading modern post-training systems
+    path: docs/reading/post-training-systems.md
+    labs: []
+  - id: 18
+    title: End-to-end NanoPT pipeline
+    path: docs/pipeline/end-to-end-recipe.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/18_artifact_lineage.py
+      - tier: reference
+        command: ./scripts/run_m7_reference_pipeline.sh
+        evidence: docs/reference/evidence/m7-reference-pipeline-92564f3.json
+  - id: 19
+    title: Extending NanoPT
+    path: docs/extending/contribution-paths.md
+    labs: []

@@ -1,5 +1,15 @@
 # Exact generation and inspectable evaluation
 
+## Learning objectives
+
+After this chapter, you should be able to:
+
+- trace one sampled token ID and its stopping decision without `transformers.generate`;
+- distinguish policy and behavior log probabilities;
+- separate parse rate, exact correctness, pass@k, and uncertainty intervals;
+- explain why examples are written before aggregate metrics;
+- rebuild a report without loading a model.
+
 Milestone 3 connects the token probabilities from the foundations chapters to complete model
 responses. NanoPT uses a small token-at-a-time sampler instead of delegating the reference path to
 `transformers.generate`. The slower implementation keeps every probability and stopping decision

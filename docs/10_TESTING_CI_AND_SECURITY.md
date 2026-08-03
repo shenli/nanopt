@@ -122,6 +122,7 @@ uv run ruff check .
 uv run mypy src/nanopt
 uv run pytest --cov=nanopt --cov-report=term-missing
 uv run python scripts/validate_schemas.py
+uv run python scripts/validate_m9_curriculum.py
 uv run python scripts/lint_formulas.py docs
 uv run mkdocs build --strict
 uv build
@@ -130,6 +131,11 @@ uv build
 GPU smoke and reference validation run only on an explicitly selected local machine. Never execute
 unreviewed pull-request code on a persistent GPU host. Store checksummed evidence only after the
 complete validation protocol passes.
+
+The separate `scripts/run_m9_curriculum_gate.sh` creates a fresh locked environment, executes every
+unique CPU and systems-simulation lab declared in `specs/curriculum.yaml`, and verifies that every
+reference-tier declaration points to prior passing compact evidence. It never reruns expensive GPU
+training merely to validate a documentation link.
 
 ## 6. Agent-environment security tests
 

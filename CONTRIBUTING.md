@@ -33,6 +33,19 @@ Repository-specific instructions for coding agents are kept in [`AGENTS.md`](AGE
 define the rule that implementation, hand-computable tests, and learner-facing tutorials move
 together in one change.
 
+Use the contribution guide matching the change:
+
+- [`algorithms and objective variants`](docs/contributing/algorithms.md);
+- [`tasks and verifiers`](docs/contributing/tasks.md);
+- [`hardware profiles`](docs/contributing/hardware.md).
+
+Course changes must update `specs/curriculum.yaml`. Before claiming a lab tier is complete, run the
+fresh-environment curriculum gate:
+
+```bash
+./scripts/run_m9_curriculum_gate.sh
+```
+
 ## Pull requests
 
 Keep pull requests milestone-sized. Describe scope and non-scope, architecture decisions, commands

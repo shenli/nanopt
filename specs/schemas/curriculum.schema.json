@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/curriculum.schema.json",
+  "title": "NanoPT Curriculum Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "prerequisite", "chapters"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "prerequisite": {"$ref": "#/$defs/chapter"},
+    "chapters": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "items": {"$ref": "#/$defs/chapter"}
+    }
+  },
+  "$defs": {
+    "lab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier", "command"],
+      "properties": {
+        "tier": {"enum": ["cpu", "gpu_smoke", "reference", "systems_simulation", "stretch"]},
+        "command": {"type": "string", "minLength": 1},
+        "evidence": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"tier": {"const": "reference"}}, "required": ["tier"]},
+          "then": {"required": ["evidence"]}
+        }
+      ]
+    },
+    "chapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "path", "labs"],
+      "properties": {
+        "id": {"type": "integer", "minimum": -1, "maximum": 19},
+        "title": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "pattern": "^[a-zA-Z0-9_./-]+\\.md$"},
+        "labs": {"type": "array", "items": {"$ref": "#/$defs/lab"}}
+      }
+    }
+  }
+}

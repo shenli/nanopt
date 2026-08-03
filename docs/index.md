@@ -24,3 +24,8 @@ The RTX 4070 Ti SUPER configuration is validated for the pinned Base → SFT →
 path. The [M7 report](reference/m7-completion-report.md) states the exact scope and evidence.
 The [M8 report](reference/m8-completion-report.md) documents the separate agent-environment scope,
 including its unsuccessful but retained base-model baseline.
+
+Use the [course map](course/index.md) to connect all 20 chapters to their executable labs and prior
+reference evidence. The [troubleshooting guide](troubleshooting.md) records actual lessons from the
+SFT, DPO, GRPO, pipeline, and Docker validation runs; the [glossary](glossary.md) fixes notation
+before comparing external reports.

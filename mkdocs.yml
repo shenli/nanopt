@@ -43,11 +43,14 @@ nav:
       - Configuration: getting-started/configuration.md
       - Environment diagnosis: getting-started/doctor.md
       - Publishing documentation: getting-started/publishing-docs.md
+  - Course:
+      - Chapter map and evidence tiers: course/index.md
   - Foundations:
       - MathJax smoke test: foundations/mathjax-smoke.md
       - Tokens, masks, and log probabilities: foundations/tokens-masks-logprobs.md
       - Entropy and KL divergence: foundations/entropy-and-kl.md
       - Model rendering and LoRA: foundations/model-rendering-and-lora.md
+      - Optimization and LoRA: foundations/optimization-and-lora.md
   - Data:
       - Synthetic arithmetic: data/synthetic-arithmetic.md
   - Evaluation:
@@ -56,18 +59,37 @@ nav:
       - Completion-only training: sft/completion-only-training.md
   - Preferences:
       - Controlled preference data: preferences/controlled-preferences.md
+      - Reward models: preferences/reward-models.md
       - DPO margins and loss: preferences/dpo-by-hand.md
       - Cached-reference DPO training: preferences/dpo-training.md
+  - Reinforcement learning:
+      - RL foundations: rl/reinforcement-learning-foundations.md
+      - REINFORCE: rl/reinforce.md
+      - PPO and actor-critic: rl/ppo.md
   - GRPO and RLVR:
       - Advantages and clipping: grpo-rlvr/advantages-and-clipping.md
       - Exact rollouts and rewards: grpo-rlvr/exact-rollouts-and-rewards.md
       - Synchronous GRPO: grpo-rlvr/synchronous-grpo.md
+      - Reward hacking and verifiers: grpo-rlvr/reward-hacking.md
   - Pipeline:
       - End-to-end recipe and lineage: pipeline/end-to-end-recipe.md
   - Agents:
       - From tool call to trajectory: agents/from-tool-call-to-trajectory.md
       - Task authoring and verification: agents/task-authoring-and-verification.md
       - Sandbox security and threat model: agents/security-threat-model.md
+  - Systems:
+      - Rollout infrastructure: systems/rollout-infrastructure.md
+      - Production data flywheels: systems/production-flywheels.md
+  - Reading guides:
+      - Objective papers: reading/objective-papers.md
+      - Modern post-training systems: reading/post-training-systems.md
+  - Extending NanoPT:
+      - Contribution paths: extending/contribution-paths.md
+      - Algorithm contributions: contributing/algorithms.md
+      - Task and verifier contributions: contributing/tasks.md
+      - Hardware profile contributions: contributing/hardware.md
+  - Troubleshooting: troubleshooting.md
+  - Glossary: glossary.md
   - Reference:
       - CLI: reference/cli.md
       - Artifact contract: reference/artifacts.md

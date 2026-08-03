@@ -91,6 +91,9 @@ environment is usable for the reference pipeline.
 The detailed milestone contract is in the
 [`implementation roadmap`](docs/12_IMPLEMENTATION_ROADMAP.md) and
 [`acceptance criteria`](docs/13_ACCEPTANCE_CRITERIA.md).
+The [20-chapter course map](docs/course/index.md) links each concept to its implementation, local
+lab, and reference evidence. Start there after the prerequisites; use the
+[observed-run troubleshooting guide](docs/troubleshooting.md) when a gate fails.
 
 ## Development
 
@@ -109,6 +112,7 @@ uv run ruff check .
 uv run mypy src/nanopt
 uv run pytest --cov=nanopt --cov-report=term-missing
 uv run python scripts/validate_schemas.py
+uv run python scripts/validate_m9_curriculum.py
 uv run python scripts/lint_formulas.py docs
 uv run mkdocs build --strict
 uv build
