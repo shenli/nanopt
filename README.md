@@ -28,7 +28,8 @@ evaluation, pass@k and Wilson intervals, example-first JSONL artifacts, Markdown
 load/eval calibration. Its real base-model smoke passed on the proposed reference GPU from a clean,
 pinned checkout. Milestone 4 completes the readable completion-only LoRA SFT slice: protected parse
 rate improved from 0% to 95.5% and exact-answer accuracy from 0% to 86.4% on the reference smoke.
-Controlled preference construction and DPO are next in Milestone 5.
+Milestone 5's controlled preference generator, fingerprinted reference cache, and white-box DPO
+loop are implemented and awaiting the clean reference-GPU completion gate.
 
 The reference host reproduced the complete M3 smoke and offline evidence validator with
 `bash scripts/run_m3_reference_smoke.sh`.

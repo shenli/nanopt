@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shenli.github.io/nanopt/schemas/preference_pair.schema.json",
+  "title": "NanoPT controlled preference pair",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "pair_id", "task_id", "family", "difficulty", "split", "prompt",
+    "chosen", "rejected", "rejection_type", "source_dataset_fingerprint",
+    "generator_version", "seed"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "pair_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "difficulty": {"type": "integer", "minimum": 1, "maximum": 5},
+    "split": {"enum": ["train", "validation"]},
+    "prompt": {"type": "string", "minLength": 1},
+    "chosen": {"type": "string", "minLength": 1},
+    "rejected": {"type": "string", "minLength": 1},
+    "rejection_type": {"enum": ["wrong_answer", "malformed_answer", "trailing_content"]},
+    "source_dataset_fingerprint": {"type": "string", "minLength": 1},
+    "generator_version": {"const": "controlled-arithmetic-preferences-v1"},
+    "seed": {"type": "integer"}
+  }
+}

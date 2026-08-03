@@ -52,3 +52,19 @@ def dataset_fingerprint(
         "records": records,
     }
     return hashlib.sha256(_canonical_bytes(payload)).hexdigest()
+
+
+def fingerprint_records(records: Sequence[dict[str, Any]], *, namespace: str) -> str:
+    """Hash an ordered collection of JSON-compatible records under a format namespace.
+
+    The caller controls record ordering because order is part of generated-dataset lineage. A
+    namespace prevents structurally similar record types from accidentally sharing an identity.
+    """
+
+    if not namespace:
+        raise ValueError("fingerprint namespace must not be empty")
+    if not records:
+        raise ValueError("cannot fingerprint an empty record collection")
+    return hashlib.sha256(
+        _canonical_bytes({"namespace": namespace, "records": list(records)})
+    ).hexdigest()

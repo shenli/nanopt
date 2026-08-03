@@ -14,12 +14,14 @@ from rich.console import Console
 from rich.table import Table
 
 from nanopt.config.loader import ConfigError, ConfigRepository
-from nanopt.config.models import BaseEvalExperiment, SftExperiment
+from nanopt.config.models import BaseEvalExperiment, DpoExperiment, SftExperiment
 from nanopt.config.provenance import serialize_provenance
 from nanopt.config.resolver import ResolutionResult, resolve_config
 from nanopt.data.arithmetic import ArithmeticGeneratorConfig, generate_tasks
+from nanopt.data.preferences import generate_preference_pairs
 from nanopt.data.schemas import ArithmeticSplitConfig
 from nanopt.data.splits import SPLIT_ORDER, build_splits
+from nanopt.dpo.run import execute_dpo_run
 from nanopt.eval.io import (
     read_arithmetic_tasks,
     read_split_manifest,
@@ -74,6 +76,7 @@ class CalibrationMode(StrEnum):
     load = "load"
     eval = "eval"
     sft = "sft"
+    dpo = "dpo"
 
 
 def _version_callback(value: bool) -> None:
@@ -292,6 +295,44 @@ def data_generate(
     )
 
 
+@data_app.command("preferences")
+def data_preferences(
+    tasks: Annotated[
+        Path, typer.Option(exists=True, dir_okay=False, help="Source arithmetic task JSONL.")
+    ] = Path("artifacts/data/arithmetic_v1/tasks.jsonl"),
+    output: Annotated[Path, typer.Option(help="New or empty preference JSONL output.")] = Path(
+        "artifacts/data/arithmetic_preferences_v1/preferences.jsonl"
+    ),
+    audit: Annotated[Path | None, typer.Option(help="Optional preference audit path.")] = None,
+    seed: Annotated[int, typer.Option(help="Controlled rejection assignment seed.")] = 42,
+) -> None:
+    """Construct verifier-audited chosen/rejected pairs from non-protected task splits."""
+
+    try:
+        if output.exists() and output.stat().st_size:
+            raise ValueError("preference output must be new or empty")
+        task_records = read_arithmetic_tasks(tasks)
+        source_manifest_path = tasks.with_name("dataset_manifest.json")
+        source_manifest = read_split_manifest(source_manifest_path)
+        validate_tasks_against_manifest(task_records, source_manifest)
+        pairs, preference_audit = generate_preference_pairs(
+            task_records,
+            source_dataset_fingerprint=source_manifest.dataset_fingerprint,
+            seed=seed,
+        )
+        for pair in pairs:
+            append_jsonl(output, pair.model_dump(mode="json"))
+        audit_path = audit or output.with_name("preference_audit.json")
+        write_json(audit_path, preference_audit.model_dump(mode="json"))
+    except (OSError, TypeError, ValueError) as exc:
+        console.print(f"[red]Preference construction failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(
+        f"Wrote {len(pairs)} controlled pairs to [bold]{output}[/bold]; "
+        f"fingerprint {preference_audit.dataset_fingerprint}"
+    )
+
+
 def _resolve_evaluation(
     *,
     hardware: str,
@@ -329,6 +370,27 @@ def _resolve_sft(
     )
     if not isinstance(result.config.experiment, SftExperiment):
         raise ConfigError(f"experiment {experiment!r} is not an SFT profile")
+    return result
+
+
+def _resolve_dpo(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+    overrides: tuple[str, ...] = (),
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=overrides,
+    )
+    if not isinstance(result.config.experiment, DpoExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not a DPO profile")
     return result
 
 
@@ -616,6 +678,53 @@ def train_sft_command(
     console.print(f"SFT completed: [bold]{context.run_dir}[/bold]")
 
 
+@train_app.command("dpo")
+def train_dpo_command(
+    preferences: Annotated[
+        Path, typer.Option(exists=True, dir_okay=False, help="Preference JSONL file.")
+    ],
+    sft_adapter: Annotated[
+        Path,
+        typer.Option(exists=True, file_okay=False, help="Frozen parent SFT adapter directory."),
+    ],
+    hardware: Annotated[str, typer.Option()] = "rtx_4070_ti_super_16gb",
+    model: Annotated[str, typer.Option()] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option()] = "math_dpo",
+    artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe DPO run ID.")] = None,
+    local_files_only: Annotated[bool, typer.Option()] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    set_values: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Repeatable scalar override within the DPO profile."),
+    ] = None,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Train a DPO adapter from an exact SFT copy and a fingerprinted reference cache."""
+
+    try:
+        resolved = _resolve_dpo(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+            overrides=tuple(set_values or ()),
+        )
+        context = execute_dpo_run(
+            resolved,
+            preferences_path=preferences,
+            sft_adapter_path=sft_adapter,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            local_files_only=local_files_only,
+            device=device,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]DPO failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"DPO completed: [bold]{context.run_dir}[/bold]")
+
+
 @report_app.command("build")
 def report_build(
     run_dir: Annotated[Path, typer.Argument(exists=True, file_okay=False)],
@@ -648,6 +757,15 @@ def calibrate(
     model: Annotated[str, typer.Option()] = "qwen3_0_6b_base",
     experiment: Annotated[str, typer.Option()] = "base_eval",
     sft_experiment: Annotated[str, typer.Option(help="SFT profile for --mode sft.")] = "math_sft",
+    dpo_experiment: Annotated[str, typer.Option(help="DPO profile for --mode dpo.")] = "math_dpo",
+    preferences: Annotated[
+        Path | None,
+        typer.Option(exists=True, dir_okay=False, help="Required preference JSONL for DPO."),
+    ] = None,
+    sft_adapter: Annotated[
+        Path | None,
+        typer.Option(exists=True, file_okay=False, help="Required SFT adapter for DPO."),
+    ] = None,
     artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
     run_id: Annotated[str | None, typer.Option(help="Optional path-safe eval calibration ID.")] = (
         None
@@ -659,6 +777,34 @@ def calibrate(
     """Exercise the real model load or evaluation path before a full reference run."""
 
     try:
+        if mode is CalibrationMode.dpo:
+            if preferences is None or sft_adapter is None:
+                raise ValueError("--preferences and --sft-adapter are required for --mode dpo")
+            dpo_resolved = _resolve_dpo(
+                hardware=hardware,
+                model=model,
+                experiment=dpo_experiment,
+                config_dir=config_dir,
+                overrides=(
+                    "training.pair_micro_batch_size=1",
+                    "training.gradient_accumulation_steps=1",
+                    "reference.cache_validation_sample_size=1",
+                ),
+            )
+            context = execute_dpo_run(
+                dpo_resolved,
+                preferences_path=preferences,
+                sft_adapter_path=sft_adapter,
+                artifacts_root=artifacts_root,
+                run_id=run_id,
+                local_files_only=local_files_only,
+                device=device,
+                pair_limit=limit,
+            )
+            console.print(
+                f"Non-representative DPO calibration completed: [bold]{context.run_dir}[/bold]"
+            )
+            return
         if mode is CalibrationMode.sft:
             if tasks is None:
                 raise ValueError("--tasks is required for --mode sft")

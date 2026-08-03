@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shenli.github.io/nanopt/schemas/reference_logprob_cache.schema.json",
+  "title": "NanoPT DPO reference log-probability cache entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "pair_id", "chosen_logp", "rejected_logp",
+    "chosen_active_tokens", "rejected_active_tokens"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "pair_id": {"type": "string", "minLength": 1},
+    "chosen_logp": {"type": "number"},
+    "rejected_logp": {"type": "number"},
+    "chosen_active_tokens": {"type": "integer", "minimum": 1},
+    "rejected_active_tokens": {"type": "integer", "minimum": 1}
+  }
+}

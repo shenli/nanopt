@@ -187,3 +187,37 @@ def test_data_generate_command_reproduces_task_file(tmp_path: Path, project_root
     )
     assert rejected.exit_code == 1
     assert not same_path.exists()
+
+
+def test_data_preferences_command_writes_audited_nonprotected_pairs(
+    tmp_path: Path, project_root: Path
+) -> None:
+    tasks = tmp_path / "tasks.jsonl"
+    generated = runner.invoke(
+        app,
+        [
+            "data",
+            "generate",
+            "--generator-config",
+            str(project_root / "tasks/arithmetic/generator_config.yaml"),
+            "--split-config",
+            str(project_root / "tasks/arithmetic/split_config.yaml"),
+            "--output",
+            str(tasks),
+        ],
+    )
+    assert generated.exit_code == 0, generated.stdout
+    preferences = tmp_path / "preferences.jsonl"
+
+    command = runner.invoke(
+        app,
+        ["data", "preferences", "--tasks", str(tasks), "--output", str(preferences)],
+    )
+
+    assert command.exit_code == 0, command.stdout
+    records = [json.loads(line) for line in preferences.read_text().splitlines()]
+    audit = json.loads((tmp_path / "preference_audit.json").read_text())
+    assert len(records) == 80
+    assert {record["split"] for record in records} == {"train", "validation"}
+    assert audit["all_chosen_correct"] is True
+    assert audit["all_rejected_match_intended_failure"] is True
