@@ -10,6 +10,14 @@ if [[ ! -f "pyproject.toml" || ! -d "src/nanopt" ]]; then
   echo "Could not locate the NanoPT repository root." >&2
   exit 2
 fi
+if command -v uv >/dev/null 2>&1; then
+  uv_command="$(command -v uv)"
+elif [[ -x "${HOME}/.local/bin/uv" ]]; then
+  uv_command="${HOME}/.local/bin/uv"
+else
+  echo "uv is required; install it from https://docs.astral.sh/uv/." >&2
+  exit 2
+fi
 if [[ -n "$(git status --porcelain)" ]]; then
   echo "M3 reference smoke requires a clean checkout." >&2
   exit 2
@@ -27,10 +35,10 @@ exec > >(tee "${evidence_root}/commands.log") 2>&1
 echo "M3 reference smoke evidence: ${evidence_root}"
 echo "Git commit: $(git rev-parse HEAD)"
 
-uv sync --frozen --extra dev --extra docs
+"${uv_command}" sync --frozen --extra dev --extra docs
 
 set +e
-uv run nanopt doctor \
+"${uv_command}" run nanopt doctor \
   --profile rtx_4070_ti_super_16gb \
   --json "${evidence_root}/doctor.json"
 doctor_status=$?
@@ -40,15 +48,15 @@ if [[ ${doctor_status} -ne 0 && ${doctor_status} -ne 2 ]]; then
   exit "${doctor_status}"
 fi
 
-uv run nanopt data generate \
+"${uv_command}" run nanopt data generate \
   --output "${evidence_root}/data/tasks.jsonl" \
   --manifest "${evidence_root}/data/dataset_manifest.json"
 
-uv run nanopt calibrate \
+"${uv_command}" run nanopt calibrate \
   --mode load \
   --device cuda
 
-uv run nanopt calibrate \
+"${uv_command}" run nanopt calibrate \
   --mode eval \
   --tasks "${evidence_root}/data/tasks.jsonl" \
   --artifacts-root "${evidence_root}/runs" \
@@ -56,7 +64,7 @@ uv run nanopt calibrate \
   --local-files-only \
   --device cuda
 
-uv run nanopt eval run \
+"${uv_command}" run nanopt eval run \
   --tasks "${evidence_root}/data/tasks.jsonl" \
   --mode deterministic \
   --checkpoint-id base \
@@ -65,7 +73,7 @@ uv run nanopt eval run \
   --local-files-only \
   --device cuda
 
-uv run python scripts/validate_m3_reference_smoke.py \
+"${uv_command}" run python scripts/validate_m3_reference_smoke.py \
   "${evidence_root}" \
   --output "${evidence_root}/m3_smoke_evidence.json"
 
