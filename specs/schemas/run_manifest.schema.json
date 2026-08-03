@@ -117,6 +117,24 @@
         "representative": {"type": "boolean"}
       }
     },
+    "training": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device",
+        "train_examples",
+        "validation_examples",
+        "representative",
+        "resumed"
+      ],
+      "properties": {
+        "device": {"enum": ["cpu", "cuda"]},
+        "train_examples": {"type": "integer", "minimum": 1},
+        "validation_examples": {"type": "integer", "minimum": 1},
+        "representative": {"type": "boolean"},
+        "resumed": {"type": "boolean"}
+      }
+    },
     "failure": {
       "type": ["object", "null"],
       "additionalProperties": false,

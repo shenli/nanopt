@@ -6,8 +6,9 @@ NanoPT exposes only commands backed by implemented, tested behavior:
 nanopt doctor
 nanopt config resolve
 nanopt data generate
-nanopt calibrate --mode load|eval
-nanopt eval run
+nanopt calibrate --mode load|eval|sft
+nanopt train sft
+nanopt eval run [--adapter ADAPTER_DIR]
 nanopt report build RUN_DIR
 nanopt artifacts inspect RUN_DIR
 ```
@@ -24,8 +25,13 @@ loading.
 `nanopt calibrate --mode load` exercises the exact model-loader path. `--mode eval` requires a task
 JSONL and uses an explicit small limit; its manifest labels the result non-representative.
 
+`nanopt calibrate --mode sft` runs one deliberately non-representative optimizer step. `nanopt train
+sft` executes the configured completion-only LoRA stage and may resume from a clean-boundary
+checkpoint with `--resume-from`. The run writes teacher-forced metrics and a report, but protected
+generation still requires `nanopt eval run --adapter ADAPTER_DIR --checkpoint-id sft`.
+
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.
 
-Training, pipeline, and agent commands are added with their later vertical slices. The CLI does not
-advertise placeholders that silently do nothing.
+DPO, GRPO, pipeline, and agent commands are added with their later vertical slices. The CLI does
+not advertise placeholders that silently do nothing.

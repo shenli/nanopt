@@ -52,6 +52,8 @@ nav:
       - Synthetic arithmetic: data/synthetic-arithmetic.md
   - Evaluation:
       - Exact generation and reports: evaluation/exact-generation-and-reports.md
+  - Supervised fine-tuning:
+      - Completion-only training: sft/completion-only-training.md
   - Preferences:
       - DPO margins and loss: preferences/dpo-by-hand.md
   - GRPO and RLVR:
@@ -66,10 +68,12 @@ nav:
           - Artifact writes: adr/0002-run-artifact-writes.md
           - Local validation: adr/0003-local-validation.md
           - Reference PyTorch wheel: adr/0004-reference-pytorch-wheel.md
+          - SFT schedule and checkpoints: adr/0005-sft-schedule-and-checkpoints.md
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
       - M2 completion report: reference/m2-completion-report.md
       - M3 completion report: reference/m3-completion-report.md
+      - M4 implementation status: reference/m4-implementation-status.md
   - Project plans:
       - Vision and scope: 00_VISION_AND_SCOPE.md
       - Product requirements: 01_PRODUCT_REQUIREMENTS.md

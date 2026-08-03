@@ -14,7 +14,7 @@ from rich.console import Console
 from rich.table import Table
 
 from nanopt.config.loader import ConfigError, ConfigRepository
-from nanopt.config.models import BaseEvalExperiment
+from nanopt.config.models import BaseEvalExperiment, SftExperiment
 from nanopt.config.provenance import serialize_provenance
 from nanopt.config.resolver import ResolutionResult, resolve_config
 from nanopt.data.arithmetic import ArithmeticGeneratorConfig, generate_tasks
@@ -31,6 +31,7 @@ from nanopt.eval.runner import (
     LocalModelBackend,
     evaluate_to_artifacts,
 )
+from nanopt.models.adapters import ParameterCounts, load_lora_adapter, parameter_counts
 from nanopt.models.loading import LoadedModel, load_qwen3_base
 from nanopt.models.renderer import ChatRenderer
 from nanopt.reporting.builder import build_evaluation_report
@@ -38,6 +39,8 @@ from nanopt.rollout.sampler import SamplingConfig
 from nanopt.runtime.artifacts import append_jsonl, sha256_file, write_json, write_yaml
 from nanopt.runtime.doctor import DoctorReport, collect_doctor_report
 from nanopt.runtime.run_context import RunContext, create_run_context
+from nanopt.sft.checkpoint import sha256_directory
+from nanopt.sft.run import execute_sft_run
 from nanopt.version import __version__
 
 app = typer.Typer(
@@ -51,11 +54,13 @@ artifacts_app = typer.Typer(help="Inspect local NanoPT run artifacts.")
 data_app = typer.Typer(help="Generate and validate deterministic local task artifacts.")
 eval_app = typer.Typer(help="Run checkpoint-agnostic generation evaluation.")
 report_app = typer.Typer(help="Build local reports from inspectable run artifacts.")
+train_app = typer.Typer(help="Run readable white-box training stages.")
 app.add_typer(config_app, name="config")
 app.add_typer(artifacts_app, name="artifacts")
 app.add_typer(data_app, name="data")
 app.add_typer(eval_app, name="eval")
 app.add_typer(report_app, name="report")
+app.add_typer(train_app, name="train")
 console = Console()
 
 
@@ -67,6 +72,7 @@ class EvaluationMode(StrEnum):
 class CalibrationMode(StrEnum):
     load = "load"
     eval = "eval"
+    sft = "sft"
 
 
 def _version_callback(value: bool) -> None:
@@ -304,6 +310,27 @@ def _resolve_evaluation(
     return result
 
 
+def _resolve_sft(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+    overrides: tuple[str, ...] = (),
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=overrides,
+    )
+    if not isinstance(result.config.experiment, SftExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not an SFT profile")
+    return result
+
+
 def _evaluation_plan(
     experiment: BaseEvalExperiment,
     mode: EvaluationMode,
@@ -389,6 +416,8 @@ def _execute_evaluation(
     local_files_only: bool,
     device: str,
     limit: int | None,
+    adapter_path: Path | None = None,
+    adapter_name: str = "sft",
 ) -> RunContext:
     experiment = result.config.experiment
     if not isinstance(experiment, BaseEvalExperiment):
@@ -409,6 +438,26 @@ def _execute_evaluation(
     try:
         context.set_status("running")
         loaded = load_qwen3_base(result.config.model, local_files_only=local_files_only)
+        if adapter_path is not None:
+            base_parameter_count = loaded.parameters.total
+            adapted = load_lora_adapter(
+                loaded.model,
+                adapter_path,
+                adapter_name=adapter_name,
+                trainable=False,
+            )
+            loaded = LoadedModel(
+                model=adapted,
+                tokenizer=loaded.tokenizer,
+                model_revision=loaded.model_revision,
+                tokenizer_revision=loaded.tokenizer_revision,
+                parameters=ParameterCounts(
+                    total=base_parameter_count,
+                    trainable=parameter_counts(adapted).trainable,
+                ),
+            )
+            context.manifest["model"]["adapter_name"] = adapter_name
+            context.manifest["model"]["adapter_sha256"] = sha256_directory(adapter_path)
         selected_device = _move_model(loaded, device)
         renderer = ChatRenderer(
             loaded.tokenizer,
@@ -473,6 +522,11 @@ def eval_run(
         bool, typer.Option(help="Forbid Hugging Face network access and use cached files only.")
     ] = False,
     device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    adapter: Annotated[
+        Path | None,
+        typer.Option(exists=True, file_okay=False, help="Optional local LoRA adapter directory."),
+    ] = None,
+    adapter_name: Annotated[str, typer.Option(help="Name assigned to --adapter.")] = "sft",
     config_dir: Annotated[Path | None, typer.Option(help="Override profile directory.")] = None,
 ) -> None:
     """Evaluate one checkpoint and write examples before aggregates and reports."""
@@ -494,11 +548,62 @@ def eval_run(
             local_files_only=local_files_only,
             device=device,
             limit=None,
+            adapter_path=adapter,
+            adapter_name=adapter_name,
         )
     except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
         console.print(f"[red]Evaluation failed:[/red] {exc}", highlight=False)
         raise typer.Exit(code=1) from exc
     console.print(f"Evaluation completed: [bold]{context.run_dir}[/bold]")
+
+
+@train_app.command("sft")
+def train_sft_command(
+    tasks: Annotated[Path, typer.Option(exists=True, dir_okay=False, help="Task JSONL file.")],
+    hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Model profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option(help="SFT experiment profile ID.")] = "math_sft",
+    artifacts_root: Annotated[Path, typer.Option(help="Parent directory for the new run.")] = Path(
+        "artifacts/runs"
+    ),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe SFT run ID.")] = None,
+    resume_from: Annotated[
+        Path | None,
+        typer.Option(exists=True, file_okay=False, help="Clean-boundary SFT checkpoint directory."),
+    ] = None,
+    local_files_only: Annotated[bool, typer.Option()] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    set_values: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Repeatable scalar override within the SFT profile."),
+    ] = None,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Train one completion-only LoRA adapter with explicit optimizer semantics."""
+
+    try:
+        resolved = _resolve_sft(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+            overrides=tuple(set_values or ()),
+        )
+        context = execute_sft_run(
+            resolved,
+            tasks_path=tasks,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            local_files_only=local_files_only,
+            device=device,
+            resume_from=resume_from,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]SFT failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"SFT completed: [bold]{context.run_dir}[/bold]")
 
 
 @report_app.command("build")
@@ -532,6 +637,7 @@ def calibrate(
     hardware: Annotated[str, typer.Option()] = "rtx_4070_ti_super_16gb",
     model: Annotated[str, typer.Option()] = "qwen3_0_6b_base",
     experiment: Annotated[str, typer.Option()] = "base_eval",
+    sft_experiment: Annotated[str, typer.Option(help="SFT profile for --mode sft.")] = "math_sft",
     artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
     run_id: Annotated[str | None, typer.Option(help="Optional path-safe eval calibration ID.")] = (
         None
@@ -543,6 +649,33 @@ def calibrate(
     """Exercise the real model load or evaluation path before a full reference run."""
 
     try:
+        if mode is CalibrationMode.sft:
+            if tasks is None:
+                raise ValueError("--tasks is required for --mode sft")
+            sft_resolved = _resolve_sft(
+                hardware=hardware,
+                model=model,
+                experiment=sft_experiment,
+                config_dir=config_dir,
+                overrides=(
+                    "training.micro_batch_size=1",
+                    "training.gradient_accumulation_steps=1",
+                    "training.max_steps=1",
+                ),
+            )
+            context = execute_sft_run(
+                sft_resolved,
+                tasks_path=tasks,
+                artifacts_root=artifacts_root,
+                run_id=run_id,
+                local_files_only=local_files_only,
+                device=device,
+                train_limit=limit,
+            )
+            console.print(
+                f"Non-representative SFT calibration completed: [bold]{context.run_dir}[/bold]"
+            )
+            return
         resolved = _resolve_evaluation(
             hardware=hardware,
             model=model,

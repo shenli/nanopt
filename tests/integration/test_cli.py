@@ -27,6 +27,7 @@ def test_help_and_version_do_not_download_models() -> None:
     assert "doctor" in help_result.stdout
     assert "eval" in help_result.stdout
     assert "report" in help_result.stdout
+    assert "train" in help_result.stdout
     assert "calibrate" in help_result.stdout
     assert version_result.exit_code == 0
     assert "0.1.0.dev0" in version_result.stdout

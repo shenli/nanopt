@@ -19,6 +19,7 @@ import pytest
         ("labs/04_group_advantages.py", "Group-advantage lab passed."),
         ("labs/05_synthetic_arithmetic.py", "Synthetic arithmetic lab passed."),
         ("labs/06_exact_generation.py", "Exact generation lab passed."),
+        ("labs/07_completion_only_sft.py", "Completion-only SFT lab passed."),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(

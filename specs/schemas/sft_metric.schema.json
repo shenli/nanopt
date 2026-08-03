@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/sft_metric.schema.json",
+  "title": "NanoPT SFT Metric",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "split",
+    "optimizer_step",
+    "completion_nll",
+    "completion_token_accuracy",
+    "active_tokens",
+    "learning_rate",
+    "gradient_norm",
+    "gradient_clipped",
+    "tokens_per_second",
+    "peak_allocated_bytes",
+    "peak_reserved_bytes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "split": {"enum": ["train", "validation"]},
+    "optimizer_step": {"type": "integer", "minimum": 0},
+    "completion_nll": {"type": "number", "minimum": 0},
+    "completion_token_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+    "active_tokens": {"type": "integer", "minimum": 1},
+    "learning_rate": {"type": ["number", "null"], "minimum": 0},
+    "gradient_norm": {"type": ["number", "null"], "minimum": 0},
+    "gradient_clipped": {"type": ["boolean", "null"]},
+    "tokens_per_second": {"type": ["number", "null"], "minimum": 0},
+    "peak_allocated_bytes": {"type": "integer", "minimum": 0},
+    "peak_reserved_bytes": {"type": "integer", "minimum": 0}
+  }
+}

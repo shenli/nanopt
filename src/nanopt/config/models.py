@@ -200,7 +200,7 @@ class TrainDataConfig(StrictModel):
     train_split: str
     validation_split: str
     max_sequence_length: int = Field(gt=0)
-    completion_only: bool
+    completion_only: Literal[True]
 
 
 class OptimizerConfig(StrictModel):
@@ -224,7 +224,7 @@ class OptimizerConfig(StrictModel):
 class TrainAdapterConfig(StrictModel):
     inherit_from: str | None
     name: str
-    trainable: bool
+    trainable: Literal[True]
 
 
 class LinkedEvaluationConfig(StrictModel):
