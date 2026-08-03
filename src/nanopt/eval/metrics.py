@@ -125,6 +125,8 @@ def aggregate_results(results: list[EvaluationResult]) -> dict[str, object]:
     correct = sum(item.verifier_status == "correct" for item in results)
     parsed = sum(item.parser_status == "valid" for item in results)
     eos = sum(item.finish_reason == "eos" for item in results)
+    stop_sequence = sum(item.finish_reason == "stop_sequence" for item in results)
+    length = sum(item.finish_reason == "length" for item in results)
     lengths = [len(item.completion_token_ids or []) for item in results]
     accuracy = wilson_interval(correct, len(results))
     parse_rate = wilson_interval(parsed, len(results))
@@ -135,6 +137,8 @@ def aggregate_results(results: list[EvaluationResult]) -> dict[str, object]:
         "accuracy": accuracy.__dict__,
         "parse_rate": parse_rate.__dict__,
         "eos_fraction": eos / len(results),
+        "stop_sequence_fraction": stop_sequence / len(results),
+        "length_limit_fraction": length / len(results),
         "completion_tokens": {
             "mean": sum(lengths) / len(lengths),
             "minimum": min(lengths),

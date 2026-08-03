@@ -68,6 +68,10 @@ sequence, so its returned mask is all true. Stop-sequence tokens remain in the e
 The standalone mask functions also handle padded batches and imported trajectories that contain
 positions after EOS.
 
+Reports separate generic EOS, task-protocol stop, and length-limit fractions. A model that reaches
+the exact `</answer>` stop boundary should not be presented as a zero-termination run merely because
+it did not emit the tokenizer's generic EOS token.
+
 ## Teacher-forced parity
 
 The most important sampler test joins the prompt and exact sampled IDs, scores the full sequence in

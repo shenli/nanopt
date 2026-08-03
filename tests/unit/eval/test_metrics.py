@@ -69,13 +69,17 @@ def test_pass_at_k_groups_samples_by_task() -> None:
 
 
 def test_aggregate_results_keeps_labeled_counts() -> None:
-    summary = aggregate_results(
-        [_result("a", 0, correct=True), _result("b", 0, correct=False, parsed=False)]
+    stopped = _result("b", 0, correct=False, parsed=False).model_copy(
+        update={"finish_reason": "stop_sequence"}
     )
+    summary = aggregate_results([_result("a", 0, correct=True), stopped])
     assert summary["examples"] == 2
     assert summary["tasks"] == 2
     assert summary["accuracy"]["estimate"] == 0.5  # type: ignore[index]
     assert summary["parse_rate"]["estimate"] == 0.5  # type: ignore[index]
+    assert summary["eos_fraction"] == 0.5
+    assert summary["stop_sequence_fraction"] == 0.5
+    assert summary["length_limit_fraction"] == 0.0
 
 
 def test_metric_aggregation_rejects_empty_or_unbalanced_groups() -> None:

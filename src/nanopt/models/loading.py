@@ -130,7 +130,7 @@ def load_qwen3_base(
         revision=source.revision,
         trust_remote_code=False,
         local_files_only=local_files_only,
-        torch_dtype=_torch_dtype(profile.loading.dtype),
+        dtype=_torch_dtype(profile.loading.dtype),
         low_cpu_mem_usage=profile.loading.low_cpu_mem_usage,
         use_safetensors=profile.loading.use_safetensors,
         device_map=device_map,

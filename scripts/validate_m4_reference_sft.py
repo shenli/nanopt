@@ -151,8 +151,13 @@ def validate_m4_reference_sft(evidence_root: Path, project_root: Path) -> dict[s
     eval_summary = _read_object(evidence_root / "runs/sft-eval/summary.json")
     parse_rate = float(eval_summary.get("parse_rate", {}).get("estimate", 0.0))
     accuracy = float(eval_summary.get("accuracy", {}).get("estimate", 0.0))
+    protocol_stop_rate = float(eval_summary.get("stop_sequence_fraction", 0.0))
     _require(parse_rate >= MINIMUM_PARSE_RATE, "SFT protected parse rate missed the M4 target")
     _require(accuracy >= MINIMUM_ACCURACY, "SFT protected accuracy missed the M4 target")
+    _require(
+        protocol_stop_rate >= MINIMUM_PARSE_RATE,
+        "SFT protocol stop rate missed the M4 target",
+    )
 
     return {
         "schema_version": 1,
@@ -172,6 +177,7 @@ def validate_m4_reference_sft(evidence_root: Path, project_root: Path) -> dict[s
             **evaluation,
             "parse_rate": parse_rate,
             "accuracy": accuracy,
+            "protocol_stop_rate": protocol_stop_rate,
             "summary_sha256": sha256_file(evidence_root / "runs/sft-eval/summary.json"),
         },
     }

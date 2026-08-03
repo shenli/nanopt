@@ -103,6 +103,10 @@ def _markdown(
         f"| Exact-answer accuracy | {_interval_line(summary['accuracy'])} |",
         f"| Parse rate | {_interval_line(summary['parse_rate'])} |",
         f"| EOS fraction | {100 * float(summary['eos_fraction']):.1f}% |",
+        "| Protocol stop fraction | "
+        f"{100 * float(summary.get('stop_sequence_fraction', 0.0)):.1f}% |",
+        "| Length-limit fraction | "
+        f"{100 * float(summary.get('length_limit_fraction', 0.0)):.1f}% |",
     ]
     for metric in pass_metrics:
         lines.append(

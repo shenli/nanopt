@@ -80,7 +80,7 @@ def test_qwen_loader_passes_explicit_safe_options_and_records_revisions(
     assert FakeAutoTokenizer.kwargs["trust_remote_code"] is False
     assert FakeAutoTokenizer.kwargs["local_files_only"] is True
     assert FakeAutoTokenizer.kwargs["revision"] == "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
-    assert FakeAutoModel.kwargs["torch_dtype"] == torch.bfloat16
+    assert FakeAutoModel.kwargs["dtype"] == torch.bfloat16
     assert FakeAutoModel.kwargs["device_map"] == "cpu"
     assert FakeAutoModel.kwargs["use_safetensors"] is True
 
