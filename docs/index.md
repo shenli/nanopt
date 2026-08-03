@@ -16,6 +16,9 @@ deterministic replay, and a validated hardened-Docker reference path.
 Milestone 9 completes the executable course, reading and troubleshooting guides, systems
 simulations, glossary, and contribution paths. Its clean curriculum gate ran every unique local
 lab and verified the hashes of all cited reference evidence.
+Milestone 10 freezes NanoPT v0.1.0 and reruns the local, curriculum, complete reference-pipeline,
+and Docker agent/security gates. The source tag and private release pass; PyPI and public
+announcement steps remain owner-gated publication actions.
 
 ## Status vocabulary
 
@@ -29,6 +32,8 @@ The [M8 report](reference/m8-completion-report.md) documents the separate agent-
 including its unsuccessful but retained base-model baseline.
 The [M9 report](reference/m9-completion-report.md) documents the complete curriculum map and the
 fresh execution evidence for all local labs.
+The [M10 report](reference/m10-completion-report.md) documents the final release decision,
+distribution hashes, supply-chain audit, fresh reference reruns, and disclosed publication limits.
 
 Use the [course map](course/index.md) to connect all 20 chapters to their executable labs and prior
 reference evidence. The [troubleshooting guide](troubleshooting.md) records actual lessons from the

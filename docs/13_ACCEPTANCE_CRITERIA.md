@@ -4,21 +4,21 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 
 ## 1. Repository-wide gates
 
-- [ ] Public repository content is English, excluding proper names, quoted source titles, and intentionally multilingual test fixtures.
-- [ ] Package installs from `uv.lock` in a clean Linux environment.
-- [ ] `nanopt --help`, `nanopt doctor`, and `nanopt config resolve` work without downloading a model.
-- [ ] Ruff, type checking, CPU tests, package build, schema validation, and strict docs build pass.
-- [ ] No required golden-path command depends on notebooks, hosted telemetry, paid APIs, or private credentials.
-- [ ] README claims distinguish proposed, smoke-tested, and validated behavior.
-- [ ] Every reference result links to an evidence manifest and immutable commit/model revision.
-- [ ] No secret, absolute personal path, or hidden-test content appears in committed artifacts.
+- [x] Public repository content is English, excluding proper names, quoted source titles, and intentionally multilingual test fixtures.
+- [x] Package installs from `uv.lock` in a clean Linux environment.
+- [x] `nanopt --help`, `nanopt doctor`, and `nanopt config resolve` work without downloading a model.
+- [x] Ruff, type checking, CPU tests, package build, schema validation, and strict docs build pass.
+- [x] No required golden-path command depends on notebooks, hosted telemetry, paid APIs, or private credentials.
+- [x] README claims distinguish proposed, smoke-tested, and validated behavior.
+- [x] Every reference result links to an evidence manifest and immutable commit/model revision.
+- [x] No secret, absolute personal path, or hidden-test content appears in committed artifacts.
 
 ## 2. Mathematical correctness gates
 
-- [ ] Causal token shifting matches hand-computable fixtures.
-- [ ] Prompt, padding, and post-EOS tokens are excluded by masks.
-- [ ] Core reductions fail clearly on zero active tokens.
-- [ ] Log-softmax and loss reductions use the documented precision.
+- [x] Causal token shifting matches hand-computable fixtures.
+- [x] Prompt, padding, and post-EOS tokens are excluded by masks.
+- [x] Core reductions fail clearly on zero active tokens.
+- [x] Log-softmax and loss reductions use the documented precision.
 - [x] DPO sign, margin, beta, masking, and cache-parity tests pass.
 - [x] Group-relative advantages match hand calculations and sum to approximately zero.
 - [x] All-equal reward groups yield zero advantages.
@@ -29,25 +29,25 @@ This document is the release contract for NanoPT v0.1. A feature is not complete
 
 ## 3. Data gates
 
-- [ ] Generated data validates against versioned schemas.
-- [ ] Identical generator config/seed produces identical content fingerprint.
-- [ ] No canonical task hash overlaps protected splits.
-- [ ] Every trusted answer is independently re-evaluated from the AST.
+- [x] Generated data validates against versioned schemas.
+- [x] Identical generator config/seed produces identical content fingerprint.
+- [x] No canonical task hash overlaps protected splits.
+- [x] Every trusted answer is independently re-evaluated from the AST.
 - [x] Every chosen preference passes the strict verifier.
 - [x] Every rejected preference fails the intended criterion.
 - [x] Preference audit reports length and rejection-type distributions.
 - [x] Parser attack suite has zero cases where an incorrect trusted answer receives correctness reward.
-- [ ] Dataset cards explain scope, generation, limitations, and license.
+- [x] Dataset cards explain scope, generation, limitations, and license.
 
 ## 4. Baseline/evaluation gates
 
-- [ ] Base model evaluation saves example-level outputs and aggregate metrics.
-- [ ] Deterministic and sampled generation modes are separately configured.
-- [ ] pass@k implementation passes fixtures.
-- [ ] Confidence intervals and task counts accompany headline accuracy metrics.
-- [ ] Reports separate parser failure from wrong answer.
-- [ ] Same evaluator version is used across checkpoint comparisons.
-- [ ] Regression selection is deterministic and reproducible.
+- [x] Base model evaluation saves example-level outputs and aggregate metrics.
+- [x] Deterministic and sampled generation modes are separately configured.
+- [x] pass@k implementation passes fixtures.
+- [x] Confidence intervals and task counts accompany headline accuracy metrics.
+- [x] Reports separate parser failure from wrong answer.
+- [x] Same evaluator version is used across checkpoint comparisons.
+- [x] Regression selection is deterministic and reproducible.
 
 ## 5. SFT gates
 

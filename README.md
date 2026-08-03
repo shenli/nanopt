@@ -66,6 +66,11 @@ The curriculum validation is documented in the
 [M9 completion report](docs/reference/m9-completion-report.md) and compact
 [curriculum evidence](docs/reference/evidence/m9-curriculum-3d721c2.json).
 
+The v0.1 release audit is documented in the
+[M10 completion report](docs/reference/m10-completion-report.md), with reviewed aggregate
+[release evidence](docs/reference/evidence/v0.1-release-574582a.json). PyPI publication is not part
+of this tagged source release.
+
 ## Foundation quick start
 
 Review the [course prerequisites](docs/getting-started/prerequisites.md), then use Python 3.11 or
