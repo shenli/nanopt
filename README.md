@@ -23,13 +23,12 @@ NanoPT is pre-alpha. Milestone 1 provides the package, CLI, typed configuration 
 environment diagnosis, run-artifact lifecycle, documentation skeleton, and local CPU validation.
 Milestone 2 completes the CPU-tested mathematical core, pinned Qwen loader and exact renderer, LoRA
 adapter lifecycle, deterministic arithmetic generator and fingerprints, leakage-safe splits, and
-strict parser/verifier. Milestone 3's CPU implementation adds exact autoregressive sampling,
-deterministic/sample evaluation, pass@k and Wilson intervals, example-first JSONL artifacts,
-Markdown/HTML reports, and load/eval calibration commands. The pinned real tokenizer boundary is
-tested. A real base-model evaluation on the reference GPU is still required before M3 is complete;
-training arrives in later milestones.
+strict parser/verifier. Milestone 3 completes exact autoregressive sampling, deterministic/sample
+evaluation, pass@k and Wilson intervals, example-first JSONL artifacts, Markdown/HTML reports, and
+load/eval calibration. Its real base-model smoke passed on the proposed reference GPU from a clean,
+pinned checkout. Training begins with the readable SFT vertical slice in Milestone 4.
 
-The reference host runs the complete M3 smoke and offline evidence validator with
+The reference host reproduced the complete M3 smoke and offline evidence validator with
 `bash scripts/run_m3_reference_smoke.sh`.
 
 The only proposed reference profile is one NVIDIA RTX 4070 Ti SUPER with 16 GB VRAM on Linux
