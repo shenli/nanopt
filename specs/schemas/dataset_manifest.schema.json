@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/dataset_manifest.schema.json",
+  "title": "NanoPT Synthetic Dataset Split Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "split_algorithm_version",
+    "seed",
+    "dataset_fingerprint",
+    "counts",
+    "canonical_hashes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "split_algorithm_version": {"const": "canonical-hash-v1"},
+    "seed": {"type": "integer"},
+    "dataset_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["train", "validation", "test_iid", "test_compositional", "test_range", "test_format_attack", "smoke"],
+      "properties": {
+        "train": {"type": "integer", "minimum": 0},
+        "validation": {"type": "integer", "minimum": 0},
+        "test_iid": {"type": "integer", "minimum": 0},
+        "test_compositional": {"type": "integer", "minimum": 0},
+        "test_range": {"type": "integer", "minimum": 0},
+        "test_format_attack": {"type": "integer", "minimum": 0},
+        "smoke": {"type": "integer", "minimum": 0}
+      }
+    },
+    "canonical_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["train", "validation", "test_iid", "test_compositional", "test_range", "test_format_attack", "smoke"],
+      "properties": {
+        "train": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "validation": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "test_iid": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "test_compositional": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "test_range": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "test_format_attack": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+        "smoke": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+      }
+    }
+  }
+}

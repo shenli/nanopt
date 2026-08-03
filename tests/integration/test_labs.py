@@ -14,6 +14,10 @@ import pytest
     [
         ("labs/00_prerequisites.py", "Prerequisite self-check passed."),
         ("labs/01_tokens_and_masks.py", "NanoPT sequence logp          = -0.9163"),
+        ("labs/02_logprob_by_hand.py", "Log-probability lab passed."),
+        ("labs/03_dpo_vertical_slice.py", "DPO lab passed."),
+        ("labs/04_group_advantages.py", "Group-advantage lab passed."),
+        ("labs/05_synthetic_arithmetic.py", "Synthetic arithmetic lab passed."),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(

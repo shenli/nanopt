@@ -46,6 +46,14 @@ nav:
   - Foundations:
       - MathJax smoke test: foundations/mathjax-smoke.md
       - Tokens, masks, and log probabilities: foundations/tokens-masks-logprobs.md
+      - Entropy and KL divergence: foundations/entropy-and-kl.md
+      - Model rendering and LoRA: foundations/model-rendering-and-lora.md
+  - Data:
+      - Synthetic arithmetic: data/synthetic-arithmetic.md
+  - Preferences:
+      - DPO margins and loss: preferences/dpo-by-hand.md
+  - GRPO and RLVR:
+      - Advantages and clipping: grpo-rlvr/advantages-and-clipping.md
   - Reference:
       - CLI: reference/cli.md
       - Artifact contract: reference/artifacts.md
@@ -57,6 +65,7 @@ nav:
           - Local validation: adr/0003-local-validation.md
       - Publication checklist: reference/publication-checklist.md
       - M1 completion report: reference/m1-completion-report.md
+      - M2 completion report: reference/m2-completion-report.md
   - Project plans:
       - Vision and scope: 00_VISION_AND_SCOPE.md
       - Product requirements: 01_PRODUCT_REQUIREMENTS.md

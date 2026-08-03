@@ -4,9 +4,10 @@ NanoPT is an executable course and white-box reference implementation for post-t
 base language model. The project connects hand-computable objectives to tested tensor functions,
 single-GPU experiments, inspectable artifacts, and a secure stateful agent environment.
 
-Milestone 1 is the repository foundation. Milestone 2 begins the tested mathematical core, without
-training code yet. Start with the [prerequisites](getting-started/prerequisites.md), install the
-project, then continue to tokens, masks, and causal log probabilities.
+Milestone 1 is the repository foundation. Milestone 2 provides the CPU-tested mathematical core,
+model/adapter integration contracts, and deterministic synthetic data. Start with the
+[prerequisites](getting-started/prerequisites.md), install the project, then continue to tokens,
+masks, and causal log probabilities. Generation and training are not implemented yet.
 
 ## Status vocabulary
 

@@ -20,6 +20,7 @@ classifiers = [
 ]
 dependencies = [
   "numpy>=1.26,<3",
+  "packaging>=24,<27",
   "peft>=0.15,<1",
   "pydantic>=2.10,<3",
   "PyYAML>=6,<7",

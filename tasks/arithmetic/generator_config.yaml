@@ -1,0 +1,11 @@
+schema_version: 1
+generator_version: arithmetic-v1
+seed: 42
+count: 128
+families:
+  - addition_subtraction
+  - multiplication
+  - exact_division
+  - mixed_precedence
+minimum_operand: -20
+maximum_operand: 20
