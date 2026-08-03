@@ -255,7 +255,10 @@ def _validate_distributions(dist_dir: Path) -> dict[str, Any]:
         f"nanopt-{RELEASE_VERSION}-py3-none-any.whl",
         f"nanopt-{RELEASE_VERSION}.tar.gz",
     }
-    found = {path.name for path in dist_dir.iterdir() if path.is_file()}
+    # uv protects a custom output directory with this control file. It is not a release artifact.
+    found = {
+        path.name for path in dist_dir.iterdir() if path.is_file() and path.name != ".gitignore"
+    }
     _require(found == expected, f"unexpected distribution files: {sorted(found)}")
     artifacts: dict[str, dict[str, Any]] = {}
     for filename in sorted(found):
