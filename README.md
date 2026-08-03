@@ -40,6 +40,10 @@ Milestone 8 completes the secure MiniSWE environment. Its Docker oracle solved 5
 all five trajectories replayed exactly, and the retained capped Qwen baseline scored 0.3 after two
 invalid JSON actions. Security probes confirmed non-root execution with no network, GPU, Docker
 socket, capabilities, privilege escalation, or writable container root.
+Milestone 9 completes the executable curriculum: one prerequisite chapter, 20 numbered chapters,
+and all 20 unique local labs passed from a clean locked environment. It also adds primary-source
+reading guides, observed-run troubleshooting, deterministic systems simulations, a glossary, and
+extension guides for algorithms, tasks, and hardware.
 
 | Checkpoint | Protected exact accuracy | Parse rate |
 | --- | ---: | ---: |
@@ -56,6 +60,10 @@ claim does not generalize automatically to other 16 GB GPUs.
 The separate agent-environment validation is documented in the
 [M8 completion report](docs/reference/m8-completion-report.md) and compact
 [reference evidence](docs/reference/evidence/m8-reference-agent-9e3daa1.json).
+
+The curriculum validation is documented in the
+[M9 completion report](docs/reference/m9-completion-report.md) and compact
+[curriculum evidence](docs/reference/evidence/m9-curriculum-3d721c2.json).
 
 ## Foundation quick start
 

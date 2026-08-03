@@ -121,14 +121,18 @@ The project should define numeric release targets in a versioned `reference_targ
 
 ## 11. Documentation gates
 
-- [ ] Every chapter follows the standard chapter template where applicable.
-- [ ] All formulas render correctly with MathJax.
-- [ ] No malformed raw formula delimiters remain.
-- [ ] Every lab command has been run in its claimed environment tier.
-- [ ] Source links favor primary papers, official reports, and official repositories.
-- [ ] The course distinguishes source-supported facts, project design decisions, and unvalidated hypotheses.
-- [ ] Small-scale simplifications are explicitly mapped to industrial systems.
-- [ ] README provides a short path; detailed theory stays in docs.
+- [x] Every chapter follows the standard chapter template where applicable.
+- [x] All formulas render correctly with MathJax.
+- [x] No malformed raw formula delimiters remain.
+- [x] Every lab command has been run in its claimed environment tier.
+- [x] Source links favor primary papers, official reports, and official repositories.
+- [x] The course distinguishes source-supported facts, project design decisions, and unvalidated hypotheses.
+- [x] Small-scale simplifications are explicitly mapped to industrial systems.
+- [x] README provides a short path; detailed theory stays in docs.
+
+These gates were closed by the clean M9 curriculum run recorded in the
+[completion report](reference/m9-completion-report.md). Reference-tier commands retain their
+accepted M3–M8 evidence rather than being mislabeled as CPU curriculum runs.
 
 ## 12. Release decision
 

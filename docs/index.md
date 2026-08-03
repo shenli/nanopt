@@ -13,6 +13,9 @@ path with hash-linked, independently resumable stages and validates the referenc
 the [prerequisites](getting-started/prerequisites.md), then follow the course in navigation order.
 Milestone 8 adds the five-task MiniSWE environment, structured tools, isolated verification,
 deterministic replay, and a validated hardened-Docker reference path.
+Milestone 9 completes the executable course, reading and troubleshooting guides, systems
+simulations, glossary, and contribution paths. Its clean curriculum gate ran every unique local
+lab and verified the hashes of all cited reference evidence.
 
 ## Status vocabulary
 
@@ -24,6 +27,8 @@ The RTX 4070 Ti SUPER configuration is validated for the pinned Base → SFT →
 path. The [M7 report](reference/m7-completion-report.md) states the exact scope and evidence.
 The [M8 report](reference/m8-completion-report.md) documents the separate agent-environment scope,
 including its unsuccessful but retained base-model baseline.
+The [M9 report](reference/m9-completion-report.md) documents the complete curriculum map and the
+fresh execution evidence for all local labs.
 
 Use the [course map](course/index.md) to connect all 20 chapters to their executable labs and prior
 reference evidence. The [troubleshooting guide](troubleshooting.md) records actual lessons from the
