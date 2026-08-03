@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import math
 from collections import defaultdict
 from pathlib import Path
@@ -33,7 +34,10 @@ def _targets(project_root: Path) -> dict[str, Any]:
 
 
 def _validate_reward_hacking(path: Path, maximum_credit: float) -> dict[str, Any]:
-    values = _read_object(path)
+    try:
+        values = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid reward-hacking JSON at {path}: {exc}") from exc
     _require(isinstance(values, list) and values, "reward-hacking suite is empty")
     for value in values:
         _require(isinstance(value, dict), "reward-hacking result is malformed")
