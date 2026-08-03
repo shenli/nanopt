@@ -40,4 +40,4 @@ evaluation:
 artifacts:
   save_adapter_only: true
   save_reference_cache_manifest: true
-status: proposed_unvalidated
+status: validated

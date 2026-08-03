@@ -71,4 +71,4 @@ stage_policy:
   fail_fast: true
   require_calibration_before_training: true
   protected_test_evaluation_after_recipe_freeze: true
-status: proposed_unvalidated
+status: validated

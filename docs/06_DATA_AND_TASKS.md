@@ -177,9 +177,11 @@ Required splits:
 
 Use canonical hashes to assert no overlap across protected splits. Store a split manifest with counts per family and difficulty.
 
-## 8. Proposed dataset scales
+## 8. Validated teaching scale and larger experiments
 
-These are starting points, not validated reference sizes:
+The validated M7 teaching pipeline uses one deterministic 128-task corpus across training,
+validation, and protected splits. The larger values below remain scaling targets, not support
+claims:
 
 | Dataset | Smoke | Proposed reference |
 |---|---:|---:|
@@ -190,7 +192,8 @@ These are starting points, not validated reference sizes:
 | RL prompt pool | 64 | 2,000–5,000 |
 | Each primary test split | 64 | 500–1,000 |
 
-The final reference size must be selected after measuring runtime and learning curves on the target GPU. Keep the generator capable of producing larger datasets without changing schemas.
+Keep the generator capable of producing larger datasets without changing schemas. A future larger
+reference recipe needs its own frozen targets and evidence; it does not inherit M7 validation.
 
 ## 9. Dataset fingerprints
 

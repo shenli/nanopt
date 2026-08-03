@@ -1,6 +1,6 @@
 schema_version: 1
 id: rtx_4070_ti_super_16gb
-support_status: proposed_unvalidated
+support_status: validated
 description: Single NVIDIA GeForce RTX 4070 Ti SUPER reference profile
 platform:
   os: linux
@@ -26,10 +26,10 @@ runtime_defaults:
   dataloader_pin_memory: true
   quantization: none
 validation:
-  evidence_manifest: null
-  validated_commit: null
-  validated_at: null
+  evidence_manifest: docs/reference/evidence/m7-reference-pipeline-92564f3.json
+  validated_commit: 92564f3abd3bfa353ab92587ddbc09892c9b13de
+  validated_at: '2026-08-03T17:37:05.196837Z'
 notes:
-  - All memory values are proposed until a complete evidence run passes.
+  - M7 measured a 7.41 GiB maximum reserved-memory peak across the complete pipeline.
   - The product label is 16 GB; CUDA/PyTorch may reserve part of that capacity before reporting it.
   - Desktop/display usage can reduce available VRAM and must be reported by nanopt doctor.

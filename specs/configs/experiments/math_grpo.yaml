@@ -58,7 +58,7 @@ artifacts:
   save_adapter_only: true
   save_trajectories: true
   save_reward_examples: true
-status: proposed_unvalidated
+status: validated
 notes:
   - The reference training sampler is untruncated at temperature one so stored old log probabilities match the behavior distribution.
   - All iteration and batch values require calibration and pilot runs before validation.

@@ -89,23 +89,23 @@ The project should define numeric release targets in a versioned `reference_targ
 
 ## 8. End-to-end pipeline gates
 
-- [ ] One documented command sequence runs Base → SFT → DPO → GRPO as independently resumable stages.
-- [ ] Pipeline manifest records every child run and checkpoint hash.
-- [ ] A fresh clone can rebuild the final comparison report from saved artifacts.
-- [ ] Model and tokenizer revisions are immutable in the evidence bundle.
-- [ ] Protected test data is not used for training, reward shaping, or final hyperparameter selection.
-- [ ] Total wall time and phase-specific VRAM peaks are measured, not estimated.
-- [ ] Failed/retried stages and deviations are disclosed.
+- [x] One documented command sequence runs Base → SFT → DPO → GRPO as independently resumable stages.
+- [x] Pipeline manifest records every child run and checkpoint hash.
+- [x] A fresh clone can rebuild the final comparison report from saved artifacts.
+- [x] Model and tokenizer revisions are immutable in the evidence bundle.
+- [x] Protected test data is not used for training, reward shaping, or final hyperparameter selection.
+- [x] Total wall time and phase-specific VRAM peaks are measured, not estimated.
+- [x] Failed/retried stages and deviations are disclosed.
 
 ## 9. Hardware-validation gates
 
-- [ ] `nanopt doctor` identifies the RTX 4070 Ti SUPER and records actual VRAM/driver/runtime.
-- [ ] BF16 support is checked at runtime.
-- [ ] Model load, evaluation, SFT, DPO, and GRPO calibrations pass.
-- [ ] Full pipeline stays below the profile hard memory budget.
-- [ ] No hidden manual source change is needed between stages.
-- [ ] Evidence bundle contains configs, manifests, metrics, reports, and checksums.
-- [ ] Profile status changes to `validated` in the same reviewed commit/release that contains evidence.
+- [x] `nanopt doctor` identifies the RTX 4070 Ti SUPER and records actual VRAM/driver/runtime.
+- [x] BF16 support is checked at runtime.
+- [x] Model load, evaluation, SFT, DPO, and GRPO calibrations pass.
+- [x] Full pipeline stays below the profile hard memory budget.
+- [x] No hidden manual source change is needed between stages.
+- [x] Evidence bundle contains configs, manifests, metrics, reports, and checksums.
+- [x] Profile status changes to `validated` in the same reviewed commit/release that contains evidence.
 
 ## 10. Agent-environment gates
 

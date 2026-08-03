@@ -34,4 +34,4 @@ artifacts:
   save_adapter_only: true
   save_optimizer_state: true
   save_samples: true
-status: proposed_unvalidated
+status: validated

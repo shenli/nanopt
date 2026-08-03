@@ -134,4 +134,5 @@ These are proposed initial ADRs. The coding agent should create individual files
 
 **Decision:** Start with one 4070 Ti SUPER profile and add other consumer GPUs through measured evidence.
 
-**Consequence:** Same-VRAM devices are not automatically supported, and initial profile remains unvalidated until full runs pass.
+**Consequence:** Same-VRAM devices are not automatically supported. The initial profile stayed
+unvalidated until M7 passed; its current validation is scoped to the committed evidence bundle.

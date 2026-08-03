@@ -34,7 +34,7 @@ Important fields:
 ```yaml
 schema_version: 1
 id: rtx_4070_ti_super_16gb
-support_status: proposed_unvalidated
+support_status: validated
 platform:
   os: linux
   architecture: x86_64
@@ -55,10 +55,12 @@ runtime:
   torch_compile: false
   gradient_checkpointing_default: true
 validation:
-  evidence_manifest: null
+  evidence_manifest: docs/reference/evidence/m7-reference-pipeline-92564f3.json
 ```
 
-All memory thresholds are proposed until the first validation run. `support_status` may become `validated` only when `evidence_manifest` points to committed release evidence.
+The hard threshold is a safety limit, while the M7 evidence records the measured 7.41 GiB peak.
+`support_status` is `validated` only because `evidence_manifest` points to committed reviewed
+evidence for the pinned reference path.
 
 ## 4. Model profile schema
 

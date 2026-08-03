@@ -8,9 +8,9 @@ Milestone 1 is the repository foundation. Milestone 2 provides the CPU-tested ma
 model/adapter integration contracts, and deterministic synthetic data. Milestone 3 provides exact
 generation, example-first evaluation, statistical summaries, shareable reports, and a completed
 reference-GPU base evaluation. Milestone 4 adds completion-only LoRA SFT and protected generation
-evidence. Start with the [prerequisites](getting-started/prerequisites.md), continue through tokens
-and log probabilities, then run the exact-generation and SFT labs. Preference construction and DPO
-begin in Milestone 5.
+evidence. Milestones 5 and 6 add controlled DPO and exact-token GRPO. Milestone 7 joins the complete
+path with hash-linked, independently resumable stages and validates the reference GPU. Start with
+the [prerequisites](getting-started/prerequisites.md), then follow the course in navigation order.
 
 ## Status vocabulary
 
@@ -18,4 +18,5 @@ begin in Milestone 5.
 - **Proposed** means the setting is an explicit starting point that still needs calibration.
 - **Validated** means a reviewed evidence bundle passed the complete reference protocol.
 
-The RTX 4070 Ti SUPER configuration is currently proposed and unvalidated.
+The RTX 4070 Ti SUPER configuration is validated for the pinned Base → SFT → DPO → GRPO reference
+path. The [M7 report](reference/m7-completion-report.md) states the exact scope and evidence.

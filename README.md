@@ -34,13 +34,20 @@ protected exact accuracy moved from 86.4% to 84.1%, a disclosed 2.3-point regres
 Milestone 6 completes exact-token grouped RLVR and synchronous clipped GRPO. Its clean reference
 run improved protected exact accuracy from DPO's 84.1% to 88.6%, with gains on compositional and
 range splits, while storing all sampled IDs and old log probabilities before optimization.
+Milestone 7 completes the independently resumable, hash-linked end-to-end recipe. A fresh locked
+environment reproduced all 15 stages in 222.7 seconds with zero retries and a 7.41 GiB peak.
 
-The reference host reproduced the complete M3 smoke and offline evidence validator with
-`bash scripts/run_m3_reference_smoke.sh`.
+| Checkpoint | Protected exact accuracy | Parse rate |
+| --- | ---: | ---: |
+| Base | 0.0% | 0.0% |
+| SFT | 86.4% | 95.5% |
+| DPO | 84.1% | 95.5% |
+| GRPO | 88.6% | 95.5% |
 
-The only proposed reference profile is one NVIDIA RTX 4070 Ti SUPER with 16 GB VRAM on Linux
-x86-64. This profile is **not validated**. No memory, runtime, performance, or hardware-support
-claim should be inferred until a complete evidence bundle passes the release protocol.
+The NVIDIA RTX 4070 Ti SUPER 16 GB Linux x86-64 profile is **validated** for this pinned reference
+path. See the [M7 completion report](docs/reference/m7-completion-report.md) and compact
+[reference evidence](docs/reference/evidence/m7-reference-pipeline-92564f3.json). This measured
+claim does not generalize automatically to other 16 GB GPUs.
 
 ## Foundation quick start
 

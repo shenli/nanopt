@@ -61,6 +61,11 @@ def test_validated_hardware_requires_evidence(tmp_path: Path, project_root: Path
     )
     raw["id"] = "invalid_validated"
     raw["support_status"] = "validated"
+    # The checked-in reference profile is now genuinely validated. Remove its evidence explicitly
+    # so this fixture continues to exercise the invalid state instead of inheriting valid evidence.
+    raw["validation"]["evidence_manifest"] = None
+    raw["validation"]["validated_commit"] = None
+    raw["validation"]["validated_at"] = None
     path = tmp_path / "hardware" / "invalid_validated.yaml"
     path.parent.mkdir()
     path.write_text(yaml.safe_dump(raw))

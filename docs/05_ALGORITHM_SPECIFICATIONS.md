@@ -447,7 +447,8 @@ $$
 }.
 $$
 
-The proposed reference setting is `token_mean`; this remains unvalidated until experiments compare behavior. The report must display the chosen mode.
+The validated reference setting is `token_mean`. The M6 and M7 reports display the chosen mode and
+bind it to the exact experiment config; alternative normalizations remain experimental.
 
 ### 7.6 Optional KL regularization
 
