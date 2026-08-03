@@ -765,6 +765,10 @@ def train_grpo_command(
     experiment: Annotated[str, typer.Option()] = "math_grpo",
     artifacts_root: Annotated[Path, typer.Option()] = Path("artifacts/runs"),
     run_id: Annotated[str | None, typer.Option(help="Optional path-safe GRPO run ID.")] = None,
+    iteration_limit: Annotated[
+        int | None,
+        typer.Option(help="Explicit non-representative iteration cap for recipe pilots."),
+    ] = None,
     local_files_only: Annotated[bool, typer.Option()] = False,
     device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
     set_values: Annotated[
@@ -791,6 +795,7 @@ def train_grpo_command(
             run_id=run_id,
             local_files_only=local_files_only,
             device=device,
+            iteration_limit=iteration_limit,
         )
     except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
         console.print(f"[red]GRPO failed:[/red] {exc}", highlight=False)
