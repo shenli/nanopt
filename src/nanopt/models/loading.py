@@ -14,6 +14,7 @@ from nanopt.config.models import ModelProfile
 from nanopt.models.adapters import ParameterCounts, parameter_counts
 
 QWEN3_BASE_MODEL_ID = "Qwen/Qwen3-0.6B-Base"
+QWEN_CHAT_TERMINATOR = "<|im_end|>"
 
 
 class ModelIntegrationError(RuntimeError):
@@ -81,6 +82,23 @@ def _validate_tokenizer(tokenizer: Any) -> None:
             raise ModelIntegrationError("tokenizer cannot derive padding from an EOS token")
         tokenizer.pad_token = eos_token
     tokenizer.padding_side = "right"
+    qwen_chat_terminator_id(tokenizer)
+
+
+def qwen_chat_terminator_id(tokenizer: Any) -> int:
+    """Return the special token that ends a Qwen chat-template assistant turn.
+
+    Qwen's generic tokenizer EOS is ``<|endoftext|>``, while rendered chat turns end with
+    ``<|im_end|>``. Generation must stop on the latter to match the exact SFT target boundary.
+    """
+
+    convert = getattr(tokenizer, "convert_tokens_to_ids", None)
+    if not callable(convert):
+        raise ModelIntegrationError("tokenizer cannot resolve the Qwen chat terminator")
+    token_id = convert(QWEN_CHAT_TERMINATOR)
+    if not isinstance(token_id, int) or token_id < 0:
+        raise ModelIntegrationError("tokenizer returned an invalid Qwen chat terminator ID")
+    return token_id
 
 
 def load_qwen3_base(

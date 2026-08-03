@@ -79,7 +79,7 @@ fi
   --local-files-only \
   --device cuda
 
-"${uv_command}" run python scripts/validate_m4_reference_sft.py \
+"${uv_command}" run python -m scripts.validate_m4_reference_sft \
   "${evidence_root}" \
   --output "${evidence_root}/m4_sft_evidence.json"
 

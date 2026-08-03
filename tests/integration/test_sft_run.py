@@ -27,6 +27,10 @@ class LocalTokenizer:
     pad_token_id = 0
     eos_token_id = 2
 
+    def convert_tokens_to_ids(self, token: str) -> int:
+        assert token == "<|im_end|>"
+        return 2
+
     def apply_chat_template(
         self,
         conversation: list[dict[str, str]],
@@ -45,6 +49,8 @@ class LocalTokenizer:
             )
         if add_generation_prompt:
             ids.append(role_ids["assistant"])
+        elif conversation[-1]["role"] == "assistant":
+            ids.append(self.eos_token_id)
         return ids
 
 

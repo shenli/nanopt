@@ -44,6 +44,12 @@ never searches decoded strings for a boundary. [`CompletionOnlyCollator`](https:
 right-pads IDs, attention masks, and action masks together; it rejects overlong examples instead of
 silently truncating a target.
 
+Qwen has two relevant special tokens: the tokenizer's generic `<|endoftext|>` EOS and the
+`<|im_end|>` token that actually terminates an assistant turn in the chat template. NanoPT resolves
+the latter explicitly, includes it in the SFT action mask, excludes the template newline after it,
+and uses the same ID as the generation stop token. Confusing these boundaries can produce a model
+that writes a correct answer and then continues until the length limit.
+
 ## The readable training step
 
 [`train_sft`](https://github.com/shenli/nanopt/blob/main/src/nanopt/sft/trainer.py) makes the control
@@ -110,6 +116,7 @@ label separate from representative evidence.
 ## Common mistakes
 
 - Shifting the action mask twice drops the first completion token.
+- Stopping on generic EOS instead of the chat terminator creates valid prefixes with trailing text.
 - Marking padding active changes the loss when another example length changes.
 - Averaging micro-batch means equally changes the token-level objective.
 - Treating lower teacher-forced NLL as generation success hides format failures.

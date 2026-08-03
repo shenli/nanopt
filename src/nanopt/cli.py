@@ -32,7 +32,7 @@ from nanopt.eval.runner import (
     evaluate_to_artifacts,
 )
 from nanopt.models.adapters import ParameterCounts, load_lora_adapter, parameter_counts
-from nanopt.models.loading import LoadedModel, load_qwen3_base
+from nanopt.models.loading import LoadedModel, load_qwen3_base, qwen_chat_terminator_id
 from nanopt.models.renderer import ChatRenderer
 from nanopt.reporting.builder import build_evaluation_report
 from nanopt.rollout.sampler import SamplingConfig
@@ -462,10 +462,11 @@ def _execute_evaluation(
         renderer = ChatRenderer(
             loaded.tokenizer,
             enable_thinking=result.config.model.renderer.enable_thinking,
+            terminal_token_id=qwen_chat_terminator_id(loaded.tokenizer),
         )
         _record_loaded_model(context, loaded, renderer)
-        eos_token_id = int(loaded.tokenizer.eos_token_id)
-        plan = _evaluation_plan(experiment, mode, eos_token_id=eos_token_id)
+        terminal_token_id = qwen_chat_terminator_id(loaded.tokenizer)
+        plan = _evaluation_plan(experiment, mode, eos_token_id=terminal_token_id)
         backend = LocalModelBackend(loaded.model, loaded.tokenizer, renderer)
         evaluate_to_artifacts(
             tasks,

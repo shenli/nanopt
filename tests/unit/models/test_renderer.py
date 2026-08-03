@@ -50,6 +50,15 @@ class FakeChatTokenizer:
         return torch.tensor([ids]) if self.tensor_output else ids
 
 
+class TrailingTemplateTokenizer(FakeChatTokenizer):
+    def apply_chat_template(self, *args: Any, **kwargs: Any) -> Any:
+        ids = super().apply_chat_template(*args, **kwargs)
+        conversation = args[0]
+        if conversation[-1]["role"] == "assistant":
+            ids.append(99)
+        return ids
+
+
 def test_render_prompt_records_template_hash_and_thinking_setting() -> None:
     tokenizer = FakeChatTokenizer(tensor_output=True)
     renderer = ChatRenderer(tokenizer, enable_thinking=False)
@@ -76,6 +85,15 @@ def test_render_supervised_marks_only_tokens_after_exact_prompt_prefix() -> None
     assert result.prompt_length == 5
     assert result.action_mask == (False, False, False, False, False, True, True)
     assert result.attention_mask == (True,) * 7
+
+
+def test_render_supervised_excludes_tokens_after_configured_terminal() -> None:
+    renderer = ChatRenderer(TrailingTemplateTokenizer(), terminal_token_id=2)
+
+    result = renderer.render_supervised([{"role": "user", "content": "x"}], "y")
+
+    assert result.input_ids[-3:] == (221, 2, 99)
+    assert result.action_mask[-3:] == (True, True, False)
 
 
 def test_renderer_rejects_a_chat_template_without_stable_prefix() -> None:

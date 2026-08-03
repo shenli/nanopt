@@ -21,7 +21,7 @@ from nanopt.models.adapters import (
     parameter_counts,
     save_lora_adapter,
 )
-from nanopt.models.loading import load_qwen3_base
+from nanopt.models.loading import load_qwen3_base, qwen_chat_terminator_id
 from nanopt.models.renderer import ChatRenderer
 from nanopt.runtime.artifacts import append_jsonl, sha256_file, write_json, write_text
 from nanopt.runtime.run_context import RunContext, create_run_context
@@ -157,6 +157,7 @@ def execute_sft_run(
         renderer = ChatRenderer(
             loaded.tokenizer,
             enable_thinking=result.config.model.renderer.enable_thinking,
+            terminal_token_id=qwen_chat_terminator_id(loaded.tokenizer),
         )
 
         checkpoint_metadata = read_sft_checkpoint(resume_from) if resume_from else None

@@ -24,6 +24,10 @@ class FakeTokenizer:
     def __init__(self) -> None:
         self.init_kwargs = {"_commit_hash": "tokenizer-commit"}
 
+    def convert_tokens_to_ids(self, token: str) -> int:
+        assert token == "<|im_end|>"
+        return 3
+
 
 class FakeModel(nn.Module):
     def __init__(self, commit: str | None = "model-commit") -> None:

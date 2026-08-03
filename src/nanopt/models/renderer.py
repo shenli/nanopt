@@ -97,11 +97,20 @@ class ChatRenderer:
     IDs to be an exact prefix of the complete token IDs.
     """
 
-    def __init__(self, tokenizer: ChatTemplateTokenizer, *, enable_thinking: bool = False) -> None:
+    def __init__(
+        self,
+        tokenizer: ChatTemplateTokenizer,
+        *,
+        enable_thinking: bool = False,
+        terminal_token_id: int | None = None,
+    ) -> None:
         if not isinstance(tokenizer.chat_template, str) or not tokenizer.chat_template.strip():
             raise RendererError("tokenizer must provide a non-empty chat_template")
         self.tokenizer = tokenizer
         self.enable_thinking = enable_thinking
+        if terminal_token_id is not None and terminal_token_id < 0:
+            raise RendererError("terminal_token_id must be non-negative")
+        self.terminal_token_id = terminal_token_id
         self.chat_template_sha256 = hashlib.sha256(tokenizer.chat_template.encode()).hexdigest()
 
     def _render(
@@ -157,10 +166,23 @@ class ChatRenderer:
                 "the chat template cannot provide a safe completion boundary"
             )
         prompt_length = len(prompt_ids)
+        completion_end = len(full_ids)
+        if self.terminal_token_id is not None:
+            try:
+                terminal_index = full_ids.index(self.terminal_token_id, prompt_length)
+            except ValueError as exc:
+                raise RendererError(
+                    "supervised rendering does not contain the configured terminal token"
+                ) from exc
+            completion_end = terminal_index + 1
         return RenderedSupervisedExample(
             input_ids=full_ids,
             attention_mask=(True,) * len(full_ids),
-            action_mask=(False,) * prompt_length + (True,) * (len(full_ids) - prompt_length),
+            action_mask=(
+                (False,) * prompt_length
+                + (True,) * (completion_end - prompt_length)
+                + (False,) * (len(full_ids) - completion_end)
+            ),
             prompt_length=prompt_length,
             chat_template_sha256=self.chat_template_sha256,
         )
