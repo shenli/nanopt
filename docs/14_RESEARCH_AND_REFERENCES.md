@@ -127,8 +127,7 @@ This is the reading and implementation reference map for NanoPT. Prefer primary 
 
 - Official paper: https://arxiv.org/abs/2607.24653
 - Official repository: https://github.com/MoonshotAI/Kimi-K3
-- Original local handoff source: `source_materials/k3_tech_report.pdf`
-- Relevant sections in the provided report:
+- Relevant sections in the official report:
   - post-training method;
   - RL task synthesis and agentic environments;
   - partial rollout and stale trajectories;
@@ -139,7 +138,8 @@ This is the reading and implementation reference map for NanoPT. Prefer primary 
   - external KV-cache retention;
   - pause/resume/fork/snapshot sandbox lifecycle.
 - Role for NanoPT: industrial-scale contrast for the small agent environment and systems chapters.
-- Redistribution warning: do not commit or republish the PDF without confirming its license. Cite or link to an authorized public source if one exists.
+- Redistribution warning: link to the official paper or repository rather than committing a local
+  PDF copy.
 
 ## 8. Suggested reading order for contributors
 

@@ -656,6 +656,83 @@ class AgentRlExperiment(StrictModel):
     status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
 
 
+# The v0.4 systems lab makes rollout-control decisions executable without installing or claiming
+# a production inference engine. Its token IDs and cache costs are deterministic teaching values.
+class SystemsWorkloadConfig(StrictModel):
+    rollout_action_lengths: list[int] = Field(min_length=2)
+    worker_count: int = Field(gt=0)
+    update_every_completions: int = Field(gt=0)
+    tool_budget: int = Field(gt=0)
+
+    @model_validator(mode="after")
+    def require_budgeted_positive_work(self) -> SystemsWorkloadConfig:
+        if any(length <= 0 for length in self.rollout_action_lengths):
+            raise ValueError("systems-lab rollout lengths must be positive")
+        if any(length > self.tool_budget for length in self.rollout_action_lengths):
+            raise ValueError("systems-lab tool budget must cover every rollout")
+        return self
+
+
+class SystemsCheckpointConfig(StrictModel):
+    pause_only_between_actions: Literal[True]
+    persist_model_and_world_state: Literal[True]
+    verify_snapshot_and_payload_hashes: Literal[True]
+
+
+class SystemsFreshnessConfig(StrictModel):
+    max_policy_lag: int = Field(ge=0)
+    reject_mixed_policy_episode: Literal[True]
+    simulated_experience_used_for_update: Literal[False]
+
+
+class SystemsWeightSyncConfig(StrictModel):
+    compare_modes: list[Literal["episode_boundary", "action_boundary"]] = Field(
+        min_length=2,
+        max_length=2,
+    )
+
+    @model_validator(mode="after")
+    def require_both_safe_boundaries(self) -> SystemsWeightSyncConfig:
+        if set(self.compare_modes) != {"episode_boundary", "action_boundary"}:
+            raise ValueError("systems lab must compare episode- and action-boundary weight sync")
+        return self
+
+
+class SystemsCacheConfig(StrictModel):
+    tier: Literal["external_cpu_metadata_simulation"]
+    capacity_entries: int = Field(ge=0)
+    key_includes_policy_hash: Literal[True]
+
+
+class SystemsBackendConfig(StrictModel):
+    rollout_backend: Literal["deterministic_simulation"]
+    accelerated_backend_installed: Literal[False]
+    measured_throughput_claim: Literal[False]
+
+
+class SystemsArtifactsConfig(StrictModel):
+    save_actions: Literal[True]
+    save_checkpoints: Literal[True]
+    save_admission_decisions: Literal[True]
+    save_weight_sync_events: Literal[True]
+    save_report: Literal[True]
+
+
+class SystemsLabExperiment(StrictModel):
+    schema_version: Literal[1]
+    id: str
+    stage: Literal["systems_lab"]
+    seed: int
+    workload: SystemsWorkloadConfig
+    checkpoint: SystemsCheckpointConfig
+    freshness: SystemsFreshnessConfig
+    weight_sync: SystemsWeightSyncConfig
+    cache: SystemsCacheConfig
+    backend: SystemsBackendConfig
+    artifacts: SystemsArtifactsConfig
+    status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
+
+
 ExperimentProfile = Annotated[
     BaseEvalExperiment
     | SftExperiment
@@ -664,7 +741,8 @@ ExperimentProfile = Annotated[
     | TeachingLabExperiment
     | AgentEvaluationExperiment
     | AgentSftExperiment
-    | AgentRlExperiment,
+    | AgentRlExperiment
+    | SystemsLabExperiment,
     Field(discriminator="stage"),
 ]
 

@@ -102,7 +102,9 @@ The course should explain probability, log probabilities, cross-entropy, gradien
   replay-linked tool and recovery data, supervised agent behavior, and context-policy evaluation.
 - **v0.3 — Mini Agent RL (complete).** Fresh grouped rollouts, exact-token short-horizon policy
   optimization, policy-age evidence, credit-assignment experiments, and tool-budget evaluation.
-- **v0.4 — Systems laboratory.** Partial rollout, staleness, external state, and optional accelerated rollout integrations.
+- **v0.4 — Systems laboratory (implemented).** Resumable partial-rollout state, policy-age
+  admission, weight synchronization, and external-cache behavior as deterministic CPU evidence.
+  Accelerated rollout integration remains optional and unclaimed.
 - **v1.0 — Stable executable course.** Validated profiles, polished curriculum, reproducible results, and contribution process.
 
 ## Naming

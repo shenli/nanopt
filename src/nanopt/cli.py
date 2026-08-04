@@ -25,6 +25,7 @@ from nanopt.config.models import (
     DpoExperiment,
     GrpoExperiment,
     SftExperiment,
+    SystemsLabExperiment,
 )
 from nanopt.config.provenance import serialize_provenance
 from nanopt.config.resolver import ResolutionResult, resolve_config
@@ -46,6 +47,7 @@ from nanopt.reporting.builder import build_evaluation_report
 from nanopt.runtime.artifacts import append_jsonl, write_json, write_yaml
 from nanopt.runtime.doctor import DoctorReport, collect_doctor_report
 from nanopt.sft.run import execute_sft_run
+from nanopt.systems.run import execute_systems_lab_run
 from nanopt.version import __version__
 
 app = typer.Typer(
@@ -62,6 +64,7 @@ report_app = typer.Typer(help="Build local reports from inspectable run artifact
 train_app = typer.Typer(help="Run readable white-box training stages.")
 pipeline_app = typer.Typer(help="Run or resume the explicit Base-to-GRPO recipe.")
 agent_app = typer.Typer(help="Evaluate structured policies in the resettable MiniSWE environment.")
+systems_app = typer.Typer(help="Run deterministic rollout-infrastructure teaching simulations.")
 app.add_typer(config_app, name="config")
 app.add_typer(artifacts_app, name="artifacts")
 app.add_typer(data_app, name="data")
@@ -70,6 +73,7 @@ app.add_typer(report_app, name="report")
 app.add_typer(train_app, name="train")
 app.add_typer(pipeline_app, name="pipeline")
 app.add_typer(agent_app, name="agent")
+app.add_typer(systems_app, name="systems")
 console = Console()
 
 
@@ -494,6 +498,67 @@ def _resolve_agent_rl(
     if not isinstance(result.config.experiment, AgentRlExperiment):
         raise ConfigError(f"experiment {experiment!r} is not an Agent RL profile")
     return result
+
+
+def _resolve_systems_lab(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+    overrides: tuple[str, ...] = (),
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=overrides,
+    )
+    if not isinstance(result.config.experiment, SystemsLabExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not a systems-lab profile")
+    return result
+
+
+@systems_app.command("simulate")
+def systems_simulate_command(
+    hardware: Annotated[str, typer.Option(help="Metadata hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Metadata model profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[
+        str, typer.Option(help="Systems-lab experiment profile ID.")
+    ] = "resumable_rollouts",
+    artifacts_root: Annotated[Path, typer.Option(help="Parent directory for the run.")] = Path(
+        "artifacts/runs"
+    ),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe run ID.")] = None,
+    set_values: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Repeatable scalar override within the systems profile."),
+    ] = None,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Compare resumable-rollout weight, cache, and freshness policies on CPU."""
+
+    try:
+        resolved = _resolve_systems_lab(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+            overrides=tuple(set_values or ()),
+        )
+        context = execute_systems_lab_run(
+            resolved,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Systems simulation failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"Systems simulation completed: [bold]{context.run_dir}[/bold]")
 
 
 @eval_app.command("run")

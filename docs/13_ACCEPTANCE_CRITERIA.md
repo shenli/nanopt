@@ -146,6 +146,20 @@ The project should define numeric release targets in a versioned `reference_targ
 - [x] Parent and selected Agent RL policies are compared under at least two tool budgets on held-out tasks.
 - [x] A clean Docker/GPU reference run stays under the hard VRAM limit and retains compact evidence.
 
+## v0.4 Systems laboratory
+
+- [x] Partial rollouts pause only between complete structured actions.
+- [x] Every checkpoint pairs exact model execution state with external world state.
+- [x] Snapshot, workspace, cursor, budget, and payload tampering stop resume.
+- [x] Policy publication compares episode-boundary and action-boundary synchronization.
+- [x] Prefix-cache identity includes both exact prompt IDs and behavior-policy hash.
+- [x] Cache hits, misses, evictions, and synthetic recomputation costs are inspectable.
+- [x] Admission records distinguish fresh, stale, and mixed-policy episodes.
+- [x] A bounded-action counterfactual never silently becomes an implemented off-policy objective.
+- [x] Simulated experience is explicitly excluded from model updates.
+- [x] The CLI writes actions, checkpoints, sync events, admission decisions, summary, and report.
+- [x] Documentation distinguishes CPU control-plane evidence from accelerated-runtime claims.
+
 ## 11. Documentation gates
 
 - [x] Every chapter follows the standard chapter template where applicable.

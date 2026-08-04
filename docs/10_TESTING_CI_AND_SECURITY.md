@@ -100,6 +100,12 @@ Required before a milestone commit or release:
 - MkDocs strict build;
 - secret scanning and dependency audit where practical.
 
+The release-structure audit scans both tracked files and untracked, non-ignored candidates. This
+keeps a new private path, credential, non-English public page, oversized file, symlink, or GitHub
+Actions workflow from hiding outside the audit merely because it has not been staged yet. Ignored
+runtime artifacts and the explicitly ignored private working files remain outside the public
+candidate tree.
+
 Avoid enforcing an arbitrary high total coverage percentage. Require high coverage for `core`, config, parser/verifier, and schemas, and test every documented algorithm branch.
 
 ## 5. Local validation policy

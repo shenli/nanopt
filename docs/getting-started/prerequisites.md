@@ -34,7 +34,7 @@ NanoPT requires:
 Install the project environment before running the readiness lab:
 
 ```bash
-uv sync --extra dev --extra docs
+uv sync --frozen --extra dev --extra docs
 uv run python labs/00_prerequisites.py
 ```
 

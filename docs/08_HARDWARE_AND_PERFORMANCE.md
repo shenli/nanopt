@@ -2,7 +2,7 @@
 
 ## 1. Reference platform
 
-NanoPT v0.1 targets one platform for its first validation:
+NanoPT's validated reference platform is:
 
 ```text
 GPU: NVIDIA GeForce RTX 4070 Ti SUPER
@@ -29,7 +29,7 @@ Only `validated` profiles appear in README support claims.
 
 ## 3. Initial memory strategy
 
-The proposed reference model has approximately 0.6B parameters. The initial path uses:
+The pinned reference model has approximately 0.6B parameters. The validated path uses:
 
 - BF16 frozen base weights;
 - BF16 or FP32 LoRA parameters according to PEFT behavior and measured stability;
@@ -43,7 +43,7 @@ The proposed reference model has approximately 0.6B parameters. The initial path
 
 This is intentionally simpler than QLoRA. Quantization should be added only after the unquantized adapter path is measured, because quantization introduces extra dependencies and changes the learning/debugging surface.
 
-## 4. Proposed safety budgets
+## 4. Safety budgets
 
 Initial profile values:
 
@@ -53,7 +53,9 @@ hard_peak_reserved_gib: 15.2
 minimum_free_vram_before_start_gib: 14.0
 ```
 
-These values are proposals, not measurements. The final profile must reflect observed behavior on the owner's machine, including display usage and allocator fragmentation.
+These values are admission thresholds, not measurements. Accepted measurements live in the linked
+reference evidence. A new hardware profile must set its thresholds from observed behavior,
+including display usage and allocator fragmentation.
 
 - Exceeding the soft budget produces a warning and suggested reductions.
 - Exceeding the hard budget fails calibration.
@@ -176,7 +178,8 @@ gradient_accumulation_steps: 8
 kl_beta: 0.0
 ```
 
-The coding agent must not tune silently around these values. Calibration recommendations are printed; the owner or reference-run process commits the chosen config.
+The implementation process must not tune silently around these values. Calibration recommendations
+are printed; the maintainer or reference-run process commits the chosen config.
 
 ## 9. OOM response policy
 
@@ -256,4 +259,7 @@ A GPU with the same nominal VRAM is not automatically compatible: architecture, 
 
 ## 12. Runtime claims
 
-Do not publish estimated training times as measured values. The first full pipeline run will establish official wall-clock ranges. Subsequent releases should show the distribution across repeated runs when possible.
+Do not publish estimated training times as measured values. The accepted M7 run established the
+first pinned pipeline timing; v0.2 and v0.3 added separate Agent SFT and Mini Agent RL measurements.
+See the completion reports and compact evidence rather than extrapolating them to other machines.
+Subsequent releases should show distributions across repeated runs when practical.

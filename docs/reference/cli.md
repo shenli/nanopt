@@ -17,6 +17,7 @@ nanopt eval run [--adapter ADAPTER_DIR]
 nanopt pipeline run --tasks TASKS --recipe math_pipeline
 nanopt agent run --policy oracle|model --backend docker|fake
 nanopt agent build-sft-data --output AGENT_DATASET_DIR
+nanopt systems simulate [--experiment resumable_rollouts]
 nanopt report build RUN_DIR
 nanopt artifacts inspect RUN_DIR
 ```
@@ -73,6 +74,12 @@ Greedy validation after each update selects the earliest highest-reward post-upd
 untrained parent is ineligible, and all later validation results remain in the run artifacts.
 `--iteration-limit` is an explicitly non-representative calibration path; the reference config
 requires temperature-one, top-p-one sampling and rejects stale data at the trainer boundary.
+
+`nanopt systems simulate` runs the v0.4 deterministic partial-rollout laboratory on CPU. It
+compares episode-boundary and action-boundary weight synchronization, validates hash-bound
+model/world checkpoints, simulates a policy-keyed external prefix cache, and writes explicit
+training-admission decisions. It does not load a model, execute Docker, install an accelerated
+backend, measure throughput, or use simulated records for training.
 
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.

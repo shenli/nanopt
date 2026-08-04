@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/partial_rollout_checkpoint.schema.json",
+  "title": "NanoPT Partial Rollout Checkpoint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sync_mode",
+    "schema_version",
+    "checkpoint_id",
+    "trajectory_id",
+    "tick",
+    "model",
+    "world",
+    "payload_sha256"
+  ],
+  "properties": {
+    "sync_mode": {"enum": ["episode_boundary", "action_boundary"]},
+    "schema_version": {"const": 1},
+    "checkpoint_id": {"type": "string", "minLength": 1},
+    "trajectory_id": {"type": "string", "minLength": 1},
+    "tick": {"type": "integer", "minimum": 1},
+    "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prompt_token_ids",
+        "sampling_rng_counter",
+        "stop_state",
+        "behavior_policy_version",
+        "behavior_policy_sha256",
+        "generation_config_sha256",
+        "prefix_cache_key"
+      ],
+      "properties": {
+        "prompt_token_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "sampling_rng_counter": {"type": "integer", "minimum": 0},
+        "stop_state": {"const": "between_actions"},
+        "behavior_policy_version": {"type": "integer", "minimum": 0},
+        "behavior_policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "generation_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "prefix_cache_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "world": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_snapshot_sha256",
+        "workspace_sha256",
+        "event_cursor",
+        "remaining_tool_budget"
+      ],
+      "properties": {
+        "initial_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "workspace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "event_cursor": {"type": "integer", "minimum": 0},
+        "remaining_tool_budget": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

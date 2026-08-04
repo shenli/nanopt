@@ -28,6 +28,7 @@ def test_help_and_version_do_not_download_models() -> None:
     assert "eval" in help_result.stdout
     assert "report" in help_result.stdout
     assert "train" in help_result.stdout
+    assert "systems" in help_result.stdout
     assert "calibrate" in help_result.stdout
     assert version_result.exit_code == 0
     assert "0.3.0" in version_result.stdout
@@ -35,6 +36,10 @@ def test_help_and_version_do_not_download_models() -> None:
     train_help = runner.invoke(app, ["train", "--help"])
     assert train_help.exit_code == 0
     assert "agent-rl" in train_help.stdout
+
+    systems_help = runner.invoke(app, ["systems", "--help"])
+    assert systems_help.exit_code == 0
+    assert "simulate" in systems_help.stdout
 
 
 def test_config_resolve_writes_config_and_provenance(tmp_path: Path, project_root: Path) -> None:

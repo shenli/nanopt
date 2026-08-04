@@ -1,0 +1,36 @@
+schema_version: 1
+id: resumable_rollouts
+stage: systems_lab
+seed: 83
+workload:
+  rollout_action_lengths: [2, 8, 2, 2]
+  worker_count: 2
+  update_every_completions: 1
+  tool_budget: 10
+checkpoint:
+  pause_only_between_actions: true
+  persist_model_and_world_state: true
+  verify_snapshot_and_payload_hashes: true
+freshness:
+  max_policy_lag: 0
+  reject_mixed_policy_episode: true
+  simulated_experience_used_for_update: false
+weight_sync:
+  compare_modes:
+    - episode_boundary
+    - action_boundary
+cache:
+  tier: external_cpu_metadata_simulation
+  capacity_entries: 4
+  key_includes_policy_hash: true
+backend:
+  rollout_backend: deterministic_simulation
+  accelerated_backend_installed: false
+  measured_throughput_claim: false
+artifacts:
+  save_actions: true
+  save_checkpoints: true
+  save_admission_decisions: true
+  save_weight_sync_events: true
+  save_report: true
+status: smoke_tested

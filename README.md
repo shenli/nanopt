@@ -15,7 +15,7 @@ inspectable run artifacts, and a resettable coding-agent environment.
 ```text
 Qwen3-0.6B Base
 ├── completion-only SFT → controlled DPO → synchronous GRPO/RLVR
-└── replayed tool trajectories → exact-token Agent SFT → Mini Agent RL
+└── replayed tool trajectories → exact-token Agent SFT → Mini Agent RL → systems lab
 ```
 
 ## Why NanoPT?
@@ -73,6 +73,7 @@ uv run nanopt doctor --json doctor.json
 uv run python labs/01_tokens_and_masks.py
 uv run python labs/20_agent_sft_masks.py
 uv run python labs/21_agent_rl_credit.py
+uv run python labs/22_resumable_rollouts.py
 ```
 
 `nanopt doctor` is read-only. On unsupported hardware it reports what differs instead of claiming
@@ -130,9 +131,24 @@ policy versions, and post-terminal hidden outcome rewards. It also writes fresh/
 credit-assignment, and tool-budget studies. Read [Mini Agent RL](docs/agents/agent-rl.md) before
 changing rollout or policy-age semantics.
 
+## Run the v0.4 systems laboratory
+
+Trace partial rollout state, policy publication, cache identity, and training admission without a
+model download or cluster:
+
+```bash
+uv run python labs/22_resumable_rollouts.py
+uv run nanopt systems simulate --run-id systems-tutorial
+```
+
+The simulation compares keeping old weights for a complete episode with synchronizing only
+between complete tool actions. It writes inspectable model/world checkpoints and explicitly does
+not use synthetic experience for training. Read [RL from a systems perspective](docs/tutorials/rl-from-systems-perspective.md)
+for the end-to-end walkthrough.
+
 ## Learn in layers
 
-The [22-chapter course map](docs/course/index.md) links each idea to source code, a CPU lab, and the
+The [23-chapter course map](docs/course/index.md) links each idea to source code, a CPU lab, and the
 appropriate evidence tier. A useful route is:
 
 1. [Prerequisites](docs/getting-started/prerequisites.md)
@@ -143,6 +159,7 @@ appropriate evidence tier. A useful route is:
 6. [From tool calls to trajectories](docs/agents/from-tool-call-to-trajectory.md)
 7. [Exact-token Agent SFT](docs/agents/agent-sft.md)
 8. [Mini Agent RL](docs/agents/agent-rl.md)
+9. [RL from a systems perspective](docs/tutorials/rl-from-systems-perspective.md)
 
 ## Repository map
 
@@ -152,7 +169,7 @@ src/nanopt/sft/        readable completion-only trainer
 src/nanopt/dpo/        preference cache and DPO training
 src/nanopt/grpo/       exact-token rollout and synchronous GRPO
 src/nanopt/agent/      MiniSWE environment, replay, Agent SFT, and Agent RL
-labs/                  22 executable local lessons
+labs/                  23 executable local lessons
 tasks/                 deterministic arithmetic and MiniSWE tasks
 configs/               strict, mirrored experiment profiles
 specs/schemas/         public artifact and dataset contracts

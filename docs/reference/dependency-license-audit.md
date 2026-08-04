@@ -3,15 +3,16 @@
 ## Scope
 
 This is a release-engineering inventory, not legal advice. NanoPT does not vendor its Python
-dependencies, Qwen weights, generated datasets, or trained adapters in the v0.1 source and wheel
-archives. Dependencies are installed from their own distributions and retain their own licenses.
+dependencies, Qwen weights, generated datasets, or trained adapters in its source and wheel
+archives through v0.3. Dependencies are installed from their own distributions and retain their
+own licenses.
 
 The complete environment is fixed by `uv.lock`. The M10 release evidence records that file's hash
 and the installed distribution/version/license metadata from a fresh locked environment.
 
 ## Direct runtime dependencies
 
-| Dependency | Locked v0.1 version | Declared license metadata |
+| Dependency | Current locked version | Declared license metadata |
 | --- | --- | --- |
 | NumPy | 2.4.6 / 2.5.1 platform variants | BSD-3-Clause plus bundled permissive components |
 | packaging | 26.2 | Apache-2.0 OR BSD-2-Clause |
@@ -37,7 +38,7 @@ license failure.
 - The MiniSWE backend references a digest-pinned official Python 3.11 slim image. NanoPT does not
   repackage that image in its Python artifacts.
 - The synthetic arithmetic dataset has a separate [dataset card](../data/dataset-card.md). No bulk
-  dataset or adapter is attached to v0.1.
+  dataset or adapter is attached to releases through v0.3.
 
 ## Release checks
 

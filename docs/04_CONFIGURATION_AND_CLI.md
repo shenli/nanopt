@@ -214,6 +214,20 @@ nanopt agent run \
 
 The command checks Docker isolation requirements before loading the model.
 
+### 6.7 Systems simulation command
+
+```bash
+nanopt systems simulate \
+  --experiment resumable_rollouts \
+  --run-id systems-tutorial
+```
+
+This CPU command resolves the ordinary strict config bundle, then writes synthetic actions,
+hash-bound partial checkpoints, weight-sync events, training-admission decisions, a summary, and a
+report. The profile fixes `measured_throughput_claim: false` and
+`simulated_experience_used_for_update: false`; changing those values is rejected rather than
+silently expanding the evidence tier.
+
 ## 7. CLI overrides
 
 Support dotted scalar overrides only in v0.1. Examples:

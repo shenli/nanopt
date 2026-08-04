@@ -22,6 +22,7 @@ def test_all_canonical_profiles_validate(config_repository: ConfigRepository) ->
         "agent_sft",
         "agent_sft_eval",
         "agent_rl",
+        "resumable_rollouts",
     ):
         config_repository.experiment(experiment)
     config_repository.recipe("math_pipeline")

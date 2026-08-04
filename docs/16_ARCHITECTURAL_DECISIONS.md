@@ -1,6 +1,8 @@
 # Architectural Decisions
 
-These are proposed initial ADRs. The coding agent should create individual files under `docs/adr/`, preserve decision history, and update status only through review.
+This index summarizes accepted project decisions. The individual records under `docs/adr/`
+preserve their original context and consequences; status changes require review rather than silent
+rewriting.
 
 ## ADR-001: Build an executable course, not a production framework
 
@@ -126,7 +128,8 @@ These are proposed initial ADRs. The coding agent should create individual files
 
 **Decision:** Code, comments, docs, reports, examples, and project governance are English.
 
-**Consequence:** Background source materials may be multilingual in the private handoff, but must be synthesized into original English public documentation.
+**Consequence:** Background sources may be multilingual, but NanoPT synthesizes them into original
+English public documentation.
 
 ## ADR-014: Evidence-backed hardware profiles
 
@@ -139,4 +142,6 @@ unvalidated until M7 passed; its current validation is scoped to the committed e
 
 Implemented milestone decisions are preserved as numbered records under `docs/adr/`. The M8
 structured-tool and sandbox decision is
-[ADR-0009](adr/0009-structured-mini-swe-sandbox.md).
+[ADR-0009](adr/0009-structured-mini-swe-sandbox.md). The v0.3 and v0.4 policy/systems boundaries
+are [ADR-0011](adr/0011-fresh-exact-token-agent-grpo.md) and
+[ADR-0012](adr/0012-resumable-rollout-control-plane.md).

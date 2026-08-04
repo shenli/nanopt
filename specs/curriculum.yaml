@@ -162,3 +162,9 @@ chapters:
     title: Extending NanoPT
     path: docs/extending/contribution-paths.md
     labs: []
+  - id: 22
+    title: RL from a systems perspective
+    path: docs/tutorials/rl-from-systems-perspective.md
+    labs:
+      - tier: systems_simulation
+        command: uv run python labs/22_resumable_rollouts.py

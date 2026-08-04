@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nanopt.dev/schemas/systems_simulation_summary.schema.json",
+  "title": "NanoPT Systems Simulation Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "backend",
+    "measured_throughput_claim",
+    "simulated_experience_used_for_update",
+    "comparisons"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"const": "v0_4_systems_simulation_passed"},
+    "backend": {"const": "deterministic_simulation"},
+    "measured_throughput_claim": {"const": false},
+    "simulated_experience_used_for_update": {"const": false},
+    "comparisons": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sync_mode",
+          "ticks",
+          "policy_updates",
+          "completed_trajectories",
+          "partial_checkpoints",
+          "strict_eligible_trajectories",
+          "mixed_policy_trajectories",
+          "stale_trajectories",
+          "external_cache_hits",
+          "external_cache_misses",
+          "recomputed_prompt_tokens",
+          "used_for_model_update"
+        ],
+        "properties": {
+          "sync_mode": {"enum": ["episode_boundary", "action_boundary"]},
+          "ticks": {"type": "integer", "minimum": 1},
+          "policy_updates": {"type": "integer", "minimum": 1},
+          "completed_trajectories": {"type": "integer", "minimum": 2},
+          "partial_checkpoints": {"type": "integer", "minimum": 1},
+          "strict_eligible_trajectories": {"type": "integer", "minimum": 0},
+          "mixed_policy_trajectories": {"type": "integer", "minimum": 0},
+          "stale_trajectories": {"type": "integer", "minimum": 0},
+          "external_cache_hits": {"type": "integer", "minimum": 0},
+          "external_cache_misses": {"type": "integer", "minimum": 0},
+          "recomputed_prompt_tokens": {"type": "integer", "minimum": 0},
+          "used_for_model_update": {"const": false}
+        }
+      }
+    }
+  }
+}

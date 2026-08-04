@@ -95,26 +95,46 @@ def _tracked_files(project_root: Path) -> list[str]:
     return sorted(path for path in completed.stdout.decode().split("\0") if path)
 
 
+def _candidate_files(project_root: Path) -> list[str]:
+    """Return tracked and untracked, non-ignored files that could enter the public tree.
+
+    A release candidate is normally clean, in which case this list equals ``git ls-files``.
+    Including untracked candidates keeps the everyday local gate useful while a milestone is
+    being assembled: a new secret or private path cannot evade the audit merely because it has
+    not been staged yet.
+    """
+
+    completed = subprocess.run(
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+        cwd=project_root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(path for path in completed.stdout.decode().split("\0") if path)
+
+
 def _scan_public_tree(project_root: Path) -> dict[str, Any]:
     """Reject private inputs, personal paths, secrets, and non-English scripts."""
 
     tracked = _tracked_files(project_root)
+    candidates = _candidate_files(project_root)
     _require(not (PRIVATE_TRACKED_NAMES & set(tracked)), "private handoff file is tracked")
     _require(
         not any(path.startswith(PRIVATE_TRACKED_PREFIXES) for path in tracked),
         "private or generated artifact directory is tracked",
     )
     _require(
-        not any(path.startswith(".github/workflows/") for path in tracked),
+        not any(path.startswith(".github/workflows/") for path in candidates),
         "GitHub Actions workflows are outside the local-validation policy",
     )
 
     text_files = 0
     total_bytes = 0
     file_hashes: dict[str, str] = {}
-    for relative in tracked:
+    for relative in candidates:
         path = project_root / relative
-        _require(path.is_file(), f"tracked path is not a regular file: {relative}")
+        _require(not path.is_symlink(), f"public candidate is a symbolic link: {relative}")
+        _require(path.is_file(), f"public candidate is not a regular file: {relative}")
         size = path.stat().st_size
         _require(size <= 2 * 1024 * 1024, f"tracked file exceeds 2 MiB: {relative}")
         total_bytes += size
@@ -141,6 +161,8 @@ def _scan_public_tree(project_root: Path) -> dict[str, Any]:
 
     return {
         "tracked_files": len(tracked),
+        "candidate_files": len(candidates),
+        "untracked_candidate_files": len(set(candidates) - set(tracked)),
         "text_files_scanned": text_files,
         "total_bytes": total_bytes,
         "tree_manifest_sha256": sha256_bytes(canonical_json(file_hashes)),

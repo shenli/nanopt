@@ -26,7 +26,7 @@
       "uniqueItems": true
     },
     "stage": {
-      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "agent_sft", "agent_rl", "teaching_lab", "pipeline"]
+      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "agent_sft", "agent_rl", "systems_lab", "teaching_lab", "pipeline"]
     },
     "status": {
       "enum": ["created", "running", "completed", "failed", "interrupted", "tainted"]

@@ -5,7 +5,7 @@ NanoPT uses MkDocs Material and does not require GitHub Actions to publish its d
 ## Preview locally
 
 ```bash
-uv sync --extra docs
+uv sync --frozen --extra docs
 uv run mkdocs serve
 ```
 

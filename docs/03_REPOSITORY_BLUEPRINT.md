@@ -1,5 +1,12 @@
 # Repository Blueprint
 
+!!! note "Historical design map"
+
+    This page preserves the proposed v0.1 structure and the reasoning behind it. The implemented
+    tree evolved through later milestones; use the
+    [README repository map](https://github.com/shenli/nanopt#repository-map) and the actual source
+    tree for current paths.
+
 ## Proposed public repository tree
 
 ```text

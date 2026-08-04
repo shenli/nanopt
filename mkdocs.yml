@@ -45,6 +45,7 @@ nav:
       - Publishing documentation: getting-started/publishing-docs.md
   - Course:
       - Chapter map and evidence tiers: course/index.md
+      - RL from a systems perspective: tutorials/rl-from-systems-perspective.md
   - Foundations:
       - MathJax smoke test: foundations/mathjax-smoke.md
       - Tokens, masks, and log probabilities: foundations/tokens-masks-logprobs.md
@@ -110,6 +111,7 @@ nav:
           - Structured MiniSWE sandbox: adr/0009-structured-mini-swe-sandbox.md
           - Exact-token Agent SFT: adr/0010-exact-token-agent-sft.md
           - Fresh exact-token Agent GRPO: adr/0011-fresh-exact-token-agent-grpo.md
+          - Resumable rollout control plane: adr/0012-resumable-rollout-control-plane.md
       - Publication checklist: reference/publication-checklist.md
       - Dependency and model license audit: reference/dependency-license-audit.md
       - M1 completion report: reference/m1-completion-report.md

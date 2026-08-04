@@ -59,3 +59,10 @@ output are absent; only bounded outcome counts and reward are retained after ter
 The run manifest and summary distinguish the terminal training version from the selected
 post-update policy boundary, and retain validation reward for every version so a later regression
 cannot disappear when an earlier adapter is published.
+
+A `systems_lab` run is CPU-only and adds `actions.jsonl`, `partial_checkpoints.jsonl`,
+`weight_sync_events.jsonl`, and `admission_decisions.jsonl`. Its synthetic action IDs expose the
+control-plane record shape; they are never labeled as model output. `summary.json` and `report.md`
+compare cache reuse, recomputation, staleness, and mixed-policy behavior. Both the config and
+summary declare that simulated experience was not used for a model update and that no throughput
+was measured.

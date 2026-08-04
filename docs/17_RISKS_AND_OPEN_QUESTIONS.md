@@ -1,5 +1,8 @@
 # Risks and Open Questions
 
+This is a living risk register. Some entries preserve the decision context from v0.1; resolved
+items say so explicitly rather than disappearing from the project history.
+
 ## 1. Naming and publication
 
 ### Risk
@@ -47,7 +50,9 @@ Using a tokenizer chat template can make prompt/completion boundary masking subt
 
 ### Risk
 
-The proposed configurations may fit in nominal 16 GB but fail due to display use, allocator fragmentation, driver differences, or longer examples.
+The pinned reference configurations fit the validated 16 GB machine, but the same recipes may fail
+on another nominally identical card because of display use, allocator fragmentation, driver
+differences, or longer modified examples.
 
 ### Mitigation
 
@@ -191,7 +196,9 @@ The project may attempt SFT, DPO, reward modeling, PPO, GRPO, Agent RL, distribu
 
 ### Mitigation
 
-Hold v0.1 to the acceptance criteria. PPO remains a tiny lab; Agent RL and distributed backends remain future releases.
+The v0.1 scope stayed within its acceptance criteria. Later releases added Agent SFT, Mini Agent
+RL, and a deterministic systems laboratory as separate vertical slices. PPO remains a tiny lab,
+and accelerated or distributed backends remain future work.
 
 ## 15. Performance versus readability
 
@@ -203,15 +210,19 @@ A simple sampler may dominate runtime, creating pressure to add vLLM before corr
 
 Profile first, preserve the reference backend forever, and add accelerated implementations behind identical trajectory schemas later.
 
-## 16. Empirical release targets
+## 16. Empirical release targets (resolved for current releases)
 
-### Open question
+### Recorded answer
 
-What exact quality thresholds should Base, SFT, DPO, and GRPO meet?
+Each reference milestone froze its quality thresholds in `configs/reference_targets.yaml` before
+the accepted run. Later releases added separate Agent SFT, Mini Agent RL, and systems-simulation
+targets without rewriting the earlier evidence.
 
-### Plan
+### Ongoing rule
 
-Run pilot experiments, then freeze a `reference_targets.yaml` before final tuning. Targets should include parse rate, held-out accuracy/reward, preference metrics, reward-hacking integrity, and allowed anchor regressions.
+Run pilot experiments, then freeze targets before final tuning. Targets should include parse rate,
+held-out accuracy or reward, preference metrics, reward-hacking integrity, and allowed anchor
+regressions.
 
 ## 17. Dataset and artifact publication
 

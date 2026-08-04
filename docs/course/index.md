@@ -39,6 +39,7 @@ the small lab teaches the invariant, while the reference run measures the comple
 | 19 | [Reading modern systems](../reading/post-training-systems.md) | Compare reports without filling gaps | Reading guide |
 | 20 | [End-to-end pipeline](../pipeline/end-to-end-recipe.md) | Hash-linked resumable stages | M7 reference |
 | 21 | [Extending NanoPT](../extending/contribution-paths.md) | Add one auditable vertical slice | Contributor exercise |
+| 22 | [RL from a systems perspective](../tutorials/rl-from-systems-perspective.md) | Experience, resume state, weights, cache, and admission | Systems: lab 22; v0.4 |
 
 ## Evidence tiers
 

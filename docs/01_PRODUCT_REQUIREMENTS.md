@@ -13,13 +13,12 @@ NanoPT must let a learner run and inspect a complete small-model post-training p
 A new user should be able to execute the following progression:
 
 ```bash
-uv sync --extra gpu
-source .venv/bin/activate
-nanopt doctor
-nanopt config resolve --recipe math-pipeline --hardware rtx_4070_ti_super_16gb
-nanopt calibrate --recipe math-pipeline --hardware rtx_4070_ti_super_16gb
-nanopt pipeline run --recipe math-pipeline --hardware rtx_4070_ti_super_16gb
-nanopt report build artifacts/runs/<run-id>
+uv sync --frozen --extra dev --extra docs
+uv run nanopt doctor
+uv run nanopt config resolve --recipe math_pipeline --stage base_eval
+uv run nanopt calibrate --mode load --device cuda
+uv run nanopt pipeline run --recipe math_pipeline --tasks <tasks.jsonl> --device cuda
+uv run nanopt report build artifacts/runs/<run-id>
 ```
 
 The exact CLI can evolve, but the user experience must preserve these concepts: environment diagnosis, explicit resolved configuration, short calibration, formal run, and local report.
@@ -157,7 +156,9 @@ The MiniSWE environment must provide:
 - deterministic final-state verification;
 - isolation from the host and hidden verifier.
 
-v0.1 requires rollout and evaluation, not policy optimization in this environment.
+v0.1 required rollout and evaluation, not policy optimization in this environment. v0.2 added
+exact-token Agent SFT, v0.3 added Mini Agent RL, and v0.4 adds only a deterministic systems
+simulation around longer rollout control.
 
 ### FR-11: Documentation
 

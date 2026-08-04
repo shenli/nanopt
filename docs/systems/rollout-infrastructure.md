@@ -53,6 +53,21 @@ Clipping and importance ratios tolerate limited mismatch; they are not permissio
 identity. Scheduling policy also affects the training distribution because long tasks may be
 discarded more often.
 
+## v0.4: pair resumable state with a weight boundary
+
+The v0.4 lab extends the tick scheduler with hash-bound model/world checkpoints, policy
+publication, external prefix-cache identity, and admission decisions. Run:
+
+```bash
+uv run python labs/22_resumable_rollouts.py
+uv run nanopt systems simulate --run-id systems-lab
+```
+
+Keeping one policy for the whole episode preserves cache reuse but makes a long episode stale.
+Synchronizing only between complete actions makes later actions newer, but invalidates old-policy
+KV state and produces a mixed-policy episode. The [systems-perspective tutorial](../tutorials/rl-from-systems-perspective.md)
+traces both cases from task snapshot through training admission.
+
 ## Common mistakes
 
 - Measuring average latency while hiding the long tail.

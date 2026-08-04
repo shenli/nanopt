@@ -172,7 +172,8 @@ The model-facing environment and hidden verifier must not share a writable files
 
 ## 9. Reward and score schema
 
-v0.1 reports evaluation scores, not training rewards. The schema should nevertheless anticipate RL:
+v0.1 introduced this evaluation score; v0.3 uses the same bounded final score as a hidden outcome
+reward after the episode terminates:
 
 ```json
 {
@@ -187,12 +188,12 @@ v0.1 reports evaluation scores, not training rewards. The schema should neverthe
 }
 ```
 
-A proposed future reward is:
+The implemented score is:
 
 ```text
-0 if build/import fails
+0 if public verification fails
 otherwise hidden-tests-passed / hidden-tests-total
-minus explicit policy or budget penalties
+minus 0.1 per policy violation, bounded below by 0
 ```
 
 Never accept the agent's self-reported success as evidence.
@@ -272,5 +273,6 @@ v0.3 implements:
 - credit-assignment and tool-budget studies.
 
 The implementation builds on v0.2's deterministic reset, independent hidden verification, and
-reproducible trajectory replay. It deliberately stops at short horizons; resumable partial rollout,
-asynchronous workers, and external state remain v0.4 systems work.
+reproducible trajectory replay. v0.3 deliberately stops at short horizons. The v0.4 systems lab
+adds a deterministic model/world checkpoint and partial-rollout control simulation; asynchronous
+workers, real KV-cache movement, and accelerated inference remain unimplemented.

@@ -33,6 +33,11 @@ import pytest
         ("labs/18_artifact_lineage.py", "Artifact-lineage lab passed."),
         ("labs/19_optimizer_step.py", "Optimizer-step lab passed."),
         ("labs/20_agent_sft_masks.py", "Agent SFT mask invariant passed"),
+        (
+            "labs/21_agent_rl_credit.py",
+            "Agent RL identical-snapshot and credit-assignment invariants passed",
+        ),
+        ("labs/22_resumable_rollouts.py", "Resumable-rollout systems lab passed."),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(

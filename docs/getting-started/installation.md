@@ -3,7 +3,7 @@
 NanoPT supports Python 3.11 and 3.12. The reference dependency workflow uses `uv.lock`:
 
 ```bash
-uv sync --extra dev --extra docs
+uv sync --frozen --extra dev --extra docs
 uv run nanopt --help
 uv run pytest
 ```

@@ -40,3 +40,27 @@ v0_3:
     - Frozen after a clean one-iteration pilot produced one non-degenerate four-episode group.
     - The pilot preserved held-out full-budget reward at 1.0 and measured partial reward at budget 2.
     - Quality targets are deliberately narrow because validation contains one educational task.
+v0_4:
+  rollout_action_lengths: [2, 8, 2, 2]
+  worker_count: 2
+  update_every_completions: 1
+  maximum_training_policy_lag: 0
+  expected_ticks: 8
+  expected_policy_updates: 3
+  expected_partial_checkpoints: 3
+  episode_boundary:
+    expected_mixed_policy_trajectories: 0
+    expected_stale_trajectories: 1
+    expected_external_cache_hits: 3
+    expected_external_cache_misses: 0
+    expected_recomputed_prompt_tokens: 0
+  action_boundary:
+    expected_mixed_policy_trajectories: 1
+    expected_stale_trajectories: 1
+    expected_external_cache_hits: 0
+    expected_external_cache_misses: 3
+    expected_recomputed_prompt_tokens: 42
+  notes:
+    - Targets are exact counts from a hand-computable deterministic control-plane workload.
+    - They validate state, cache, policy-age, and admission semantics, not hardware throughput.
+    - Simulated experience must remain excluded from every model update.
