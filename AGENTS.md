@@ -32,7 +32,8 @@ When code behavior changes, update the corresponding tutorial in the same change
 
 ## Correctness and scope
 
-- Follow the milestone dependency order in `docs/12_IMPLEMENTATION_ROADMAP.md`.
+- Follow the learner sequence in `docs/course/index.md` and the public acceptance contracts in
+  `docs/13_ACCEPTANCE_CRITERIA.md`.
 - Follow tensor and objective contracts in `docs/05_ALGORITHM_SPECIFICATIONS.md`.
 - Treat masks as the source of truth; do not bury masking rules in `-100` labels.
 - Compute log-softmax and loss reductions in FP32 unless a specification explicitly says otherwise.
