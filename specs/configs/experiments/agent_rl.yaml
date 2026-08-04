@@ -57,6 +57,9 @@ studies:
     - 2
     - 5
   retain_first_iteration_for_staleness: true
+  validation_every_iterations: 1
+  selection_rule: highest_post_update_validation_reward_then_earliest
+  parent_policy_selectable: false
 environment:
   backend: docker
   image: python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93

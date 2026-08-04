@@ -614,6 +614,9 @@ class AgentRlStudiesConfig(StrictModel):
     credit_assignment: list[Literal["all_actions", "terminal_action"]] = Field(min_length=2)
     tool_budgets: list[int] = Field(min_length=2)
     retain_first_iteration_for_staleness: Literal[True]
+    validation_every_iterations: Literal[1]
+    selection_rule: Literal["highest_post_update_validation_reward_then_earliest"]
+    parent_policy_selectable: Literal[False]
 
     @model_validator(mode="after")
     def require_distinct_study_coordinates(self) -> AgentRlStudiesConfig:

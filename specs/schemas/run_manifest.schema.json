@@ -189,7 +189,8 @@
           "required": [
             "device", "iterations", "optimizer_steps", "groups", "episodes", "actions",
             "representative", "consumed_exact_stored_token_ids", "maximum_policy_lag",
-            "hidden_reward_exposed_during_rollout"
+            "hidden_reward_exposed_during_rollout", "final_training_policy_version",
+            "selected_policy_version"
           ],
           "properties": {
             "device": {"enum": ["cpu", "cuda"]},
@@ -201,7 +202,9 @@
             "representative": {"type": "boolean"},
             "consumed_exact_stored_token_ids": {"const": true},
             "maximum_policy_lag": {"const": 0},
-            "hidden_reward_exposed_during_rollout": {"const": false}
+            "hidden_reward_exposed_during_rollout": {"const": false},
+            "final_training_policy_version": {"type": "integer", "minimum": 1},
+            "selected_policy_version": {"type": "integer", "minimum": 1}
           }
         }
       ]

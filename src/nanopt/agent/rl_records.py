@@ -192,6 +192,9 @@ class AgentRlSummary(AgentRecord):
     exact_sampled_tokens: Literal[True] = True
     hidden_reward_exposed_during_rollout: Literal[False] = False
     maximum_training_policy_lag: Literal[0] = 0
+    final_training_policy_version: int = Field(gt=0)
+    selected_policy_version: int = Field(gt=0)
+    validation_rewards_by_policy_version: list[float] = Field(min_length=2)
     mean_reward: float = Field(ge=0, le=1)
     action_validity_rate: float = Field(ge=0, le=1)
     degenerate_group_fraction: float = Field(ge=0, le=1)
@@ -202,3 +205,13 @@ class AgentRlSummary(AgentRecord):
     peak_allocated_bytes: int = Field(ge=0)
     peak_reserved_bytes: int = Field(ge=0)
     representative: bool
+
+    @model_validator(mode="after")
+    def validate_policy_selection(self) -> AgentRlSummary:
+        if self.selected_policy_version > self.final_training_policy_version:
+            raise ValueError("selected Agent RL policy version cannot exceed the final version")
+        if len(self.validation_rewards_by_policy_version) != self.final_training_policy_version + 1:
+            raise ValueError("validation reward history must include version zero and every update")
+        if any(value < 0 or value > 1 for value in self.validation_rewards_by_policy_version):
+            raise ValueError("validation rewards must be between zero and one")
+        return self

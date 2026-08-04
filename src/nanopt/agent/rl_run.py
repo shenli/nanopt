@@ -40,8 +40,10 @@ from nanopt.models.adapters import (
     clone_lora_adapter,
     load_lora_adapter,
     parameter_counts,
+    restore_lora_adapter,
     save_lora_adapter,
     selected_adapter,
+    snapshot_lora_adapter,
 )
 from nanopt.models.loading import load_qwen3_base, qwen_chat_terminator_id
 from nanopt.models.renderer import ChatRenderer
@@ -184,6 +186,10 @@ def _write_report(
     staleness: AgentRlStalenessStudy,
     budget: AgentRlBudgetStudy,
 ) -> None:
+    version_line = (
+        "- Terminal / selected policy version: "
+        f"{summary.final_training_policy_version} / {summary.selected_policy_version}"
+    )
     staleness_rows = "\n".join(
         f"| {point.label.title()} | {point.policy_lag} | {point.mean_abs_log_ratio:.6f} | "
         f"{point.max_abs_log_ratio:.6f} | {point.approximate_ess_fraction:.3f} |"
@@ -202,6 +208,7 @@ def _write_report(
 - Parent Agent SFT adapter: `{summary.parent_agent_sft_adapter_sha256}`
 - Agent RL adapter: `{summary.agent_rl_adapter_sha256}`
 - Fresh iterations / optimizer steps: {summary.iterations} / {summary.optimizer_steps}
+{version_line}
 - Groups / episodes / action turns: {summary.groups} / {summary.episodes} / {summary.actions}
 - Maximum training policy lag: {summary.maximum_training_policy_lag}
 - Hidden reward exposed during rollout: {str(summary.hidden_reward_exposed_during_rollout).lower()}
@@ -237,6 +244,8 @@ retained stale group below was measured but never reused for training.
 These measurements cover a five-task educational suite and do not establish general coding-agent
 performance. Terminal-only credit assignment is retained as a counterfactual coverage study; the
 reference optimizer assigns the group-relative outcome advantage to every sampled action token.
+The published adapter is the highest-reward post-update validation boundary, breaking ties toward
+the earliest version; the untrained parent is not eligible for selection.
 """
     write_text(run_dir / "report.md", markdown)
     write_text(
@@ -339,6 +348,16 @@ def execute_agent_rl_run(
         metrics: list[AgentRlMetric] = []
         optimizer_steps = 0
         policy_version = 0
+        maximum_budget = max(experiment.studies.tool_budgets)
+        initial_validation = next(
+            point.mean_hidden_outcome_reward
+            for point in reference_points
+            if point.tool_budget == maximum_budget
+        )
+        validation_rewards = [initial_validation]
+        selected_policy_version = 0
+        best_validation_reward = -1.0
+        best_policy_state: dict[str, torch.Tensor] | None = None
         for iteration, task in enumerate(schedule):
             rollout_started = time.perf_counter()
             group = generate_agent_rl_group(
@@ -385,6 +404,26 @@ def execute_agent_rl_run(
             metrics.append(metric)
             optimizer_steps += update.optimizer_steps
             policy_version += 1
+            selection_point = _budget_point(
+                policy,
+                tokenizer,
+                renderer,
+                validation_tasks,
+                experiment,
+                backend,
+                limits,
+                run_id=run_id_value,
+                checkpoint="agent_rl",
+                policy_version=policy_version,
+                tool_budget=maximum_budget,
+            )
+            validation_rewards.append(selection_point.mean_hidden_outcome_reward)
+            if selection_point.mean_hidden_outcome_reward > best_validation_reward:
+                best_validation_reward = selection_point.mean_hidden_outcome_reward
+                selected_policy_version = policy_version
+                best_policy_state = snapshot_lora_adapter(
+                    policy, experiment.policy.policy_adapter_name
+                )
 
         # The final policy scores both the newest and oldest retained data. Neither point is fed
         # back into the optimizer, keeping the training policy-lag invariant at exactly zero.
@@ -411,6 +450,16 @@ def execute_agent_rl_run(
         )
         credit = build_credit_assignment_study(groups)
 
+        if best_policy_state is None or selected_policy_version == 0:
+            raise RuntimeError("Agent RL did not produce a selectable post-update policy")
+        # Staleness is measured against the terminal training policy above. Public artifacts and
+        # the budget study use the best post-update validation boundary, never the untrained parent.
+        restore_lora_adapter(
+            policy,
+            experiment.policy.policy_adapter_name,
+            best_policy_state,
+        )
+
         policy_points = [
             _budget_point(
                 policy,
@@ -422,7 +471,7 @@ def execute_agent_rl_run(
                 limits,
                 run_id=run_id_value,
                 checkpoint="agent_rl",
-                policy_version=policy_version,
+                policy_version=selected_policy_version,
                 tool_budget=budget,
             )
             for budget in experiment.studies.tool_budgets
@@ -434,6 +483,18 @@ def execute_agent_rl_run(
         write_json(context.run_dir / "staleness_study.json", staleness.model_dump(mode="json"))
         write_json(context.run_dir / "credit_study.json", credit.model_dump(mode="json"))
         write_json(context.run_dir / "tool_budget_study.json", budget_study.model_dump(mode="json"))
+        write_json(
+            context.run_dir / "policy_selection.json",
+            {
+                "schema_version": 1,
+                "initial_reference_reward": initial_validation,
+                "validation_rewards_by_policy_version": validation_rewards,
+                "final_training_policy_version": policy_version,
+                "selected_policy_version": selected_policy_version,
+                "selection_rule": "highest_post_update_validation_reward_then_earliest",
+                "parent_policy_selectable": False,
+            },
+        )
 
         adapter_dir = save_lora_adapter(
             policy,
@@ -444,12 +505,6 @@ def execute_agent_rl_run(
         adapter_sha = sha256_directory(adapter_dir)
         episodes = [episode for group in groups for episode in group.episodes]
         actions = flatten_agent_rl_actions(groups)
-        maximum_budget = max(experiment.studies.tool_budgets)
-        initial_validation = next(
-            point.mean_hidden_outcome_reward
-            for point in reference_points
-            if point.tool_budget == maximum_budget
-        )
         final_validation = next(
             point.mean_hidden_outcome_reward
             for point in policy_points
@@ -462,6 +517,9 @@ def execute_agent_rl_run(
             groups=len(groups),
             episodes=len(episodes),
             actions=len(actions),
+            final_training_policy_version=policy_version,
+            selected_policy_version=selected_policy_version,
+            validation_rewards_by_policy_version=validation_rewards,
             mean_reward=sum(episode.hidden_outcome_reward for episode in episodes) / len(episodes),
             action_validity_rate=sum(action.action_parse_status == "valid" for action in actions)
             / len(actions),
@@ -507,6 +565,8 @@ def execute_agent_rl_run(
             "consumed_exact_stored_token_ids": True,
             "maximum_policy_lag": 0,
             "hidden_reward_exposed_during_rollout": False,
+            "final_training_policy_version": policy_version,
+            "selected_policy_version": selected_policy_version,
         }
         context.manifest["agent_environment"] = {
             "backend": backend.name,
@@ -534,6 +594,7 @@ def execute_agent_rl_run(
             ("staleness_study.json", "agent_rl_staleness_study"),
             ("credit_study.json", "agent_rl_credit_study"),
             ("tool_budget_study.json", "agent_rl_tool_budget_study"),
+            ("policy_selection.json", "agent_rl_policy_selection"),
             ("report.md", "markdown_report"),
             ("report.html", "html_report"),
         ]

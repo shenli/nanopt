@@ -98,6 +98,18 @@ def validate_v0_3_agent_rl(evidence_root: Path, project_root: Path) -> dict[str,
     )
     _require(summary.maximum_training_policy_lag == 0, "summary policy lag differs")
     _require(summary.hidden_reward_exposed_during_rollout is False, "summary reward leak differs")
+    _require(
+        summary.final_training_policy_version == summary.iterations,
+        "terminal training policy version differs",
+    )
+    best_post_update_reward = max(summary.validation_rewards_by_policy_version[1:])
+    expected_selected_version = (
+        summary.validation_rewards_by_policy_version[1:].index(best_post_update_reward) + 1
+    )
+    _require(
+        summary.selected_policy_version == expected_selected_version,
+        "selected policy is not the earliest best post-update boundary",
+    )
     _require(summary.iterations == targets["iterations"], "reference iteration count differs")
     _require(
         all(len(group.episodes) == targets["group_size"] for group in groups),

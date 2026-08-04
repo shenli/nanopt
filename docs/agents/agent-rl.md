@@ -75,6 +75,12 @@ GRPO” is not treated as one universal formula.
 Only groups whose `collected_policy_version` equals the current version may update the model.
 `max_policy_lag: 0` is validated in config and checked again at the trainer boundary.
 
+After every update, the greedy policy runs on the task-level validation split. The published
+adapter is the highest-reward post-update boundary, with ties resolved toward the earliest version.
+Version zero is reported as the parent baseline but cannot win selection. The terminal training
+policy still supplies the fresh/stale drift study, so selection does not erase evidence of later
+updates or their regressions.
+
 ## Fresh versus stale is an experiment, not a slogan
 
 After training, the final policy scores the newest and oldest retained exact action IDs. For each

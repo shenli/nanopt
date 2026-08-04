@@ -117,6 +117,36 @@ def freeze_adapter(model: PeftModel, adapter_name: str) -> None:
             parameter.requires_grad = False
 
 
+def snapshot_lora_adapter(model: PeftModel, adapter_name: str) -> dict[str, torch.Tensor]:
+    """Copy one adapter to CPU tensors for explicit in-run checkpoint selection."""
+
+    _require_adapter(model, adapter_name)
+    state = get_peft_model_state_dict(
+        model,
+        adapter_name=adapter_name,
+        save_embedding_layers=False,
+    )
+    return {name: value.detach().cpu().clone() for name, value in state.items()}
+
+
+def restore_lora_adapter(
+    model: PeftModel,
+    adapter_name: str,
+    state: dict[str, torch.Tensor],
+) -> None:
+    """Restore a trusted in-memory adapter snapshot without changing its trainability."""
+
+    _require_adapter(model, adapter_name)
+    expected = get_peft_model_state_dict(
+        model,
+        adapter_name=adapter_name,
+        save_embedding_layers=False,
+    )
+    if state.keys() != expected.keys():
+        raise AdapterError("adapter snapshot keys do not match the selected adapter")
+    set_peft_model_state_dict(model, state, adapter_name=adapter_name)
+
+
 def clone_lora_adapter(
     model: PeftModel,
     *,

@@ -7,7 +7,8 @@
   "required": [
     "schema_version", "run_id", "iterations", "optimizer_steps", "groups", "episodes",
     "actions", "exact_sampled_tokens", "hidden_reward_exposed_during_rollout",
-    "maximum_training_policy_lag", "mean_reward", "action_validity_rate",
+    "maximum_training_policy_lag", "final_training_policy_version", "selected_policy_version",
+    "validation_rewards_by_policy_version", "mean_reward", "action_validity_rate",
     "degenerate_group_fraction", "initial_validation_reward", "final_validation_reward",
     "parent_agent_sft_adapter_sha256", "agent_rl_adapter_sha256", "peak_allocated_bytes",
     "peak_reserved_bytes", "representative"
@@ -23,6 +24,11 @@
     "exact_sampled_tokens": {"const": true},
     "hidden_reward_exposed_during_rollout": {"const": false},
     "maximum_training_policy_lag": {"const": 0},
+    "final_training_policy_version": {"type": "integer", "minimum": 1},
+    "selected_policy_version": {"type": "integer", "minimum": 1},
+    "validation_rewards_by_policy_version": {
+      "type": "array", "minItems": 2, "items": {"type": "number", "minimum": 0, "maximum": 1}
+    },
     "mean_reward": {"type": "number", "minimum": 0, "maximum": 1},
     "action_validity_rate": {"type": "number", "minimum": 0, "maximum": 1},
     "degenerate_group_fraction": {"type": "number", "minimum": 0, "maximum": 1},

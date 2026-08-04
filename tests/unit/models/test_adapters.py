@@ -17,8 +17,10 @@ from nanopt.models.adapters import (
     freeze_adapter,
     load_lora_adapter,
     parameter_counts,
+    restore_lora_adapter,
     save_lora_adapter,
     selected_adapter,
+    snapshot_lora_adapter,
     validate_target_modules,
 )
 
@@ -123,6 +125,22 @@ def test_adapter_save_and_load_preserve_logits(tmp_path: Path) -> None:
     assert (adapter_dir / "adapter_model.safetensors").is_file()
     torch.testing.assert_close(actual, expected)
     assert parameter_counts(loaded).trainable == 0
+
+
+def test_adapter_snapshot_restores_a_selected_training_boundary() -> None:
+    adapted = attach_lora_adapter(_tiny_model(), _lora_config(), adapter_name="agent_rl")
+    for name, parameter in adapted.named_parameters():
+        if "lora_B" in name and ".agent_rl." in name:
+            parameter.data.fill_(0.2)
+    snapshot = snapshot_lora_adapter(adapted, "agent_rl")
+    for name, parameter in adapted.named_parameters():
+        if "lora_B" in name and ".agent_rl." in name:
+            parameter.data.fill_(0.9)
+
+    restore_lora_adapter(adapted, "agent_rl", snapshot)
+    restored = get_peft_model_state_dict(adapted, adapter_name="agent_rl")
+    for key in snapshot:
+        torch.testing.assert_close(restored[key].cpu(), snapshot[key])
 
 
 def test_adapter_helpers_reject_missing_targets_names_and_paths(tmp_path: Path) -> None:
