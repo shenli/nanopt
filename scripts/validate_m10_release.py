@@ -1,4 +1,4 @@
-"""Validate the frozen v0.1 release contract and optional distribution archives."""
+"""Validate the current frozen release contract and optional distribution archives."""
 
 from __future__ import annotations
 
@@ -19,7 +19,6 @@ import yaml
 from nanopt.runtime.artifacts import canonical_json, sha256_bytes, sha256_file, write_json
 from nanopt.runtime.environment import collect_git_metadata
 
-RELEASE_VERSION = "0.1.0"
 TEXT_SUFFIXES = {
     "",
     ".cff",
@@ -150,7 +149,7 @@ def _scan_public_tree(project_root: Path) -> dict[str, Any]:
     }
 
 
-def _project_versions(project_root: Path) -> dict[str, str]:
+def _project_versions(project_root: Path, release_version: str) -> dict[str, str]:
     pyproject = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
     lock = tomllib.loads((project_root / "uv.lock").read_text(encoding="utf-8"))
     citation = _load_yaml(project_root / "CITATION.cff")
@@ -167,7 +166,7 @@ def _project_versions(project_root: Path) -> dict[str, str]:
         "lock": lock_versions[0],
         "citation": str(citation["version"]),
     }
-    _require(set(versions.values()) == {RELEASE_VERSION}, f"release versions disagree: {versions}")
+    _require(set(versions.values()) == {release_version}, f"release versions disagree: {versions}")
     _require(pyproject["project"]["license"] == "Apache-2.0", "package license changed")
     _require(citation["license"] == "Apache-2.0", "citation license changed")
     return versions
@@ -186,7 +185,10 @@ def _validate_model_and_references(project_root: Path, release: dict[str, Any]) 
         "retained_pipeline_evidence",
         "retained_agent_evidence",
         "retained_curriculum_evidence",
+        "retained_agent_sft_evidence",
     ):
+        if key not in release["reference"]:
+            continue
         relative = release["reference"][key]
         path = (project_root / relative).resolve()
         _require(
@@ -250,10 +252,10 @@ def _archive_members(path: Path) -> tuple[list[str], bytes]:
         return members, extracted.read()
 
 
-def _validate_distributions(dist_dir: Path) -> dict[str, Any]:
+def _validate_distributions(dist_dir: Path, release_version: str) -> dict[str, Any]:
     expected = {
-        f"nanopt-{RELEASE_VERSION}-py3-none-any.whl",
-        f"nanopt-{RELEASE_VERSION}.tar.gz",
+        f"nanopt-{release_version}-py3-none-any.whl",
+        f"nanopt-{release_version}.tar.gz",
     }
     # uv protects a custom output directory with this control file. It is not a release artifact.
     found = {
@@ -266,7 +268,7 @@ def _validate_distributions(dist_dir: Path) -> dict[str, Any]:
         members, metadata = _archive_members(path)
         _require(b"Name: nanopt\n" in metadata, f"archive name metadata failed: {filename}")
         _require(
-            f"Version: {RELEASE_VERSION}\n".encode() in metadata,
+            f"Version: {release_version}\n".encode() in metadata,
             f"archive version metadata failed: {filename}",
         )
         _require(any("LICENSE" in member for member in members), f"license absent: {filename}")
@@ -287,16 +289,22 @@ def _validate_distributions(dist_dir: Path) -> dict[str, Any]:
 
 
 def validate_release(project_root: Path, *, dist_dir: Path | None) -> dict[str, Any]:
-    """Return structural or built-release evidence for the frozen v0.1 candidate."""
+    """Return structural or built-release evidence for the current candidate."""
 
     project_root = project_root.resolve()
-    release_path = project_root / "configs/releases/v0_1_0.yaml"
+    pyproject = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
+    release_version = str(pyproject["project"]["version"])
+    release_id = "v" + release_version.replace(".", "_")
+    release_path = project_root / "configs/releases" / f"{release_id}.yaml"
     release = _load_yaml(release_path)
     schema = _load_json(project_root / "specs/schemas/release.schema.json")
     jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(
         release
     )
-    versions = _project_versions(project_root)
+    _require(release["id"] == release_id, "release manifest ID differs from project version")
+    _require(release["version"] == release_version, "release manifest version differs")
+    _require(release["tag"] == f"v{release_version}", "release tag differs")
+    versions = _project_versions(project_root, release_version)
     public_tree = _scan_public_tree(project_root)
     model_and_references = _validate_model_and_references(project_root, release)
 
@@ -312,7 +320,7 @@ def validate_release(project_root: Path, *, dist_dir: Path | None) -> dict[str, 
     distributions: dict[str, Any] = {}
     if dist_dir is not None:
         _require(git["dirty"] is False, "built release evidence requires a clean checkout")
-        distributions = _validate_distributions(dist_dir.resolve())
+        distributions = _validate_distributions(dist_dir.resolve(), release_version)
 
     return {
         "schema_version": 1,

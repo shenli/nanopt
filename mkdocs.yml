@@ -121,6 +121,8 @@ nav:
       - M9 completion report: reference/m9-completion-report.md
       - M10 completion report: reference/m10-completion-report.md
       - v0.1.0 release notes: reference/v0.1-release-notes.md
+      - v0.2 Agent SFT report: reference/v0.2-agent-sft-report.md
+      - v0.2.0 release notes: reference/v0.2-release-notes.md
   - Project plans:
       - Vision and scope: 00_VISION_AND_SCOPE.md
       - Product requirements: 01_PRODUCT_REQUIREMENTS.md

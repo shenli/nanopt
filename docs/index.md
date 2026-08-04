@@ -1,41 +1,36 @@
-# NanoPT
+# NanoPT: an executable post-training course
 
-NanoPT is an executable course and white-box reference implementation for post-training a small
-base language model. The project connects hand-computable objectives to tested tensor functions,
-single-GPU experiments, inspectable artifacts, and a secure stateful agent environment.
+NanoPT shows how a small base language model becomes an assistant, a reasoner, and a tool-using
+agent. Equations lead to tested tensor code; tensor code leads to single-GPU experiments; every
+reported claim leads back to inspectable artifacts.
 
-Milestone 1 is the repository foundation. Milestone 2 provides the CPU-tested mathematical core,
-model/adapter integration contracts, and deterministic synthetic data. Milestone 3 provides exact
-generation, example-first evaluation, statistical summaries, shareable reports, and a completed
-reference-GPU base evaluation. Milestone 4 adds completion-only LoRA SFT and protected generation
-evidence. Milestones 5 and 6 add controlled DPO and exact-token GRPO. Milestone 7 joins the complete
-path with hash-linked, independently resumable stages and validates the reference GPU. Start with
-the [prerequisites](getting-started/prerequisites.md), then follow the course in navigation order.
-Milestone 8 adds the five-task MiniSWE environment, structured tools, isolated verification,
-deterministic replay, and a validated hardened-Docker reference path.
-Milestone 9 completes the executable course, reading and troubleshooting guides, systems
-simulations, glossary, and contribution paths. Its clean curriculum gate ran every unique local
-lab and verified the hashes of all cited reference evidence.
-Milestone 10 freezes NanoPT v0.1.0 and reruns the local, curriculum, complete reference-pipeline,
-and Docker agent/security gates. The source tag and private release pass; PyPI and public
-announcement steps remain owner-gated publication actions.
+## What you can learn here
 
-## Status vocabulary
+- causal token coordinates, masks, log probabilities, entropy, and KL;
+- completion-only LoRA SFT with explicit accumulation and checkpoint boundaries;
+- controlled preference construction and white-box DPO;
+- exact-token grouped rollouts and synchronous GRPO/RLVR;
+- resettable agent environments, structured tools, budgets, and hidden verification;
+- replay-linked multi-turn Agent SFT and context-policy experiments.
 
-- **Required** means the release contract requires the behavior.
-- **Proposed** means the setting is an explicit starting point that still needs calibration.
-- **Validated** means a reviewed evidence bundle passed the complete reference protocol.
+Start with the [prerequisites](getting-started/prerequisites.md), then use the
+[21-chapter course map](course/index.md) to pair each chapter with its executable lab.
 
-The RTX 4070 Ti SUPER configuration is validated for the pinned Base → SFT → DPO → GRPO reference
-path. The [M7 report](reference/m7-completion-report.md) states the exact scope and evidence.
-The [M8 report](reference/m8-completion-report.md) documents the separate agent-environment scope,
-including its unsuccessful but retained base-model baseline.
-The [M9 report](reference/m9-completion-report.md) documents the complete curriculum map and the
-fresh execution evidence for all local labs.
-The [M10 report](reference/m10-completion-report.md) documents the final release decision,
-distribution hashes, supply-chain audit, fresh reference reruns, and disclosed publication limits.
+## Current release
 
-Use the [course map](course/index.md) to connect all 20 chapters to their executable labs and prior
-reference evidence. The [troubleshooting guide](troubleshooting.md) records actual lessons from the
-SFT, DPO, GRPO, pipeline, and Docker validation runs; the [glossary](glossary.md) fixes notation
-before comparing external reports.
+NanoPT v0.2.0 adds exact-token Agent SFT. Its clean reference run retained 10/10 replayed source
+trajectories, improved held-out action-token accuracy from 76.5% to 95.0%, produced 100% valid
+actions under the trained full-transcript policy, and stayed within 13.94 GiB reserved VRAM.
+
+Read the [v0.2 Agent SFT report](reference/v0.2-agent-sft-report.md) for the measurements and their
+limits. The five-task suite is educational; its one held-out success is not a broad coding benchmark.
+
+## Evidence vocabulary
+
+- **Required** is part of a release contract.
+- **Proposed** is an explicit starting point that still needs calibration.
+- **Validated** means a reviewed evidence bundle passed the stated reference protocol.
+
+The RTX 4070 Ti SUPER profile is validated for the pinned math pipeline and Agent SFT slice. CPU
+labs validate equations and invariants, not GPU support. See the [artifact contract](reference/artifacts.md)
+and [troubleshooting guide](troubleshooting.md) when reproducing a run.

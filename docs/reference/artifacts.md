@@ -44,3 +44,9 @@ An agent-evaluation run adds `trajectories.jsonl`, one typed trajectory per task
 semantic replay. `run_manifest.json` records the sandbox/backend policy, exact container image,
 isolation flags, task-suite fingerprint, and the explicit fact that the environment did not train
 the model. Hidden verifier output and source are absent by contract.
+
+An Agent SFT dataset directory contains `manifest.json`, `examples.jsonl`, and hashed records under
+`source_trajectories/`. Each example stores messages, completion, target action, token IDs,
+attention mask, action mask, prompt length, context policy, chat-template hash, and its exact source
+trajectory hash. An `agent_sft` run uses the normal metrics/checkpoint/adapter contract and adds the
+dataset, example, and source-trajectory fingerprints to `run_manifest.json`.

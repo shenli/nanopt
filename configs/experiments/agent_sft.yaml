@@ -45,4 +45,4 @@ artifacts:
   save_optimizer_state: true
   save_tokenized_examples: true
   save_source_trajectories: true
-status: proposed_unvalidated
+status: validated

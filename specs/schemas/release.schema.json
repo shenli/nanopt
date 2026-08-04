@@ -22,9 +22,9 @@
   ],
   "properties": {
     "schema_version": { "const": 1 },
-    "id": { "const": "v0_1_0" },
-    "version": { "const": "0.1.0" },
-    "tag": { "const": "v0.1.0" },
+    "id": { "type": "string", "pattern": "^v[0-9]+_[0-9]+_[0-9]+$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "tag": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$" },
     "distribution": { "const": "nanopt" },
     "import_package": { "const": "nanopt" },
     "cli": { "const": "nanopt" },
@@ -67,7 +67,8 @@
         "pipeline_recipe": { "const": "math_pipeline" },
         "retained_pipeline_evidence": { "type": "string" },
         "retained_agent_evidence": { "type": "string" },
-        "retained_curriculum_evidence": { "type": "string" }
+        "retained_curriculum_evidence": { "type": "string" },
+        "retained_agent_sft_evidence": { "type": "string" }
       }
     },
     "publication": {

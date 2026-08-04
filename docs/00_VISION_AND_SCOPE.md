@@ -98,7 +98,8 @@ The course should explain probability, log probabilities, cross-entropy, gradien
 ## Version trajectory
 
 - **v0.1 — Math post-training pipeline and agent environment.** SFT, DPO, GRPO, evaluation, and MiniSWE rollouts on the reference GPU.
-- **v0.2 — Multi-turn trajectories and Agent SFT.** Exact token/action serialization, tool-call data generation, and supervised agent behavior.
+- **v0.2 — Multi-turn trajectories and Agent SFT (complete).** Exact token/action serialization,
+  replay-linked tool and recovery data, supervised agent behavior, and context-policy evaluation.
 - **v0.3 — Mini Agent RL.** Short-horizon verifiable agent optimization and credit-assignment experiments.
 - **v0.4 — Systems laboratory.** Partial rollout, staleness, external state, and optional accelerated rollout integrations.
 - **v1.0 — Stable executable course.** Validated profiles, polished curriculum, reproducible results, and contribution process.

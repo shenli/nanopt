@@ -119,6 +119,19 @@ The project should define numeric release targets in a versioned `reference_targ
 - [x] Docker reference backend runs non-root with no network/GPU and documented resource limits.
 - [x] Environment report states that v0.1 evaluates agents but does not train them.
 
+## v0.2 Agent SFT
+
+- [x] Online inference and offline examples share one multi-turn context contract.
+- [x] Stored examples retain exact token IDs and current-action masks in full coordinates.
+- [x] Every example links to a hashed, replay-checked source trajectory.
+- [x] Tool demonstrations cover inspection, editing, tests, finishing, and invalid-action recovery.
+- [x] Agent SFT trains only LoRA parameters and saves optimizer-boundary checkpoints.
+- [x] A task-level held-out split is excluded from training.
+- [x] Teacher-forced action NLL and token accuracy improve on the held-out task.
+- [x] Docker behavior reports action validity separately from hidden-verifier task score.
+- [x] Full-transcript and observation-snapshot policies are compared explicitly.
+- [x] The clean reference run remains under the RTX 4070 Ti SUPER hard VRAM limit.
+
 ## 11. Documentation gates
 
 - [x] Every chapter follows the standard chapter template where applicable.

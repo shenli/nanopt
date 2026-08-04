@@ -11,9 +11,11 @@ nanopt calibrate --mode load|eval|sft|dpo|grpo
 nanopt train sft
 nanopt train dpo
 nanopt train grpo
+nanopt train agent-sft --dataset AGENT_DATASET_DIR
 nanopt eval run [--adapter ADAPTER_DIR]
 nanopt pipeline run --tasks TASKS --recipe math_pipeline
 nanopt agent run --policy oracle|model --backend docker|fake
+nanopt agent build-sft-data --output AGENT_DATASET_DIR
 nanopt report build RUN_DIR
 nanopt artifacts inspect RUN_DIR
 ```
@@ -54,8 +56,14 @@ numbered attempt rather than overwritten.
 `nanopt agent run` evaluates a scripted oracle or the pinned Qwen policy in resettable MiniSWE
 tasks. `--backend docker` is the secure reference path; `--backend fake` is only for trusted local
 fixtures and CPU labs. The model never supplies test commands or arbitrary shell text. Capping tasks
-or turns labels the result non-representative. v0.1 records exact model response token IDs but never
-trains or updates the policy in this environment.
+or turns labels the result non-representative.
+
+`nanopt agent build-sft-data` collects reviewed demonstrations and recovery episodes, proves exact
+semantic replay, and writes tokenizer-specific examples with explicit current-action masks.
+`nanopt train agent-sft` consumes those stored IDs directly and saves a LoRA adapter plus
+optimizer-boundary checkpoints. Use `--context-policy full_transcript|observation_snapshot` on
+`nanopt agent run` for the v0.2 ablation. Training remains offline from the environment; Docker
+rollouts are evaluation, not an implicit online-training loop.
 
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.
