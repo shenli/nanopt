@@ -56,3 +56,6 @@ An `agent_rl` run adds `rollout_groups.jsonl`, `staleness_study.json`, `credit_s
 mask, behavior log probabilities, reference log probabilities, parse status, tool, and episode
 advantage. Group records prove task/snapshot/policy-version identity. Hidden verifier source and
 output are absent; only bounded outcome counts and reward are retained after termination.
+The run manifest and summary distinguish the terminal training version from the selected
+post-update policy boundary, and retain validation reward for every version so a later regression
+cannot disappear when an earlier adapter is published.

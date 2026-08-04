@@ -29,27 +29,26 @@ Qwen3-0.6B Base
 - **Small enough to study.** The official path uses Qwen3-0.6B Base and one validated 16 GB consumer
   GPU. CPU labs cover every central invariant without a model download.
 
-## v0.2 at a glance
+## v0.3 at a glance
 
-NanoPT v0.2.0 adds a complete Agent SFT vertical slice. The clean reference gate on an NVIDIA RTX
-4070 Ti SUPER measured:
+NanoPT v0.3.0 adds an exact-token Mini Agent RL vertical slice on top of v0.2 Agent SFT. Its clean
+reference gate on an NVIDIA RTX 4070 Ti SUPER measured:
 
 | Evidence | Result |
 | --- | ---: |
-| Replay-checked source trajectories | 10/10 |
-| Exact-token examples | 24 train / 6 task-held-out validation |
-| Recovery examples | 5 |
-| Held-out action-token accuracy | 76.5% → **95.0%** |
-| Held-out action NLL | 1.240 → **0.363** |
-| Base → adapted action validity | 0% → **100%** |
-| Demonstrated / held-out Docker task score | **1.0 / 1.0** |
-| Full transcript / snapshot validity | **100% / 75%** |
-| Peak reserved VRAM | **13.94 GiB** |
+| Rollout groups / episodes / action turns | **4 / 16 / 80** |
+| Non-degenerate groups | **4/4** |
+| Mean sampled outcome reward | **0.6719** |
+| Sampled action validity | **91.25%** |
+| Exact optimizer steps | **20** |
+| Selected post-update validation reward | **1.0** |
+| Peak reserved VRAM | **14.094 GiB** |
 
-The suite contains five deliberately tiny educational tasks. A 1/1 held-out result validates this
-release protocol; it is not a claim of general software-engineering ability. See the
-[Agent SFT report](docs/reference/v0.2-agent-sft-report.md) and
-[compact evidence](docs/reference/evidence/v0.2-agent-sft-37acbc8.json).
+The suite contains five deliberately tiny educational tasks and one validation task. Policy
+quality was not monotonic: the frozen selection rule published version 1, while the terminal
+version scored 0.0. The full history stays visible as an example of why the last update is not
+automatically the best checkpoint. See the [Mini Agent RL report](docs/reference/v0.3-agent-rl-report.md)
+and [compact evidence](docs/reference/evidence/v0.3-agent-rl-85ca98b.json).
 
 The earlier math path remains fully executable. Its retained v0.1 reference results were:
 

@@ -186,6 +186,7 @@ def _validate_model_and_references(project_root: Path, release: dict[str, Any]) 
         "retained_agent_evidence",
         "retained_curriculum_evidence",
         "retained_agent_sft_evidence",
+        "retained_agent_rl_evidence",
     ):
         if key not in release["reference"]:
             continue

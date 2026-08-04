@@ -69,6 +69,8 @@ rollouts are evaluation, not an implicit online-training loop.
 `nanopt train agent-rl` clones the frozen Agent SFT adapter, collects fresh rollout groups from
 independent copies of one MiniSWE snapshot, assigns hidden terminal outcomes, and applies one
 exact-token clipped update epoch. It writes staleness, credit-assignment, and tool-budget studies.
+Greedy validation after each update selects the earliest highest-reward post-update adapter; the
+untrained parent is ineligible, and all later validation results remain in the run artifacts.
 `--iteration-limit` is an explicitly non-representative calibration path; the reference config
 requires temperature-one, top-p-one sampling and rejects stale data at the trainer boundary.
 

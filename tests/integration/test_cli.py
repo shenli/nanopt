@@ -30,7 +30,7 @@ def test_help_and_version_do_not_download_models() -> None:
     assert "train" in help_result.stdout
     assert "calibrate" in help_result.stdout
     assert version_result.exit_code == 0
-    assert "0.2.0" in version_result.stdout
+    assert "0.3.0" in version_result.stdout
 
     train_help = runner.invoke(app, ["train", "--help"])
     assert train_help.exit_code == 0

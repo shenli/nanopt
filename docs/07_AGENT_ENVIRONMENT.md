@@ -254,7 +254,7 @@ The environment controls termination on `finish`, budget exhaustion, unrecoverab
 
 v0.1 uses a bounded full transcript for short trajectories. Do not add summarization or memory systems before exact trajectory semantics are stable. The course should explain that long-horizon systems need context compaction, external memory, cache retention, and resumable state, but those are later milestones.
 
-## 14. Future Agent RL path
+## 14. Agent RL path
 
 v0.2:
 
@@ -263,12 +263,14 @@ v0.2:
 - Agent SFT and behavior cloning;
 - outcome and process metrics.
 
-v0.3:
+v0.3 implements:
 
 - grouped rollouts from the same task snapshot;
 - hidden outcome verifier as reward;
 - short-horizon GRPO or PPO-style updates;
-- replay-vs-fresh-rollout experiments;
+- fresh-only updates plus retained fresh-versus-stale policy-drift measurements;
 - credit-assignment and tool-budget studies.
 
-Before Agent RL, the project must demonstrate deterministic reset, independent hidden verification, and reproducible trajectory replay.
+The implementation builds on v0.2's deterministic reset, independent hidden verification, and
+reproducible trajectory replay. It deliberately stops at short horizons; resumable partial rollout,
+asynchronous workers, and external state remain v0.4 systems work.

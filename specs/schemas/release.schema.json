@@ -68,7 +68,8 @@
         "retained_pipeline_evidence": { "type": "string" },
         "retained_agent_evidence": { "type": "string" },
         "retained_curriculum_evidence": { "type": "string" },
-        "retained_agent_sft_evidence": { "type": "string" }
+        "retained_agent_sft_evidence": { "type": "string" },
+        "retained_agent_rl_evidence": { "type": "string" }
       }
     },
     "publication": {

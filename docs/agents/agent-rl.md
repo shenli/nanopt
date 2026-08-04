@@ -83,9 +83,10 @@ updates or their regressions.
 
 ## Fresh versus stale is an experiment, not a slogan
 
-After training, the final policy scores the newest and oldest retained exact action IDs. For each
-set the report records policy lag, mean and maximum absolute log-ratio drift, and an approximate
-importance-weight effective-sample-size fraction. Both points have `used_for_update: false`.
+After training, the terminal training policy scores the newest and oldest retained exact action
+IDs. For each set the report records policy lag, mean and maximum absolute log-ratio drift, and an
+approximate importance-weight effective-sample-size fraction. Both points have
+`used_for_update: false`.
 
 The newest point still has lag one because it is scored after its update. The oldest point spans
 all policy versions. This measures drift without silently turning v0.3 into an off-policy replay
@@ -98,7 +99,7 @@ The credit study also counts how many tokens would receive credit under a termin
 ablation. That ablation cannot teach earlier inspection or editing decisions; it is evidence about
 coverage, not a second trained checkpoint.
 
-The tool-budget study evaluates the frozen Agent SFT parent and final Agent RL adapter with the
+The tool-budget study evaluates the frozen Agent SFT parent and selected Agent RL adapter with the
 same held-out task at two caps. It reports continuous hidden reward and action validity. A partially
 correct repository can earn partial hidden credit, so “not solved” does not necessarily mean zero.
 

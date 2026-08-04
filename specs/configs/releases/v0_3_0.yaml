@@ -1,0 +1,33 @@
+schema_version: 1
+id: v0_3_0
+version: 0.3.0
+tag: v0.3.0
+distribution: nanopt
+import_package: nanopt
+cli: nanopt
+repository: https://github.com/shenli/nanopt
+documentation: https://shenli.github.io/nanopt/
+python:
+  minimum: '3.11'
+  maximum: '3.12'
+dependency_lock: uv.lock
+model:
+  profile: qwen3_0_6b_base
+  model_id: Qwen/Qwen3-0.6B-Base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  tokenizer_revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  license: Apache-2.0
+reference:
+  hardware_profile: rtx_4070_ti_super_16gb
+  pipeline_recipe: math_pipeline
+  retained_pipeline_evidence: docs/reference/evidence/m7-reference-pipeline-92564f3.json
+  retained_agent_evidence: docs/reference/evidence/m8-reference-agent-9e3daa1.json
+  retained_curriculum_evidence: docs/reference/evidence/m9-curriculum-3d721c2.json
+  retained_agent_sft_evidence: docs/reference/evidence/v0.2-agent-sft-37acbc8.json
+  retained_agent_rl_evidence: docs/reference/evidence/v0.3-agent-rl-85ca98b.json
+publication:
+  package_index: deferred
+  package_index_reason: First upload requires owner credentials and final package-name approval.
+  generated_datasets: not_distributed
+  model_adapters: not_distributed
+  public_announcement: deferred_until_repository_is_public
