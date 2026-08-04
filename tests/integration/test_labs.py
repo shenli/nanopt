@@ -32,6 +32,7 @@ import pytest
         ("labs/17_task_card.py", "Task-card lab passed."),
         ("labs/18_artifact_lineage.py", "Artifact-lineage lab passed."),
         ("labs/19_optimizer_step.py", "Optimizer-step lab passed."),
+        ("labs/20_agent_sft_masks.py", "Agent SFT mask invariant passed"),
     ],
 )
 def test_cpu_lab_runs_from_repository_root(

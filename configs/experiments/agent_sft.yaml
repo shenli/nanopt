@@ -1,0 +1,48 @@
+schema_version: 1
+id: agent_sft
+stage: agent_sft
+seed: 42
+data:
+  dataset: mini_swe_agent_sft_v1
+  train_tasks:
+    - clamp_reversed_bounds
+    - slug_separator_normalization
+    - parse_boolean_protocol
+    - chunk_size_validation
+  validation_tasks:
+    - merge_without_mutation
+  context_policy: full_transcript
+  max_sequence_length: 4096
+  completion_only: true
+  include_recovery_examples: true
+training:
+  micro_batch_size: 1
+  gradient_accumulation_steps: 4
+  max_steps: null
+  epochs: 6
+  learning_rate: 2.0e-4
+  weight_decay: 0.0
+  warmup_ratio: 0.05
+  scheduler: cosine
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+  compute_dtype: bfloat16
+  optimizer: adamw
+  log_every_optimizer_steps: 1
+  eval_every_optimizer_steps: 6
+  save_every_optimizer_steps: 36
+adapter:
+  inherit_from: null
+  name: agent_sft
+  trainable: true
+evaluation:
+  experiment: mini_swe_rollout
+  held_out_tasks:
+    - merge_without_mutation
+  compare_context_policies: true
+artifacts:
+  save_adapter_only: true
+  save_optimizer_state: true
+  save_tokenized_examples: true
+  save_source_trajectories: true
+status: proposed_unvalidated

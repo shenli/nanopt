@@ -17,6 +17,7 @@ def write_checksums(evidence_root: Path, output: Path) -> dict[str, str]:
         "commands.log",
         "m7_pipeline_evidence.json",
         "m8_agent_evidence.json",
+        "v0.2-agent-sft-evidence.json",
     }
     checksums = {
         path.relative_to(evidence_root).as_posix(): sha256_file(path)

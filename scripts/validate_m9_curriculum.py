@@ -1,4 +1,4 @@
-"""Validate the 20-chapter curriculum and optionally execute every local lab."""
+"""Validate the current curriculum and optionally execute every local lab."""
 
 from __future__ import annotations
 
@@ -70,7 +70,7 @@ def validate_curriculum(
 
     chapters = manifest["chapters"]
     _require(
-        [chapter["id"] for chapter in chapters] == list(range(20)), "chapter IDs must be 0..19"
+        [chapter["id"] for chapter in chapters] == list(range(21)), "chapter IDs must be 0..20"
     )
     entries = [manifest["prerequisite"], *chapters]
     mkdocs = (project_root / "mkdocs.yml").read_text(encoding="utf-8")

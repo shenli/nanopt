@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shenli.github.io/nanopt/schemas/agent_sft_example.schema.json",
+  "title": "NanoPT exact-token Agent SFT example",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "example_id", "split", "example_kind", "task_id", "task_version",
+    "trajectory_id", "source_trajectory_sha256", "step_index", "context_policy", "messages",
+    "completion", "target_action", "input_ids", "attention_mask", "action_mask",
+    "prompt_length", "chat_template_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "example_id": {"type": "string", "minLength": 1},
+    "split": {"enum": ["train", "validation"]},
+    "example_kind": {"enum": ["demonstration", "recovery"]},
+    "task_id": {"type": "string", "minLength": 1},
+    "task_version": {"type": "string", "minLength": 1},
+    "trajectory_id": {"type": "string", "minLength": 1},
+    "source_trajectory_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "step_index": {"type": "integer", "minimum": 0},
+    "context_policy": {"enum": ["observation_snapshot", "full_transcript"]},
+    "messages": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["role", "content"],
+        "properties": {
+          "role": {"enum": ["system", "user", "assistant"]},
+          "content": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "completion": {"type": "string", "minLength": 1},
+    "target_action": {"type": "object"},
+    "input_ids": {"type": "array", "minItems": 2, "items": {"type": "integer", "minimum": 0}},
+    "attention_mask": {"type": "array", "minItems": 2, "items": {"type": "boolean"}},
+    "action_mask": {"type": "array", "minItems": 2, "items": {"type": "boolean"}},
+    "prompt_length": {"type": "integer", "minimum": 1},
+    "chat_template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

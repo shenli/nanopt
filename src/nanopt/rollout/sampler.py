@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -113,6 +113,7 @@ def sample_autoregressive(
     config: SamplingConfig,
     *,
     seed: int = 0,
+    stop_predicate: Callable[[tuple[int, ...]], bool] | None = None,
 ) -> GenerationResult:
     """Generate one completion while preserving sampled IDs and their exact log probabilities.
 
@@ -180,6 +181,9 @@ def sample_autoregressive(
                     len(generated) >= len(stop) and tuple(generated[-len(stop) :]) == stop
                     for stop in config.stop_token_sequences
                 ):
+                    finish_reason = "stop_sequence"
+                    break
+                if stop_predicate is not None and stop_predicate(tuple(generated)):
                     finish_reason = "stop_sequence"
                     break
     finally:

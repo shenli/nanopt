@@ -80,6 +80,18 @@ def test_sampler_stops_after_complete_multi_token_protocol_sequence() -> None:
     assert result.finish_reason == "stop_sequence"
 
 
+def test_sampler_can_stop_on_a_protocol_predicate() -> None:
+    result = sample_autoregressive(
+        TransitionModel(),
+        torch.tensor([0]),
+        SamplingConfig(max_new_tokens=4, do_sample=False),
+        stop_predicate=lambda tokens: tokens == (2, 3),
+    )
+
+    assert result.generated_token_ids == (2, 3)
+    assert result.finish_reason == "stop_sequence"
+
+
 def test_sampled_mode_uses_private_deterministic_seed() -> None:
     config = SamplingConfig(max_new_tokens=6, do_sample=True, temperature=1.3, top_p=0.9)
     first = sample_autoregressive(TransitionModel(), torch.tensor([1]), config, seed=123)

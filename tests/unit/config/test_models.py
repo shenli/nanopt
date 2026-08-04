@@ -19,6 +19,8 @@ def test_all_canonical_profiles_validate(config_repository: ConfigRepository) ->
         "math_grpo",
         "ppo_toy",
         "mini_swe_rollout",
+        "agent_sft",
+        "agent_sft_eval",
     ):
         config_repository.experiment(experiment)
     config_repository.recipe("math_pipeline")

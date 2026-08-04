@@ -26,7 +26,7 @@
       "uniqueItems": true
     },
     "stage": {
-      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "teaching_lab", "pipeline"]
+      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "agent_sft", "teaching_lab", "pipeline"]
     },
     "status": {
       "enum": ["created", "running", "completed", "failed", "interrupted", "tainted"]
@@ -166,6 +166,21 @@
             "completions": {"type": "integer", "minimum": 2},
             "representative": {"type": "boolean"},
             "consumed_exact_stored_token_ids": {"const": true}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "device", "exact_stored_token_ids", "context_policy", "train_examples",
+            "validation_examples"
+          ],
+          "properties": {
+            "device": {"enum": ["cpu", "cuda"]},
+            "exact_stored_token_ids": {"const": true},
+            "context_policy": {"enum": ["observation_snapshot", "full_transcript"]},
+            "train_examples": {"type": "integer", "minimum": 1},
+            "validation_examples": {"type": "integer", "minimum": 1}
           }
         }
       ]

@@ -101,6 +101,24 @@ def qwen_chat_terminator_id(tokenizer: Any) -> int:
     return token_id
 
 
+def load_qwen_tokenizer(profile: ModelProfile, *, local_files_only: bool = False) -> Any:
+    """Load only the pinned tokenizer for exact offline dataset rendering."""
+
+    _validate_profile(profile)
+    source = profile.source
+    revision = source.tokenizer_revision or source.revision
+    tokenizer = AutoTokenizer.from_pretrained(
+        source.model_id,
+        revision=revision,
+        trust_remote_code=False,
+        local_files_only=local_files_only,
+    )
+    _validate_tokenizer(tokenizer)
+    if _resolved_revision(tokenizer, revision) is None:
+        raise ModelIntegrationError("tokenizer must resolve to immutable revisions")
+    return tokenizer
+
+
 def load_qwen3_base(
     profile: ModelProfile,
     *,
@@ -118,13 +136,7 @@ def load_qwen3_base(
     _validate_profile(profile)
     source = profile.source
     tokenizer_revision = source.tokenizer_revision or source.revision
-    tokenizer = AutoTokenizer.from_pretrained(
-        source.model_id,
-        revision=tokenizer_revision,
-        trust_remote_code=False,
-        local_files_only=local_files_only,
-    )
-    _validate_tokenizer(tokenizer)
+    tokenizer = load_qwen_tokenizer(profile, local_files_only=local_files_only)
     model = AutoModelForCausalLM.from_pretrained(
         source.model_id,
         revision=source.revision,

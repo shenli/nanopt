@@ -76,6 +76,7 @@ nav:
       - End-to-end recipe and lineage: pipeline/end-to-end-recipe.md
   - Agents:
       - From tool call to trajectory: agents/from-tool-call-to-trajectory.md
+      - Agent SFT and exact action masks: agents/agent-sft.md
       - Task authoring and verification: agents/task-authoring-and-verification.md
       - Sandbox security and threat model: agents/security-threat-model.md
   - Systems:
@@ -106,6 +107,7 @@ nav:
           - Synchronous exact-token GRPO: adr/0007-synchronous-exact-token-grpo.md
           - Resumable hash-linked pipeline: adr/0008-resumable-hash-linked-pipeline.md
           - Structured MiniSWE sandbox: adr/0009-structured-mini-swe-sandbox.md
+          - Exact-token Agent SFT: adr/0010-exact-token-agent-sft.md
       - Publication checklist: reference/publication-checklist.md
       - Dependency and model license audit: reference/dependency-license-audit.md
       - M1 completion report: reference/m1-completion-report.md

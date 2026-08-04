@@ -46,6 +46,10 @@ def _suite_fingerprint(tasks: list[LoadedAgentTask]) -> str:
 def _write_report(
     run_dir: Path, summary: AgentRunSummary, trajectories: list[AgentTrajectory]
 ) -> None:
+    validity_line = (
+        f"- Valid structured actions: {summary.valid_actions}/{summary.total_steps} "
+        f"({summary.action_validity_rate:.1%})"
+    )
     rows = "\n".join(
         f"| `{item.task_id}` | {item.finish_reason} | "
         f"{item.verification.public.passed}/{item.verification.public.total} | "
@@ -65,6 +69,7 @@ def _write_report(
 - Tasks solved: {summary.solved}/{summary.tasks}
 - Mean hidden-verifier score: {summary.mean_score:.3f}
 - Policy violations: {summary.policy_violations}
+{validity_line}
 - Total structured steps: {summary.total_steps}
 - Wall time: {summary.wall_seconds:.3f} seconds
 - Representative: {str(summary.representative).lower()}
@@ -99,6 +104,7 @@ def execute_agent_run(
     device: str,
     max_tasks: int | None = None,
     turn_limit: int | None = None,
+    task_ids: tuple[str, ...] = (),
 ) -> RunContext:
     """Evaluate one policy without training, preserving actions before aggregate scores."""
 
@@ -106,7 +112,14 @@ def execute_agent_run(
     if not isinstance(experiment, AgentEvaluationExperiment):
         raise ValueError("agent execution requires an agent_evaluation experiment")
     tasks = load_task_suite(tasks_root, split=experiment.tasks.split)
-    representative = max_tasks is None and turn_limit is None
+    if task_ids:
+        requested = set(task_ids)
+        available = {task.card.id for task in tasks}
+        missing = sorted(requested - available)
+        if missing:
+            raise ValueError(f"requested agent tasks are unavailable: {', '.join(missing)}")
+        tasks = [task for task in tasks if task.card.id in requested]
+    representative = max_tasks is None and turn_limit is None and not task_ids
     if max_tasks is not None:
         if max_tasks <= 0:
             raise ValueError("max_tasks must be positive")
@@ -208,6 +221,13 @@ def execute_agent_run(
 
         wall_seconds = time.perf_counter() - started
         solved = sum(item.verification.final_score == 1.0 for item in trajectories)
+        valid_actions = sum(
+            step.action_parse_status == "valid" for item in trajectories for step in item.steps
+        )
+        invalid_actions = sum(
+            step.action_parse_status != "valid" for item in trajectories for step in item.steps
+        )
+        total_steps = valid_actions + invalid_actions
         summary = AgentRunSummary(
             run_id=context.manifest["run_id"],
             backend=backend.name,
@@ -219,7 +239,10 @@ def execute_agent_run(
             policy_violations=sum(
                 len(step.policy_violations) for item in trajectories for step in item.steps
             ),
-            total_steps=sum(len(item.steps) for item in trajectories),
+            total_steps=total_steps,
+            valid_actions=valid_actions,
+            invalid_actions=invalid_actions,
+            action_validity_rate=valid_actions / total_steps if total_steps else 0.0,
             wall_seconds=wall_seconds,
             representative=representative,
         )

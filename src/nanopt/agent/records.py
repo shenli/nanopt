@@ -236,6 +236,9 @@ class AgentRunSummary(AgentRecord):
     mean_score: float = Field(ge=0, le=1)
     policy_violations: int = Field(ge=0)
     total_steps: int = Field(ge=0)
+    valid_actions: int = Field(ge=0)
+    invalid_actions: int = Field(ge=0)
+    action_validity_rate: float = Field(ge=0, le=1)
     wall_seconds: float = Field(ge=0)
     representative: bool
     environment_trains_model: Literal[False] = False

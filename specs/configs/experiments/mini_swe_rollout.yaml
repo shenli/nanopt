@@ -8,9 +8,11 @@ tasks:
 policy:
   checkpoint: null
   max_new_tokens_per_turn: 256
+  do_sample: true
   temperature: 0.7
   top_p: 0.95
   max_turns: 10
+  context_policy: observation_snapshot
 environment:
   backend: docker
   image: python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93

@@ -454,9 +454,11 @@ class AgentTasksConfig(StrictModel):
 class AgentPolicyConfig(StrictModel):
     checkpoint: str | None
     max_new_tokens_per_turn: int = Field(gt=0)
+    do_sample: bool = True
     temperature: float = Field(gt=0)
     top_p: float = Field(gt=0, le=1)
     max_turns: int = Field(gt=0)
+    context_policy: Literal["observation_snapshot", "full_transcript"] = "observation_snapshot"
 
 
 class AgentEnvironmentConfig(StrictModel):
@@ -499,13 +501,59 @@ class AgentEvaluationExperiment(StrictModel):
     status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
 
 
+# Agent SFT keeps task-level splits and exact tokenized demonstrations explicit. It deliberately
+# reuses the ordinary SFT optimizer contract: only the source of examples is different.
+class AgentSftDataConfig(StrictModel):
+    dataset: str
+    train_tasks: list[str] = Field(min_length=1)
+    validation_tasks: list[str] = Field(min_length=1)
+    context_policy: Literal["observation_snapshot", "full_transcript"]
+    max_sequence_length: int = Field(gt=0)
+    completion_only: Literal[True]
+    include_recovery_examples: bool
+
+    @model_validator(mode="after")
+    def require_disjoint_task_splits(self) -> AgentSftDataConfig:
+        overlap = set(self.train_tasks) & set(self.validation_tasks)
+        if overlap:
+            raise ValueError(f"Agent SFT task splits overlap: {', '.join(sorted(overlap))}")
+        return self
+
+
+class AgentSftEvaluationConfig(StrictModel):
+    experiment: str
+    held_out_tasks: list[str] = Field(min_length=1)
+    compare_context_policies: Literal[True]
+
+
+class AgentSftArtifactsConfig(StrictModel):
+    save_adapter_only: Literal[True]
+    save_optimizer_state: bool
+    save_tokenized_examples: Literal[True]
+    save_source_trajectories: Literal[True]
+
+
+class AgentSftExperiment(StrictModel):
+    schema_version: Literal[1]
+    id: str
+    stage: Literal["agent_sft"]
+    seed: int
+    data: AgentSftDataConfig
+    training: OptimizerConfig
+    adapter: TrainAdapterConfig
+    evaluation: AgentSftEvaluationConfig
+    artifacts: AgentSftArtifactsConfig
+    status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
+
+
 ExperimentProfile = Annotated[
     BaseEvalExperiment
     | SftExperiment
     | DpoExperiment
     | GrpoExperiment
     | TeachingLabExperiment
-    | AgentEvaluationExperiment,
+    | AgentEvaluationExperiment
+    | AgentSftExperiment,
     Field(discriminator="stage"),
 ]
 

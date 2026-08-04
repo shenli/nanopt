@@ -13,9 +13,12 @@ from rich.console import Console
 from rich.table import Table
 
 from nanopt.agent.run import execute_agent_run
+from nanopt.agent.sft_data import build_agent_sft_dataset
+from nanopt.agent.sft_run import execute_agent_sft_run
 from nanopt.config.loader import ConfigError, ConfigRepository
 from nanopt.config.models import (
     AgentEvaluationExperiment,
+    AgentSftExperiment,
     BaseEvalExperiment,
     DpoExperiment,
     GrpoExperiment,
@@ -79,6 +82,11 @@ class CalibrationMode(StrEnum):
 class AgentPolicyMode(StrEnum):
     oracle = "oracle"
     model = "model"
+
+
+class AgentContextMode(StrEnum):
+    observation_snapshot = "observation_snapshot"
+    full_transcript = "full_transcript"
 
 
 def _version_callback(value: bool) -> None:
@@ -424,6 +432,7 @@ def _resolve_agent(
     experiment: str,
     backend: str,
     task_split: str,
+    context_policy: str,
     config_dir: Path | None,
 ) -> ResolutionResult:
     repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
@@ -432,10 +441,35 @@ def _resolve_agent(
         hardware_id=hardware,
         model_id=model,
         experiment_id=experiment,
-        overrides=(f"environment.backend={backend}", f"tasks.split={task_split}"),
+        overrides=(
+            f"environment.backend={backend}",
+            f"tasks.split={task_split}",
+            f"policy.context_policy={context_policy}",
+        ),
     )
     if not isinstance(result.config.experiment, AgentEvaluationExperiment):
         raise ConfigError(f"experiment {experiment!r} is not an agent-evaluation profile")
+    return result
+
+
+def _resolve_agent_sft(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+    overrides: tuple[str, ...] = (),
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=overrides,
+    )
+    if not isinstance(result.config.experiment, AgentSftExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not an Agent SFT profile")
     return result
 
 
@@ -552,6 +586,14 @@ def agent_run_command(
         str, typer.Option(help="docker (secure reference) or fake (trusted tests).")
     ] = "docker",
     task_split: Annotated[str, typer.Option(help="smoke, reference, or all.")] = "smoke",
+    context_policy: Annotated[
+        AgentContextMode,
+        typer.Option(help="Snapshot history or alternating full-transcript messages."),
+    ] = AgentContextMode.observation_snapshot,
+    task_id: Annotated[
+        list[str] | None,
+        typer.Option("--task-id", help="Run only this task ID; repeat to select several."),
+    ] = None,
     hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
         "rtx_4070_ti_super_16gb"
     ),
@@ -580,7 +622,7 @@ def agent_run_command(
     device: Annotated[str, typer.Option(help="auto, cpu, or cuda for model policy only.")] = "auto",
     config_dir: Annotated[Path | None, typer.Option(help="Override profile directory.")] = None,
 ) -> None:
-    """Run structured MiniSWE episodes; v0.1 evaluates policies and never trains them."""
+    """Evaluate a structured policy in resettable MiniSWE workspaces."""
 
     try:
         if backend not in {"docker", "fake"}:
@@ -591,6 +633,7 @@ def agent_run_command(
             experiment=experiment,
             backend=backend,
             task_split=task_split,
+            context_policy=context_policy.value,
             config_dir=config_dir,
         )
         context = execute_agent_run(
@@ -605,11 +648,107 @@ def agent_run_command(
             device=device,
             max_tasks=max_tasks,
             turn_limit=turn_limit,
+            task_ids=tuple(task_id or ()),
         )
     except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
         console.print(f"[red]Agent evaluation failed:[/red] {exc}", highlight=False)
         raise typer.Exit(code=1) from exc
     console.print(f"Agent evaluation completed: [bold]{context.run_dir}[/bold]")
+
+
+@agent_app.command("build-sft-data")
+def agent_build_sft_data_command(
+    tasks_root: Annotated[
+        Path,
+        typer.Option(exists=True, file_okay=False, help="MiniSWE suite root."),
+    ] = Path("tasks/mini_swe_v1"),
+    output: Annotated[
+        Path,
+        typer.Option(help="New directory for examples, manifest, and source trajectories."),
+    ] = Path("artifacts/data/mini_swe_agent_sft_v1"),
+    hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Model/tokenizer profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option(help="Agent SFT experiment profile ID.")] = "agent_sft",
+    local_files_only: Annotated[
+        bool, typer.Option(help="Use only the locally cached pinned tokenizer.")
+    ] = False,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Collect replay-checked demonstrations and freeze exact token/action masks."""
+
+    try:
+        resolved = _resolve_agent_sft(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+        )
+        profile = resolved.config.experiment
+        if not isinstance(profile, AgentSftExperiment):
+            raise AssertionError("Agent SFT profile discriminator mismatch")
+        manifest = build_agent_sft_dataset(
+            profile,
+            resolved.config.model,
+            tasks_root=tasks_root,
+            output_dir=output,
+            local_files_only=local_files_only,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Agent SFT data build failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(
+        f"Agent SFT dataset completed: [bold]{output}[/bold] "
+        f"({manifest.train_examples} train, {manifest.validation_examples} validation)"
+    )
+
+
+@train_app.command("agent-sft")
+def train_agent_sft_command(
+    dataset: Annotated[
+        Path,
+        typer.Option(exists=True, file_okay=False, help="Frozen Agent SFT dataset directory."),
+    ],
+    hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Model profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option(help="Agent SFT experiment profile ID.")] = "agent_sft",
+    artifacts_root: Annotated[Path, typer.Option(help="Parent directory for the run.")] = Path(
+        "artifacts/runs"
+    ),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe run ID.")] = None,
+    local_files_only: Annotated[bool, typer.Option()] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    set_values: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Repeatable scalar override within the Agent SFT profile."),
+    ] = None,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Train a LoRA policy directly from stored exact-token agent actions."""
+
+    try:
+        resolved = _resolve_agent_sft(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+            overrides=tuple(set_values or ()),
+        )
+        context = execute_agent_sft_run(
+            resolved,
+            dataset_dir=dataset,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            local_files_only=local_files_only,
+            device=device,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Agent SFT failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"Agent SFT completed: [bold]{context.run_dir}[/bold]")
 
 
 @train_app.command("sft")
