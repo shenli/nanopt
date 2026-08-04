@@ -164,9 +164,9 @@ The next lesson turns these definitions into exact tensor coordinates and tested
 ## Hardware expectations
 
 The prerequisites, core-math labs, synthetic-data tools, and normal unit tests run on CPU. Model
-loading, calibration, and reference training arrive in later milestones and require explicitly
-documented GPU checks. Passing this chapter does not validate the proposed RTX 4070 Ti SUPER
-profile or prove that a training recipe fits in 16 GB.
+loading, calibration, and reference training require the explicitly documented GPU checks. Passing
+this chapter does not validate the single-consumer-GPU training path or prove that a training recipe
+fits in 16 GB VRAM.
 
 ## Readiness checklist
 

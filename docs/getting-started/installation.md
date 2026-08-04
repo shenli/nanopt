@@ -29,5 +29,5 @@ Run the complete local gate from the repository root:
 
 The command syncs the locked development environment, then checks formatting, linting, types,
 tests and coverage, schemas, documentation formulas, the strict documentation build, and package
-construction. It exits immediately if a check fails and prints `M1 local gate passed.` only after
-all checks succeed.
+construction. It exits immediately if a check fails and prints its success message only after all
+checks succeed.

@@ -39,7 +39,7 @@ scores intermediate work. Both can be learned or programmatic, and both can be w
 NanoPT uses exact arithmetic AST verification in the required path. This deliberately removes a
 learned-reward variable while teaching rollout and policy optimization. DPO uses preference pairs
 directly without fitting a separate scalar reward model. A reward-model experiment is a documented
-extension, not an implicit part of M5 or M6.
+extension, not an implicit part of the DPO or GRPO reference paths.
 
 ## Audit questions
 

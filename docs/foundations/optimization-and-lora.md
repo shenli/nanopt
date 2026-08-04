@@ -62,7 +62,8 @@ uv run python labs/19_optimizer_step.py
 ```
 
 The lab freezes one scalar, optimizes another, and asserts the exact update scope. The real LoRA
-lifecycle is covered by `tests/unit/models/test_adapters.py` and the M4 reference report.
+lifecycle is covered by `tests/unit/models/test_adapters.py` and the supervised fine-tuning GPU
+validation report.
 
 ## Common mistakes
 

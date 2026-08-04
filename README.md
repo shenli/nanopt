@@ -6,7 +6,7 @@ hiding the important parts.**
 [![Python 3.11–3.12](https://img.shields.io/badge/Python-3.11–3.12-3776AB.svg)](https://www.python.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-4C1.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/course-read%20online-7E57C2.svg)](https://shenli.github.io/nanopt/)
-[![GPU](https://img.shields.io/badge/reference%20GPU-RTX%204070%20Ti%20SUPER-76B900.svg)](docs/08_HARDWARE_AND_PERFORMANCE.md)
+[![GPU](https://img.shields.io/badge/GPU-single%2016%20GB%20consumer%20card-76B900.svg)](docs/08_HARDWARE_AND_PERFORMANCE.md)
 
 NanoPT is an executable course and white-box reference implementation for modern language-model
 post-training. It connects hand-computable equations to tested PyTorch, real LoRA training,
@@ -26,13 +26,14 @@ Qwen3-0.6B Base
   support is tied to retained measurements from a pinned commit.
 - **Agents are stateful systems.** Tools, budgets, resets, recovery turns, context policy, hidden
   verification, and sandbox boundaries are first-class—not collapsed into prompt text.
-- **Small enough to study.** The official path uses Qwen3-0.6B Base and one validated 16 GB consumer
-  GPU. CPU labs cover every central invariant without a model download.
+- **Consumer hardware by design.** The official path uses Qwen3-0.6B Base and is validated on one
+  consumer GPU with 16 GB VRAM; it does not require an H100 or B200. CPU labs cover every central
+  invariant without a model download.
 
-## v0.3 at a glance
+## Agent RL on one consumer GPU
 
-NanoPT v0.3.0 adds an exact-token Mini Agent RL vertical slice on top of v0.2 Agent SFT. Its clean
-reference gate on an NVIDIA RTX 4070 Ti SUPER measured:
+NanoPT includes an exact-token Mini Agent RL vertical slice built on Agent SFT. A clean validated
+run on one consumer GPU with 16 GB VRAM measured:
 
 | Evidence | Result |
 | --- | ---: |
@@ -50,7 +51,7 @@ version scored 0.0. The full history stays visible as an example of why the last
 automatically the best checkpoint. See the [Mini Agent RL report](docs/reference/v0.3-agent-rl-report.md)
 and [compact evidence](docs/reference/evidence/v0.3-agent-rl-85ca98b.json).
 
-The earlier math path remains fully executable. Its retained v0.1 reference results were:
+The earlier math path remains fully executable. Its retained reference results were:
 
 | Checkpoint | Protected exact accuracy | Parse rate |
 | --- | ---: | ---: |
@@ -143,7 +144,7 @@ uv run nanopt systems simulate --run-id systems-tutorial
 
 The simulation compares keeping old weights for a complete episode with synchronizing only
 between complete tool actions. It writes inspectable model/world checkpoints and explicitly does
-not use synthetic experience for training. Read [RL from a systems perspective](docs/tutorials/rl-from-systems-perspective.md)
+not use synthetic experience for training. Read [Reinforcement Learning from a Systems Perspective](docs/tutorials/rl-from-systems-perspective.md)
 for the end-to-end walkthrough.
 
 ## Learn in layers
@@ -159,7 +160,7 @@ appropriate evidence tier. A useful route is:
 6. [From tool calls to trajectories](docs/agents/from-tool-call-to-trajectory.md)
 7. [Exact-token Agent SFT](docs/agents/agent-sft.md)
 8. [Mini Agent RL](docs/agents/agent-rl.md)
-9. [RL from a systems perspective](docs/tutorials/rl-from-systems-perspective.md)
+9. [Reinforcement Learning from a Systems Perspective](docs/tutorials/rl-from-systems-perspective.md)
 
 ## Repository map
 

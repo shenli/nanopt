@@ -80,9 +80,10 @@ fingerprints, constructs all splits, renders one trusted answer, and verifies it
 
 ## Limitations
 
-M2 establishes deterministic mechanics, not the final reference dataset scale or curriculum. Later
-milestones may add controlled task families and preference transformations, but every addition must
-bring property tests, canonical leakage checks, parser attacks, and updated fingerprints.
+This layer establishes deterministic mechanics, not a claim about broad dataset scale or
+curriculum quality. Later additions may introduce controlled task families and preference
+transformations, but every addition must bring property tests, canonical leakage checks, parser
+attacks, and updated fingerprints.
 
 The dataset card and starting configuration live in
 [`tasks/arithmetic`](https://github.com/shenli/nanopt/tree/main/tasks/arithmetic).

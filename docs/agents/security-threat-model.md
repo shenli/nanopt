@@ -7,7 +7,7 @@ After this chapter, you should be able to:
 - identify what NanoPT treats as trusted and untrusted;
 - explain the separate roles of structured tools, workspace checks, and Docker isolation;
 - map each reference security flag to a concrete risk reduction;
-- state what the M8 sandbox does not promise;
+- state what the reference sandbox does not promise;
 - run the security lab without exposing a GPU or network to task code.
 
 ## Trust boundary
@@ -46,7 +46,7 @@ host and applies:
 - fixed memory, swap, PID, CPU, wall-time, and output limits;
 - no GPU flags and no Docker socket mount.
 
-The M8 reference security probe checks the effective UID/GID, zero effective capabilities,
+The reference security probe checks the effective UID/GID, zero effective capabilities,
 no-new-privileges bit, blocked outbound connection, blocked root-filesystem write, writable
 workspace, and absence of GPU devices and the Docker socket.
 

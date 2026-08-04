@@ -44,8 +44,9 @@ probabilities make one behavior policy explicit. If rollout workers finish after
 updates, the result is stale. Importance ratios can correct limited mismatch, but they do not grant
 unlimited reuse or erase support/variance problems.
 
-The M6 path is synchronous: grouped completions and old log probabilities are frozen before the
-update. The M8 environment records exact model token IDs but performs no policy update.
+The reference GRPO path is synchronous: grouped completions and old log probabilities are frozen
+before the update. The initial agent-environment validation records exact model token IDs but
+performs no policy update.
 
 ## Hands-on path
 

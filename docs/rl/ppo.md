@@ -50,10 +50,11 @@ it would be a warning sign if sustained in training.
 
 ## NanoPT's boundary
 
-M6 uses the PPO-style clipped policy term with group-relative advantages and no learned critic. It
-stores exact behavior token IDs/log probabilities and performs synchronous updates. Calling this
-full actor-critic PPO would be incorrect; calling every clipped objective identical would also be
-incorrect because normalization, KL, and advantage definitions differ.
+NanoPT's reference GRPO path uses the PPO-style clipped policy term with group-relative advantages
+and no learned critic. It stores exact behavior token IDs/log probabilities and performs
+synchronous updates. Calling this full actor-critic PPO would be incorrect; calling every clipped
+objective identical would also be incorrect because normalization, KL, and advantage definitions
+differ.
 
 ## Common mistakes, scale mapping, and reading
 

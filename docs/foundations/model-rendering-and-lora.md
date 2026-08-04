@@ -19,9 +19,9 @@ one Hub commit, and the
 therefore records resolved model and tokenizer commit hashes. It also makes dtype, safetensors,
 remote-code trust, local-only behavior, and device mapping explicit.
 
-The loader is the only M2 component allowed to contact the Hugging Face Hub. Normal CPU tests replace
-the auto loaders and cannot use the network. A separate network/GPU smoke check will exercise the
-real reference checkpoint when compatible hardware is deliberately selected.
+The loader is the only model-integration component allowed to contact the Hugging Face Hub. Normal
+CPU tests replace the auto loaders and cannot use the network. A separate network/GPU smoke check
+exercises the real reference checkpoint only when compatible hardware is deliberately selected.
 
 ## Token boundaries come from rendering
 

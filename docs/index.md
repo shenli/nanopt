@@ -18,18 +18,19 @@ reported claim leads back to inspectable artifacts.
 Start with the [prerequisites](getting-started/prerequisites.md), then use the
 [23-chapter course map](course/index.md) to pair each chapter with its executable lab.
 
-## Current release
+## Agent RL on one consumer GPU
 
-NanoPT v0.3.0 adds exact-token Mini Agent RL. Its clean reference run collected four non-degenerate
-groups, 16 episodes, and 80 action turns; sampled action validity was 91.25%, mean outcome reward
-was 0.6719, and peak reserved VRAM was 14.094 GiB. The selected post-update boundary retained
-validation reward 1.0; the later terminal boundary scored 0.0 and remains disclosed.
+NanoPT includes exact-token Mini Agent RL, validated on one consumer GPU with 16 GB VRAM—the pinned
+course path does not require an H100 or B200. The clean run collected four non-degenerate groups,
+16 episodes, and 80 action turns; sampled action validity was 91.25%, mean outcome reward was
+0.6719, and peak reserved VRAM was 14.094 GiB. The selected post-update boundary retained validation
+reward 1.0; the later terminal boundary scored 0.0 and remains disclosed.
 
-Read the [v0.3 Mini Agent RL report](reference/v0.3-agent-rl-report.md) for the measurements and
+Read the [Mini Agent RL validation report](reference/v0.3-agent-rl-report.md) for the measurements and
 their limits. The tiny task suite validates this release contract, not broad coding ability.
 
-The v0.4 development tutorial is already executable on CPU. [Trace one experience from snapshot to
-training admission](tutorials/rl-from-systems-perspective.md), then run
+The rollout-systems tutorial is executable locally. Read
+[Reinforcement Learning from a Systems Perspective](tutorials/rl-from-systems-perspective.md), then run
 `uv run python labs/22_resumable_rollouts.py`.
 
 ## Evidence vocabulary
@@ -38,6 +39,8 @@ training admission](tutorials/rl-from-systems-perspective.md), then run
 - **Proposed** is an explicit starting point that still needs calibration.
 - **Validated** means a reviewed evidence bundle passed the stated reference protocol.
 
-The RTX 4070 Ti SUPER profile is validated for the pinned math pipeline, Agent SFT, and Mini Agent
-RL slices. CPU labs validate equations and invariants, not GPU support. See the [artifact contract](reference/artifacts.md)
-and [troubleshooting guide](troubleshooting.md) when reproducing a run.
+The pinned math pipeline, Agent SFT, and Mini Agent RL slices are validated on a single consumer GPU
+with 16 GB VRAM. This is a measured configuration, not a claim that every 16 GB GPU or software
+stack is compatible. CPU labs validate equations and invariants, not GPU support. See the
+[artifact contract](reference/artifacts.md), [hardware details](08_HARDWARE_AND_PERFORMANCE.md), and
+[troubleshooting guide](troubleshooting.md) when reproducing a run.

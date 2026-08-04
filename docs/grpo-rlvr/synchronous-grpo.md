@@ -92,9 +92,9 @@ uv run nanopt train grpo \
   --local-files-only --device cuda
 ```
 
-After training, use the unchanged protected evaluator with the saved GRPO adapter. A reference run
-passes M6 only if at least one frozen primary target improves and anchor regressions remain inside
-the target fixed after pilots.
+After training, use the unchanged protected evaluator with the saved GRPO adapter. The pinned GPU
+validation passes only if at least one frozen primary target improves and anchor regressions remain
+inside the target fixed after pilots.
 
 ## What the teaching loop omits
 
@@ -102,4 +102,3 @@ The implementation recomputes full prefixes, samples synchronously, and runs on 
 KV-cache rollout acceleration, distributed generation, weight synchronization, asynchronous
 staleness controls, and replay. Those systems change performance and freshness policy; they must
 not change stored-action identity or the declared objective.
-

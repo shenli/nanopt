@@ -12,10 +12,10 @@ After this chapter, you should be able to:
 
 ## Two roles begin at the same checkpoint
 
-The frozen reference policy and the initial trainable policy are both the M4 SFT adapter. Their
-initial margins therefore match and each pair begins with loss $log 2$. NanoPT first scores every
-pair under the frozen SFT adapter, then clones that adapter under the name `dpo` and makes only the
-clone trainable.
+The frozen reference policy and the initial trainable policy are both copies of the accepted SFT
+adapter. Their initial margins therefore match and each pair begins with loss $log 2$. NanoPT first
+scores every pair under the frozen SFT adapter, then clones that adapter under the name `dpo` and
+makes only the clone trainable.
 
 For pair batch size $B$, the rendered chosen and rejected tensors each contain:
 

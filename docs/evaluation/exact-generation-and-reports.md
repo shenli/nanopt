@@ -175,8 +175,9 @@ uv run nanopt eval run \
 Run sampled evaluation separately with `--mode sampled`; never merge deterministic and sampled
 records in one JSONL file.
 
-For the official M3 smoke, use the checked-in orchestration and evidence validator instead of
-copying individual commands:
+For the pinned base-model GPU smoke, use the checked-in orchestration and evidence validator
+instead of copying individual commands. The script retains its historical milestone identifier so
+old evidence remains reproducible:
 
 ```bash
 bash scripts/run_m3_reference_smoke.sh

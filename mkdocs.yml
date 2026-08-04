@@ -45,7 +45,7 @@ nav:
       - Publishing documentation: getting-started/publishing-docs.md
   - Course:
       - Chapter map and evidence tiers: course/index.md
-      - RL from a systems perspective: tutorials/rl-from-systems-perspective.md
+      - Reinforcement Learning from a Systems Perspective: tutorials/rl-from-systems-perspective.md
   - Foundations:
       - MathJax smoke test: foundations/mathjax-smoke.md
       - Tokens, masks, and log probabilities: foundations/tokens-masks-logprobs.md
@@ -112,24 +112,23 @@ nav:
           - Exact-token Agent SFT: adr/0010-exact-token-agent-sft.md
           - Fresh exact-token Agent GRPO: adr/0011-fresh-exact-token-agent-grpo.md
           - Resumable rollout control plane: adr/0012-resumable-rollout-control-plane.md
-      - Publication checklist: reference/publication-checklist.md
       - Dependency and model license audit: reference/dependency-license-audit.md
-      - M1 completion report: reference/m1-completion-report.md
-      - M2 completion report: reference/m2-completion-report.md
-      - M3 completion report: reference/m3-completion-report.md
-      - M4 completion report: reference/m4-completion-report.md
-      - M5 completion report: reference/m5-completion-report.md
-      - M6 completion report: reference/m6-completion-report.md
-      - M7 completion report: reference/m7-completion-report.md
-      - M8 completion report: reference/m8-completion-report.md
-      - M9 completion report: reference/m9-completion-report.md
-      - M10 completion report: reference/m10-completion-report.md
+      - Repository foundation report: reference/m1-completion-report.md
+      - Core math and task report: reference/m2-completion-report.md
+      - Base-model GPU report: reference/m3-completion-report.md
+      - Supervised fine-tuning GPU report: reference/m4-completion-report.md
+      - Preference optimization GPU report: reference/m5-completion-report.md
+      - GRPO and RLVR GPU report: reference/m6-completion-report.md
+      - End-to-end pipeline GPU report: reference/m7-completion-report.md
+      - Agent environment and Docker report: reference/m8-completion-report.md
+      - Curriculum validation report: reference/m9-completion-report.md
+      - Source release audit: reference/m10-completion-report.md
       - v0.1.0 release notes: reference/v0.1-release-notes.md
-      - v0.2 Agent SFT report: reference/v0.2-agent-sft-report.md
+      - Agent SFT validation report: reference/v0.2-agent-sft-report.md
       - v0.2.0 release notes: reference/v0.2-release-notes.md
-      - v0.3 Mini Agent RL report: reference/v0.3-agent-rl-report.md
+      - Mini Agent RL validation report: reference/v0.3-agent-rl-report.md
       - v0.3.0 release notes: reference/v0.3-release-notes.md
-  - Project plans:
+  - Engineering reference:
       - Vision and scope: 00_VISION_AND_SCOPE.md
       - Product requirements: 01_PRODUCT_REQUIREMENTS.md
       - Technical architecture: 02_TECHNICAL_ARCHITECTURE.md
@@ -141,10 +140,6 @@ nav:
       - Hardware and performance: 08_HARDWARE_AND_PERFORMANCE.md
       - Evaluation and reporting: 09_EVALUATION_AND_REPORTING.md
       - Testing and security: 10_TESTING_CI_AND_SECURITY.md
-      - Documentation curriculum: 11_DOCUMENTATION_CURRICULUM.md
-      - Implementation roadmap: 12_IMPLEMENTATION_ROADMAP.md
       - Research and references: 14_RESEARCH_AND_REFERENCES.md
-      - Source synthesis: 15_SOURCE_SYNTHESIS.md
       - Architectural decisions: 16_ARCHITECTURAL_DECISIONS.md
       - Risks and open questions: 17_RISKS_AND_OPEN_QUESTIONS.md
-      - Initial issue backlog: 18_INITIAL_ISSUE_BACKLOG.md

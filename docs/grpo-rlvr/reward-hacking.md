@@ -33,17 +33,18 @@ case-shifted tags, and an answer-tag attribute. Run it before training:
 uv run python labs/14_reward_hacking.py
 ```
 
-Every attack must receive zero correctness credit. This is regression evidence for known boundaries,
-not a proof that no unknown exploit exists. M6 preserved a rejected evidence-reader attempt because
-the policy-facing reward must never learn answers from reference artifacts.
+Every attack must receive zero correctness credit. This is regression evidence for known
+boundaries, not a proof that no unknown exploit exists. The accepted GRPO evidence preserves a
+rejected evidence-reader attempt because the policy-facing reward must never learn answers from
+reference artifacts.
 
 ## Public and hidden verification
 
 Public tests teach the contract and support debugging. Hidden tests reduce direct overfitting but
 must remain isolated from observations, model-visible files, and tool output. A hidden test is not
 automatically good: it can be brittle, leak through timing/errors, or reward one implementation
-style instead of behavior. The M8 verifier uses separate disposable workspaces and returns hidden
-counts only.
+style instead of behavior. The reference agent verifier uses separate disposable workspaces and
+returns hidden counts only.
 
 ## Common mistakes and scale mapping
 

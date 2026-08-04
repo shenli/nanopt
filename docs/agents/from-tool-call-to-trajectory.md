@@ -81,9 +81,9 @@ transition semantics.
 ## Exact tokens are retained, but no optimization occurs
 
 The Qwen policy adapter renders the observation, samples one response, and records the exact
-generated token IDs before decoding the JSON view. This preserves the action identity needed by a
-future Agent SFT or Agent RL stage. M8 never computes an agent loss, backpropagates, or updates a
-checkpoint. Its reports say **evaluation only** for that reason.
+generated token IDs before decoding the JSON view. This preserves the action identity needed by
+Agent SFT or Agent RL. The environment-only validation never computes an agent loss,
+backpropagates, or updates a checkpoint. Its reports say **evaluation only** for that reason.
 
 Run the CPU lab:
 
