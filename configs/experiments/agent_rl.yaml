@@ -83,4 +83,4 @@ artifacts:
   save_staleness_study: true
   save_credit_study: true
   save_tool_budget_study: true
-status: proposed_unvalidated
+status: smoke_tested

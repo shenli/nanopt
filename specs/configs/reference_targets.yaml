@@ -22,3 +22,21 @@ notes:
   - Targets were frozen after non-representative 4- and 12-iteration pilots.
   - The 12-iteration pilot improved compositional and range accuracy with no split regression.
   - The hardware hard-memory limit remains authoritative from the hardware profile.
+v0_3:
+  frozen_after_pilot_commit: d9be583
+  iterations: 4
+  group_size: 4
+  minimum_action_validity_rate: 0.50
+  maximum_degenerate_group_fraction: 0.75
+  minimum_final_validation_reward: 1.0
+  maximum_validation_reward_regression: 0.0
+  maximum_training_policy_lag: 0
+  minimum_stale_policy_lag: 4
+  expected_tool_budgets:
+    - 2
+    - 5
+  minimum_all_to_terminal_credit_ratio: 2.0
+  notes:
+    - Frozen after a clean one-iteration pilot produced one non-degenerate four-episode group.
+    - The pilot preserved held-out full-budget reward at 1.0 and measured partial reward at budget 2.
+    - Quality targets are deliberately narrow because validation contains one educational task.

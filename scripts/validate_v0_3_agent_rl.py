@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+import yaml
 
 from nanopt.agent.rl_records import (
     AgentRlBudgetStudy,
@@ -58,6 +59,10 @@ def validate_v0_3_agent_rl(evidence_root: Path, project_root: Path) -> dict[str,
     )
 
     summary = AgentRlSummary.model_validate(_read_object(run_dir / "summary.json"), strict=True)
+    targets_value = yaml.safe_load(
+        (project_root / "configs/reference_targets.yaml").read_text(encoding="utf-8")
+    )
+    targets = targets_value["v0_3"]
     summary_schema = _read_object(project_root / "specs/schemas/agent_rl_summary.schema.json")
     jsonschema.Draft202012Validator(summary_schema).validate(summary.model_dump(mode="json"))
     groups = [
@@ -93,7 +98,28 @@ def validate_v0_3_agent_rl(evidence_root: Path, project_root: Path) -> dict[str,
     )
     _require(summary.maximum_training_policy_lag == 0, "summary policy lag differs")
     _require(summary.hidden_reward_exposed_during_rollout is False, "summary reward leak differs")
-    _require(summary.degenerate_group_fraction < 1.0, "all Agent RL groups were degenerate")
+    _require(summary.iterations == targets["iterations"], "reference iteration count differs")
+    _require(
+        all(len(group.episodes) == targets["group_size"] for group in groups),
+        "reference group size differs",
+    )
+    _require(
+        summary.action_validity_rate >= targets["minimum_action_validity_rate"],
+        "Agent RL action validity is below the frozen target",
+    )
+    _require(
+        summary.degenerate_group_fraction <= targets["maximum_degenerate_group_fraction"],
+        "too many Agent RL groups were degenerate",
+    )
+    _require(
+        summary.final_validation_reward >= targets["minimum_final_validation_reward"],
+        "final validation reward is below the frozen target",
+    )
+    _require(
+        summary.initial_validation_reward - summary.final_validation_reward
+        <= targets["maximum_validation_reward_regression"],
+        "held-out validation reward regressed beyond the frozen target",
+    )
 
     staleness = AgentRlStalenessStudy.model_validate(
         _read_object(run_dir / "staleness_study.json"), strict=True
@@ -101,9 +127,10 @@ def validate_v0_3_agent_rl(evidence_root: Path, project_root: Path) -> dict[str,
     _require(staleness.fresh.used_for_update is False, "fresh study point entered training")
     _require(staleness.stale.used_for_update is False, "stale study point entered training")
     _require(staleness.fresh.policy_lag == 1, "fresh study lag differs")
+    _require(staleness.stale.policy_lag == summary.iterations, "stale lag does not span the run")
     _require(
-        staleness.stale.policy_lag == summary.iterations,
-        "stale study lag does not span the run",
+        staleness.stale.policy_lag >= targets["minimum_stale_policy_lag"],
+        "stale study policy lag is below the frozen target",
     )
 
     credit = AgentRlCreditStudy.model_validate(
@@ -117,6 +144,11 @@ def validate_v0_3_agent_rl(evidence_root: Path, project_root: Path) -> dict[str,
         sum(credit.active_tokens_by_tool.values()) == credit.all_actions_active_tokens,
         "tool credit counts do not cover all action tokens",
     )
+    _require(
+        credit.all_actions_active_tokens / credit.terminal_action_active_tokens
+        >= targets["minimum_all_to_terminal_credit_ratio"],
+        "credit-assignment coverage ratio is below the frozen target",
+    )
 
     budget = AgentRlBudgetStudy.model_validate(
         _read_object(run_dir / "tool_budget_study.json"), strict=True
@@ -124,7 +156,10 @@ def validate_v0_3_agent_rl(evidence_root: Path, project_root: Path) -> dict[str,
     checkpoints = {point.checkpoint for point in budget.points}
     budgets = {point.tool_budget for point in budget.points}
     _require(checkpoints == {"reference", "agent_rl"}, "budget study checkpoints differ")
-    _require(len(budgets) >= 2, "budget study needs at least two caps")
+    _require(
+        budgets == set(targets["expected_tool_budgets"]),
+        "budget study caps differ from the frozen target",
+    )
     maximum_budget = max(budgets)
     reference_full = next(
         point
