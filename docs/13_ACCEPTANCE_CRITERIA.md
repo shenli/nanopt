@@ -132,6 +132,20 @@ The project should define numeric release targets in a versioned `reference_targ
 - [x] Full-transcript and observation-snapshot policies are compared explicitly.
 - [x] The clean reference run remains under the RTX 4070 Ti SUPER hard VRAM limit.
 
+## v0.3 Mini Agent RL
+
+- [ ] Every rollout group independently resets one immutable task snapshot.
+- [ ] Every action retains its exact online prompt IDs, sampled IDs, mask, and FP32 behavior log probabilities.
+- [ ] Hidden verifier source, output, and reward are absent from model observations.
+- [ ] The hidden terminal score is assigned only after episode termination.
+- [ ] Group-relative advantages and degenerate groups have hand-computable tests.
+- [ ] Training consumes stored IDs directly and rejects any nonzero policy lag.
+- [ ] The clipped objective, KL estimator, normalization, and update epoch count are explicit.
+- [ ] Fresh and stale retained groups are rescored under the final policy and excluded from updates.
+- [ ] All-action and terminal-action-only credit coverage are compared.
+- [ ] Parent and final policies are compared under at least two tool budgets on held-out tasks.
+- [ ] A clean Docker/GPU reference run stays under the hard VRAM limit and retains compact evidence.
+
 ## 11. Documentation gates
 
 - [x] Every chapter follows the standard chapter template where applicable.

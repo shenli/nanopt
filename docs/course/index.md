@@ -33,11 +33,12 @@ the small lab teaches the invariant, while the reference run measures the comple
 | 13 | [From single-turn to agents](../agents/from-tool-call-to-trajectory.md) | Stateful tool trajectories | CPU: lab 10; M8 reference |
 | 14 | [Verifiable agent tasks](../agents/task-authoring-and-verification.md) | Reset and hidden verification | CPU: lab 17; M8 reference |
 | 15 | [Agent SFT](../agents/agent-sft.md) | Exact multi-turn action masks and replay lineage | CPU: lab 20; v0.2 reference |
-| 16 | [Rollout infrastructure](../systems/rollout-infrastructure.md) | Long tails, partial work, staleness | Systems: lab 15 |
-| 17 | [Production flywheels](../systems/production-flywheels.md) | Privacy and fixed-eval boundaries | Systems: lab 16 |
-| 18 | [Reading modern systems](../reading/post-training-systems.md) | Compare reports without filling gaps | Reading guide |
-| 19 | [End-to-end pipeline](../pipeline/end-to-end-recipe.md) | Hash-linked resumable stages | M7 reference |
-| 20 | [Extending NanoPT](../extending/contribution-paths.md) | Add one auditable vertical slice | Contributor exercise |
+| 16 | [Mini Agent RL](../agents/agent-rl.md) | Hidden outcomes, policy age, and multi-turn credit | CPU: lab 21; v0.3 reference |
+| 17 | [Rollout infrastructure](../systems/rollout-infrastructure.md) | Long tails, partial work, staleness | Systems: lab 15 |
+| 18 | [Production flywheels](../systems/production-flywheels.md) | Privacy and fixed-eval boundaries | Systems: lab 16 |
+| 19 | [Reading modern systems](../reading/post-training-systems.md) | Compare reports without filling gaps | Reading guide |
+| 20 | [End-to-end pipeline](../pipeline/end-to-end-recipe.md) | Hash-linked resumable stages | M7 reference |
+| 21 | [Extending NanoPT](../extending/contribution-paths.md) | Add one auditable vertical slice | Contributor exercise |
 
 ## Evidence tiers
 

@@ -546,6 +546,113 @@ class AgentSftExperiment(StrictModel):
     status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
 
 
+# Agent RL keeps stateful rollout semantics separate from the single-turn arithmetic GRPO profile.
+# The optimizer still uses the same inspectable clipped objective, but its training units are exact
+# action turns gathered from independently reset MiniSWE workspaces.
+class AgentRlTasksConfig(StrictModel):
+    suite: str
+    train_tasks: list[str] = Field(min_length=1)
+    validation_tasks: list[str] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def require_disjoint_task_splits(self) -> AgentRlTasksConfig:
+        overlap = set(self.train_tasks) & set(self.validation_tasks)
+        if overlap:
+            raise ValueError(f"Agent RL task splits overlap: {', '.join(sorted(overlap))}")
+        return self
+
+
+class AgentRlPolicyConfig(StrictModel):
+    initialize_from_stage: Literal["agent_sft"]
+    reference_adapter_name: str
+    policy_adapter_name: str
+    context_policy: Literal["full_transcript"]
+
+
+class AgentRlRolloutConfig(StrictModel):
+    iterations: int = Field(gt=0)
+    group_size: int = Field(ge=2)
+    max_turns: int = Field(gt=0)
+    max_new_tokens_per_turn: int = Field(gt=0)
+    do_sample: Literal[True]
+    temperature: float = Field(gt=0)
+    top_p: float = Field(gt=0, le=1)
+    store_old_logprobs_dtype: Literal["float32"]
+
+    @model_validator(mode="after")
+    def require_untruncated_reference_sampling(self) -> AgentRlRolloutConfig:
+        if self.temperature != 1.0 or self.top_p != 1.0:
+            raise ValueError("Agent RL requires temperature=1 and top_p=1 for exact old logps")
+        return self
+
+
+class AgentRlRewardConfig(StrictModel):
+    source: Literal["hidden_verifier_final_score"]
+    exposed_during_rollout: Literal[False]
+
+
+class AgentRlOptimizationConfig(StrictModel):
+    update_epochs: Literal[1]
+    minibatch_actions: int = Field(gt=0)
+    gradient_accumulation_steps: int = Field(gt=0)
+    learning_rate: float = Field(gt=0)
+    weight_decay: float = Field(ge=0)
+    warmup_ratio: float = Field(ge=0, lt=1)
+    scheduler: Literal["cosine"]
+    clip_epsilon: float = Field(gt=0, lt=1)
+    loss_normalization: Literal["token_mean", "sequence_mean"]
+    kl_beta: float = Field(ge=0)
+    kl_estimator: Literal["direct", "k3"]
+    max_grad_norm: float = Field(gt=0)
+    gradient_checkpointing: bool
+    compute_dtype: Literal["bfloat16", "float16", "float32"]
+    optimizer: Literal["adamw"]
+    max_policy_lag: Literal[0]
+
+
+class AgentRlStudiesConfig(StrictModel):
+    credit_assignment: list[Literal["all_actions", "terminal_action"]] = Field(min_length=2)
+    tool_budgets: list[int] = Field(min_length=2)
+    retain_first_iteration_for_staleness: Literal[True]
+
+    @model_validator(mode="after")
+    def require_distinct_study_coordinates(self) -> AgentRlStudiesConfig:
+        if len(set(self.credit_assignment)) != len(self.credit_assignment):
+            raise ValueError("Agent RL credit-assignment modes must be unique")
+        if len(set(self.tool_budgets)) != len(self.tool_budgets):
+            raise ValueError("Agent RL tool budgets must be unique")
+        if any(value <= 0 for value in self.tool_budgets):
+            raise ValueError("Agent RL tool budgets must be positive")
+        return self
+
+
+class AgentRlArtifactsConfig(StrictModel):
+    save_adapter_only: Literal[True]
+    save_exact_rollouts: Literal[True]
+    save_hidden_summary_only: Literal[True]
+    save_staleness_study: Literal[True]
+    save_credit_study: Literal[True]
+    save_tool_budget_study: Literal[True]
+
+
+class AgentRlExperiment(StrictModel):
+    schema_version: Literal[1]
+    id: str
+    stage: Literal["agent_rl"]
+    seed: int
+    tasks: AgentRlTasksConfig
+    policy: AgentRlPolicyConfig
+    rollout: AgentRlRolloutConfig
+    reward: AgentRlRewardConfig
+    advantage: AdvantageConfig
+    optimization: AgentRlOptimizationConfig
+    studies: AgentRlStudiesConfig
+    environment: AgentEnvironmentConfig
+    tools: list[Literal["list_files", "read_file", "search", "apply_patch", "run_tests", "finish"]]
+    artifacts: AgentRlArtifactsConfig
+    status: Literal["proposed_unvalidated", "smoke_tested", "validated"]
+
+
 ExperimentProfile = Annotated[
     BaseEvalExperiment
     | SftExperiment
@@ -553,7 +660,8 @@ ExperimentProfile = Annotated[
     | GrpoExperiment
     | TeachingLabExperiment
     | AgentEvaluationExperiment
-    | AgentSftExperiment,
+    | AgentSftExperiment
+    | AgentRlExperiment,
     Field(discriminator="stage"),
 ]
 

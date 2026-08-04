@@ -26,7 +26,7 @@
       "uniqueItems": true
     },
     "stage": {
-      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "agent_sft", "teaching_lab", "pipeline"]
+      "enum": ["evaluation", "sft", "dpo", "grpo", "agent_evaluation", "agent_sft", "agent_rl", "teaching_lab", "pipeline"]
     },
     "status": {
       "enum": ["created", "running", "completed", "failed", "interrupted", "tainted"]
@@ -182,6 +182,27 @@
             "train_examples": {"type": "integer", "minimum": 1},
             "validation_examples": {"type": "integer", "minimum": 1}
           }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "device", "iterations", "optimizer_steps", "groups", "episodes", "actions",
+            "representative", "consumed_exact_stored_token_ids", "maximum_policy_lag",
+            "hidden_reward_exposed_during_rollout"
+          ],
+          "properties": {
+            "device": {"enum": ["cpu", "cuda"]},
+            "iterations": {"type": "integer", "minimum": 1},
+            "optimizer_steps": {"type": "integer", "minimum": 1},
+            "groups": {"type": "integer", "minimum": 1},
+            "episodes": {"type": "integer", "minimum": 2},
+            "actions": {"type": "integer", "minimum": 1},
+            "representative": {"type": "boolean"},
+            "consumed_exact_stored_token_ids": {"const": true},
+            "maximum_policy_lag": {"const": 0},
+            "hidden_reward_exposed_during_rollout": {"const": false}
+          }
         }
       ]
     },
@@ -208,7 +229,7 @@
         "hidden_source_exposed": {"const": false},
         "policy": {"enum": ["oracle", "model"]},
         "representative": {"type": "boolean"},
-        "environment_trains_model": {"const": false},
+        "environment_trains_model": {"type": "boolean"},
         "task_count": {"type": "integer", "minimum": 1},
         "solved": {"type": "integer", "minimum": 0},
         "replay_checked": {"type": "boolean"}

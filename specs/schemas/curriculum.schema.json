@@ -10,8 +10,8 @@
     "prerequisite": {"$ref": "#/$defs/chapter"},
     "chapters": {
       "type": "array",
-      "minItems": 21,
-      "maxItems": 21,
+      "minItems": 22,
+      "maxItems": 22,
       "items": {"$ref": "#/$defs/chapter"}
     }
   },
@@ -37,7 +37,7 @@
       "additionalProperties": false,
       "required": ["id", "title", "path", "labs"],
       "properties": {
-        "id": {"type": "integer", "minimum": -1, "maximum": 20},
+        "id": {"type": "integer", "minimum": -1, "maximum": 21},
         "title": {"type": "string", "minLength": 1},
         "path": {"type": "string", "pattern": "^[a-zA-Z0-9_./-]+\\.md$"},
         "labs": {"type": "array", "items": {"$ref": "#/$defs/lab"}}

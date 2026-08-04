@@ -68,3 +68,22 @@ def test_invalid_actions_consume_budget_and_terminate(project_root: Path) -> Non
         assert environment.terminated
         assert environment.finish_reason == "budget_exhausted"
         assert environment.policy_violation_count == 2
+
+
+def test_explicit_tool_call_limit_caps_an_identical_task_snapshot(project_root: Path) -> None:
+    task = load_task_suite(project_root / "tasks/mini_swe_v1", split="smoke")[0]
+    with MiniSWEEnvironment(
+        task,
+        FakeSandboxBackend(),
+        run_id="tool-budget",
+        allowed_tools=TOOLS,
+        limits=SandboxLimits(10, 256, 32),
+        tool_call_limit=2,
+    ) as environment:
+        trajectory = environment.run_episode(
+            ScriptedOraclePolicy(task.oracle_patch_path.read_text())
+        )
+
+    assert len(trajectory.steps) == 2
+    assert trajectory.finish_reason == "budget_exhausted"
+    assert trajectory.verification.final_score < 1.0

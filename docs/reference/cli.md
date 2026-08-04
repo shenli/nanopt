@@ -12,6 +12,7 @@ nanopt train sft
 nanopt train dpo
 nanopt train grpo
 nanopt train agent-sft --dataset AGENT_DATASET_DIR
+nanopt train agent-rl --agent-sft-adapter AGENT_SFT_ADAPTER_DIR
 nanopt eval run [--adapter ADAPTER_DIR]
 nanopt pipeline run --tasks TASKS --recipe math_pipeline
 nanopt agent run --policy oracle|model --backend docker|fake
@@ -64,6 +65,12 @@ semantic replay, and writes tokenizer-specific examples with explicit current-ac
 optimizer-boundary checkpoints. Use `--context-policy full_transcript|observation_snapshot` on
 `nanopt agent run` for the v0.2 ablation. Training remains offline from the environment; Docker
 rollouts are evaluation, not an implicit online-training loop.
+
+`nanopt train agent-rl` clones the frozen Agent SFT adapter, collects fresh rollout groups from
+independent copies of one MiniSWE snapshot, assigns hidden terminal outcomes, and applies one
+exact-token clipped update epoch. It writes staleness, credit-assignment, and tool-budget studies.
+`--iteration-limit` is an explicitly non-representative calibration path; the reference config
+requires temperature-one, top-p-one sampling and rejects stale data at the trainer boundary.
 
 `nanopt report build RUN_DIR` is offline and model-free. It rebuilds all headline aggregates from
 `samples.jsonl`. Run `uv run nanopt COMMAND --help` for the complete typed option surface.

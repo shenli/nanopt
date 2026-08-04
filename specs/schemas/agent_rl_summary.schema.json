@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shenli.github.io/nanopt/schemas/agent_rl_summary.schema.json",
+  "title": "NanoPT Mini Agent RL run summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "run_id", "iterations", "optimizer_steps", "groups", "episodes",
+    "actions", "exact_sampled_tokens", "hidden_reward_exposed_during_rollout",
+    "maximum_training_policy_lag", "mean_reward", "action_validity_rate",
+    "degenerate_group_fraction", "initial_validation_reward", "final_validation_reward",
+    "parent_agent_sft_adapter_sha256", "agent_rl_adapter_sha256", "peak_allocated_bytes",
+    "peak_reserved_bytes", "representative"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "iterations": {"type": "integer", "minimum": 1},
+    "optimizer_steps": {"type": "integer", "minimum": 1},
+    "groups": {"type": "integer", "minimum": 1},
+    "episodes": {"type": "integer", "minimum": 2},
+    "actions": {"type": "integer", "minimum": 1},
+    "exact_sampled_tokens": {"const": true},
+    "hidden_reward_exposed_during_rollout": {"const": false},
+    "maximum_training_policy_lag": {"const": 0},
+    "mean_reward": {"type": "number", "minimum": 0, "maximum": 1},
+    "action_validity_rate": {"type": "number", "minimum": 0, "maximum": 1},
+    "degenerate_group_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "initial_validation_reward": {"type": "number", "minimum": 0, "maximum": 1},
+    "final_validation_reward": {"type": "number", "minimum": 0, "maximum": 1},
+    "parent_agent_sft_adapter_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "agent_rl_adapter_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "peak_allocated_bytes": {"type": "integer", "minimum": 0},
+    "peak_reserved_bytes": {"type": "integer", "minimum": 0},
+    "representative": {"type": "boolean"}
+  }
+}

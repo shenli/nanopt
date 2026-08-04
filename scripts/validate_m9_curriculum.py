@@ -70,7 +70,7 @@ def validate_curriculum(
 
     chapters = manifest["chapters"]
     _require(
-        [chapter["id"] for chapter in chapters] == list(range(21)), "chapter IDs must be 0..20"
+        [chapter["id"] for chapter in chapters] == list(range(22)), "chapter IDs must be 0..21"
     )
     entries = [manifest["prerequisite"], *chapters]
     mkdocs = (project_root / "mkdocs.yml").read_text(encoding="utf-8")

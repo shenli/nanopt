@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shenli.github.io/nanopt/schemas/agent_rl_group.schema.json",
+  "title": "NanoPT identical-snapshot Agent RL group",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "group_id", "run_id", "iteration", "policy_version", "task_id",
+    "snapshot_sha256", "reward_mean", "reward_std", "advantage_mode", "degenerate", "episodes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "group_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "iteration": {"type": "integer", "minimum": 0},
+    "policy_version": {"type": "integer", "minimum": 0},
+    "task_id": {"type": "string", "minLength": 1},
+    "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reward_mean": {"type": "number"},
+    "reward_std": {"type": "number", "minimum": 0},
+    "advantage_mode": {"enum": ["group_centered", "group_zscore"]},
+    "degenerate": {"type": "boolean"},
+    "episodes": {"type": "array", "minItems": 2, "items": {"type": "object"}}
+  }
+}

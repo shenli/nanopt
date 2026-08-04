@@ -32,6 +32,10 @@ def test_help_and_version_do_not_download_models() -> None:
     assert version_result.exit_code == 0
     assert "0.2.0" in version_result.stdout
 
+    train_help = runner.invoke(app, ["train", "--help"])
+    assert train_help.exit_code == 0
+    assert "agent-rl" in train_help.stdout
+
 
 def test_config_resolve_writes_config_and_provenance(tmp_path: Path, project_root: Path) -> None:
     output = tmp_path / "resolved.yaml"

@@ -128,22 +128,28 @@ chapters:
       - tier: cpu
         command: uv run python labs/20_agent_sft_masks.py
   - id: 16
+    title: Mini Agent RL
+    path: docs/agents/agent-rl.md
+    labs:
+      - tier: cpu
+        command: uv run python labs/21_agent_rl_credit.py
+  - id: 17
     title: Rollout infrastructure
     path: docs/systems/rollout-infrastructure.md
     labs:
       - tier: systems_simulation
         command: uv run python labs/15_rollout_scheduler.py
-  - id: 17
+  - id: 18
     title: Production data flywheels
     path: docs/systems/production-flywheels.md
     labs:
       - tier: systems_simulation
         command: uv run python labs/16_production_flywheel.py
-  - id: 18
+  - id: 19
     title: Reading modern post-training systems
     path: docs/reading/post-training-systems.md
     labs: []
-  - id: 19
+  - id: 20
     title: End-to-end NanoPT pipeline
     path: docs/pipeline/end-to-end-recipe.md
     labs:
@@ -152,7 +158,7 @@ chapters:
       - tier: reference
         command: ./scripts/run_m7_reference_pipeline.sh
         evidence: docs/reference/evidence/m7-reference-pipeline-92564f3.json
-  - id: 20
+  - id: 21
     title: Extending NanoPT
     path: docs/extending/contribution-paths.md
     labs: []

@@ -57,8 +57,13 @@ class MiniSWEEnvironment:
         allowed_tools: list[ToolName],
         limits: SandboxLimits,
         turn_limit: int | None = None,
+        tool_call_limit: int | None = None,
         clock: Any = time.monotonic,
     ) -> None:
+        if turn_limit is not None and turn_limit <= 0:
+            raise ValueError("turn_limit must be positive")
+        if tool_call_limit is not None and tool_call_limit <= 0:
+            raise ValueError("tool_call_limit must be positive")
         self.task = task
         self.backend = backend
         self.run_id = run_id
@@ -70,7 +75,10 @@ class MiniSWEEnvironment:
         self.workspace: SafeWorkspace | None = None
         self.started_at = 0.0
         self.turns_remaining = min(task.card.budgets.turns, turn_limit or task.card.budgets.turns)
-        self.tool_calls_remaining = task.card.budgets.tool_calls
+        self.tool_calls_remaining = min(
+            task.card.budgets.tool_calls,
+            tool_call_limit or task.card.budgets.tool_calls,
+        )
         self.test_runs_remaining = task.card.budgets.test_runs
         self.steps: list[AgentStep] = []
         self.transcript: list[dict[str, Any]] = []

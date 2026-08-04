@@ -15,7 +15,7 @@ inspectable run artifacts, and a resettable coding-agent environment.
 ```text
 Qwen3-0.6B Base
 ├── completion-only SFT → controlled DPO → synchronous GRPO/RLVR
-└── replayed tool trajectories → exact-token Agent SFT → Docker evaluation
+└── replayed tool trajectories → exact-token Agent SFT → Mini Agent RL
 ```
 
 ## Why NanoPT?
@@ -73,6 +73,7 @@ uv run nanopt --help
 uv run nanopt doctor --json doctor.json
 uv run python labs/01_tokens_and_masks.py
 uv run python labs/20_agent_sft_masks.py
+uv run python labs/21_agent_rl_credit.py
 ```
 
 `nanopt doctor` is read-only. On unsupported hardware it reports what differs instead of claiming
@@ -112,9 +113,27 @@ uv run nanopt agent run \
 Read [Agent SFT: from replayable trajectories to action targets](docs/agents/agent-sft.md) before
 changing the data contract.
 
+## Run Mini Agent RL
+
+Agent RL starts from the v0.2 Agent SFT adapter. Model generation and optimization use the host
+GPU; allow-listed tools and hidden verification remain inside the network-disabled Docker sandbox:
+
+```bash
+uv run nanopt train agent-rl \
+  --agent-sft-adapter artifacts/runs/AGENT_SFT_RUN/adapter/agent_sft \
+  --tasks-root tasks/mini_swe_v1 \
+  --local-files-only \
+  --device cuda
+```
+
+The run keeps exact prompt/action IDs, behavior and reference log probabilities, snapshot identity,
+policy versions, and post-terminal hidden outcome rewards. It also writes fresh/stale,
+credit-assignment, and tool-budget studies. Read [Mini Agent RL](docs/agents/agent-rl.md) before
+changing rollout or policy-age semantics.
+
 ## Learn in layers
 
-The [21-chapter course map](docs/course/index.md) links each idea to source code, a CPU lab, and the
+The [22-chapter course map](docs/course/index.md) links each idea to source code, a CPU lab, and the
 appropriate evidence tier. A useful route is:
 
 1. [Prerequisites](docs/getting-started/prerequisites.md)
@@ -124,6 +143,7 @@ appropriate evidence tier. A useful route is:
 5. [Synchronous GRPO](docs/grpo-rlvr/synchronous-grpo.md)
 6. [From tool calls to trajectories](docs/agents/from-tool-call-to-trajectory.md)
 7. [Exact-token Agent SFT](docs/agents/agent-sft.md)
+8. [Mini Agent RL](docs/agents/agent-rl.md)
 
 ## Repository map
 
@@ -132,8 +152,8 @@ src/nanopt/core/       objectives and tensor invariants
 src/nanopt/sft/        readable completion-only trainer
 src/nanopt/dpo/        preference cache and DPO training
 src/nanopt/grpo/       exact-token rollout and synchronous GRPO
-src/nanopt/agent/      MiniSWE environment, replay, Agent SFT, Docker evaluation
-labs/                  21 executable local lessons
+src/nanopt/agent/      MiniSWE environment, replay, Agent SFT, and Agent RL
+labs/                  22 executable local lessons
 tasks/                 deterministic arithmetic and MiniSWE tasks
 configs/               strict, mirrored experiment profiles
 specs/schemas/         public artifact and dataset contracts
@@ -142,7 +162,7 @@ docs/reference/        measured reports and compact retained evidence
 
 ## Project promises
 
-- Decoded rollout text is never re-tokenized for policy-gradient or Agent SFT training.
+- Decoded rollout text is never re-tokenized for policy-gradient, Agent SFT, or Agent RL training.
 - Prompt, prior-action, current-action, and padding coordinates remain explicit.
 - Hidden verifier source and output never enter model observations or training datasets.
 - The reference agent has allow-listed tools, no arbitrary shell, no network, no GPU, no Linux
@@ -161,7 +181,7 @@ the public-release audit, documentation formulas, a strict MkDocs build, and whe
 The longer GPU and Docker gates are explicit scripts under [`scripts/`](scripts/).
 
 NanoPT is an alpha educational reference, not a production training framework. Distributed
-runtimes, accelerated rollout servers, QLoRA, and Agent RL remain later work. Contributions are
+runtimes, accelerated rollout servers, QLoRA, and long-horizon Agent RL remain later work. Contributions are
 welcome through [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 Licensed under [Apache 2.0](LICENSE).

@@ -12,12 +12,14 @@ import yaml
 from rich.console import Console
 from rich.table import Table
 
+from nanopt.agent.rl_run import execute_agent_rl_run
 from nanopt.agent.run import execute_agent_run
 from nanopt.agent.sft_data import build_agent_sft_dataset
 from nanopt.agent.sft_run import execute_agent_sft_run
 from nanopt.config.loader import ConfigError, ConfigRepository
 from nanopt.config.models import (
     AgentEvaluationExperiment,
+    AgentRlExperiment,
     AgentSftExperiment,
     BaseEvalExperiment,
     DpoExperiment,
@@ -473,6 +475,27 @@ def _resolve_agent_sft(
     return result
 
 
+def _resolve_agent_rl(
+    *,
+    hardware: str,
+    model: str,
+    experiment: str,
+    config_dir: Path | None,
+    overrides: tuple[str, ...] = (),
+) -> ResolutionResult:
+    repository = ConfigRepository(config_dir) if config_dir else ConfigRepository()
+    result = resolve_config(
+        repository=repository,
+        hardware_id=hardware,
+        model_id=model,
+        experiment_id=experiment,
+        overrides=overrides,
+    )
+    if not isinstance(result.config.experiment, AgentRlExperiment):
+        raise ConfigError(f"experiment {experiment!r} is not an Agent RL profile")
+    return result
+
+
 @eval_app.command("run")
 def eval_run(
     tasks: Annotated[Path, typer.Option(exists=True, dir_okay=False, help="Task JSONL file.")],
@@ -749,6 +772,67 @@ def train_agent_sft_command(
         console.print(f"[red]Agent SFT failed:[/red] {exc}", highlight=False)
         raise typer.Exit(code=1) from exc
     console.print(f"Agent SFT completed: [bold]{context.run_dir}[/bold]")
+
+
+@train_app.command("agent-rl")
+def train_agent_rl_command(
+    agent_sft_adapter: Annotated[
+        Path,
+        typer.Option(
+            exists=True,
+            file_okay=False,
+            help="Frozen parent Agent SFT adapter directory.",
+        ),
+    ],
+    tasks_root: Annotated[
+        Path,
+        typer.Option(exists=True, file_okay=False, help="MiniSWE suite root."),
+    ] = Path("tasks/mini_swe_v1"),
+    hardware: Annotated[str, typer.Option(help="Hardware profile ID.")] = (
+        "rtx_4070_ti_super_16gb"
+    ),
+    model: Annotated[str, typer.Option(help="Model profile ID.")] = "qwen3_0_6b_base",
+    experiment: Annotated[str, typer.Option(help="Agent RL experiment profile ID.")] = "agent_rl",
+    artifacts_root: Annotated[Path, typer.Option(help="Parent directory for the run.")] = Path(
+        "artifacts/runs"
+    ),
+    run_id: Annotated[str | None, typer.Option(help="Optional path-safe run ID.")] = None,
+    iteration_limit: Annotated[
+        int | None,
+        typer.Option(help="Explicit non-representative iteration cap for calibration."),
+    ] = None,
+    local_files_only: Annotated[bool, typer.Option()] = False,
+    device: Annotated[str, typer.Option(help="auto, cpu, or cuda.")] = "auto",
+    set_values: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Repeatable scalar override within the Agent RL profile."),
+    ] = None,
+    config_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Run fresh grouped MiniSWE rollouts and exact-token Agent GRPO updates."""
+
+    try:
+        resolved = _resolve_agent_rl(
+            hardware=hardware,
+            model=model,
+            experiment=experiment,
+            config_dir=config_dir,
+            overrides=tuple(set_values or ()),
+        )
+        context = execute_agent_rl_run(
+            resolved,
+            tasks_root=tasks_root,
+            agent_sft_adapter_path=agent_sft_adapter,
+            artifacts_root=artifacts_root,
+            run_id=run_id,
+            local_files_only=local_files_only,
+            device=device,
+            iteration_limit=iteration_limit,
+        )
+    except (ConfigError, OSError, RuntimeError, TypeError, ValueError) as exc:
+        console.print(f"[red]Agent RL failed:[/red] {exc}", highlight=False)
+        raise typer.Exit(code=1) from exc
+    console.print(f"Agent RL completed: [bold]{context.run_dir}[/bold]")
 
 
 @train_app.command("sft")

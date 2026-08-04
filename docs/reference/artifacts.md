@@ -50,3 +50,9 @@ An Agent SFT dataset directory contains `manifest.json`, `examples.jsonl`, and h
 attention mask, action mask, prompt length, context policy, chat-template hash, and its exact source
 trajectory hash. An `agent_sft` run uses the normal metrics/checkpoint/adapter contract and adds the
 dataset, example, and source-trajectory fingerprints to `run_manifest.json`.
+
+An `agent_rl` run adds `rollout_groups.jsonl`, `staleness_study.json`, `credit_study.json`, and
+`tool_budget_study.json`. Each action record retains the online prompt IDs, sampled IDs, aligned
+mask, behavior log probabilities, reference log probabilities, parse status, tool, and episode
+advantage. Group records prove task/snapshot/policy-version identity. Hidden verifier source and
+output are absent; only bounded outcome counts and reward are retained after termination.

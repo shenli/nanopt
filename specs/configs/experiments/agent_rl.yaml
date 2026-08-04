@@ -1,0 +1,86 @@
+schema_version: 1
+id: agent_rl
+stage: agent_rl
+seed: 73
+tasks:
+  suite: mini_swe_v1
+  train_tasks:
+    - clamp_reversed_bounds
+    - slug_separator_normalization
+    - parse_boolean_protocol
+    - chunk_size_validation
+  validation_tasks:
+    - merge_without_mutation
+policy:
+  initialize_from_stage: agent_sft
+  reference_adapter_name: agent_sft
+  policy_adapter_name: agent_rl
+  context_policy: full_transcript
+rollout:
+  iterations: 4
+  group_size: 4
+  max_turns: 5
+  max_new_tokens_per_turn: 384
+  do_sample: true
+  temperature: 1.0
+  top_p: 1.0
+  store_old_logprobs_dtype: float32
+reward:
+  source: hidden_verifier_final_score
+  exposed_during_rollout: false
+advantage:
+  mode: group_zscore
+  population_std: true
+  epsilon: 1.0e-4
+optimization:
+  update_epochs: 1
+  minibatch_actions: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 5.0e-6
+  weight_decay: 0.0
+  warmup_ratio: 0.0
+  scheduler: cosine
+  clip_epsilon: 0.2
+  loss_normalization: token_mean
+  kl_beta: 0.01
+  kl_estimator: k3
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+  compute_dtype: bfloat16
+  optimizer: adamw
+  max_policy_lag: 0
+studies:
+  credit_assignment:
+    - all_actions
+    - terminal_action
+  tool_budgets:
+    - 2
+    - 5
+  retain_first_iteration_for_staleness: true
+environment:
+  backend: docker
+  image: python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+  network: none
+  run_as_non_root: true
+  expose_gpu: false
+  tool_budget: 12
+  test_run_budget: 4
+  wall_clock_timeout_seconds: 300
+  memory_limit_mib: 1024
+  pids_limit: 128
+  cpu_limit: 1.0
+tools:
+  - list_files
+  - read_file
+  - search
+  - apply_patch
+  - run_tests
+  - finish
+artifacts:
+  save_adapter_only: true
+  save_exact_rollouts: true
+  save_hidden_summary_only: true
+  save_staleness_study: true
+  save_credit_study: true
+  save_tool_budget_study: true
+status: proposed_unvalidated

@@ -50,7 +50,7 @@
         "type": "object",
         "required": ["stage", "run_id", "status", "peak_reserved_bytes", "wall_clock_seconds"],
         "properties": {
-          "stage": {"enum": ["base_eval", "sft", "dpo", "grpo", "agent_evaluation"]},
+          "stage": {"enum": ["base_eval", "sft", "dpo", "grpo", "agent_evaluation", "agent_sft", "agent_rl"]},
           "run_id": {"type": "string"},
           "status": {"enum": ["completed", "failed"]},
           "peak_allocated_bytes": {"type": "integer", "minimum": 0},
