@@ -12,7 +12,7 @@ import torch
 from nanopt.agent.context import agent_system_instruction, observation_text
 from nanopt.agent.environment import MiniSWEEnvironment
 from nanopt.agent.policy import PolicyResponse
-from nanopt.agent.records import AgentObservation, AgentPolicyIdentity
+from nanopt.agent.records import AgentObservation, AgentPolicyIdentity, parse_action
 from nanopt.agent.rl_records import AgentRlAction, AgentRlEpisode, AgentRlGroup
 from nanopt.agent.sandbox.base import SandboxBackend, SandboxLimits
 from nanopt.agent.tasks import LoadedAgentTask
@@ -38,6 +38,18 @@ def agent_rl_seed(
         f"agent-rl-rollout-v1\0{base_seed}\0{iteration}\0{task_id}\0{rollout_index}\0{turn_index}"
     ).encode()
     return int.from_bytes(hashlib.sha256(value).digest()[:8], "big") & ((1 << 63) - 1)
+
+
+def has_unexecuted_timeout_generation(
+    generation_count: int, step_count: int, finish_reason: str
+) -> bool:
+    """Validate generation/step alignment and identify one deadline-crossing action."""
+
+    if generation_count == step_count:
+        return False
+    if generation_count == step_count + 1 and finish_reason == "timeout":
+        return True
+    raise RuntimeError("Agent RL generation count differs from environment step count")
 
 
 class ExactAgentRolloutPolicy:
@@ -211,8 +223,14 @@ def generate_agent_rl_episode(
         tool_call_limit=tool_call_limit,
     ) as environment:
         trajectory = environment.run_episode(policy)
-    if len(policy.generations) != len(trajectory.steps):
-        raise RuntimeError("Agent RL generation count differs from environment step count")
+    # A response may finish sampling just after the wall-clock deadline. The environment then
+    # terminates before executing it, leaving one more policy generation than environment step.
+    # Retain that sampled action: it consumed policy compute and contributed to the zero/partial
+    # terminal outcome, so silently dropping it would bias the policy-gradient dataset.
+    retain_timeout = has_unexecuted_timeout_generation(
+        len(policy.generations), len(trajectory.steps), trajectory.finish_reason
+    )
+    retained_timeout_generation = policy.generations[-1] if retain_timeout else None
 
     actions: list[AgentRlAction] = []
     for step, generation in zip(trajectory.steps, policy.generations, strict=True):
@@ -226,6 +244,31 @@ def generate_agent_rl_episode(
                 old_logprobs=list(generation.behavior_logps),
                 decoded_text=step.model_response,
                 action_parse_status=step.action_parse_status,
+                tool=tool,
+            )
+        )
+    if retained_timeout_generation is not None:
+        decoded = tokenizer.decode(
+            list(retained_timeout_generation.generated_token_ids), skip_special_tokens=True
+        )
+        if not isinstance(decoded, str):
+            raise TypeError("tokenizer decode must return text")
+        try:
+            timed_out_action = parse_action(decoded)
+            parse_status = "valid"
+            tool = timed_out_action.tool
+        except ValueError:
+            parse_status = "invalid"
+            tool = None
+        actions.append(
+            AgentRlAction(
+                turn_index=len(actions),
+                prompt_token_ids=list(retained_timeout_generation.prompt_token_ids),
+                sampled_token_ids=list(retained_timeout_generation.generated_token_ids),
+                action_mask=list(retained_timeout_generation.active_mask),
+                old_logprobs=list(retained_timeout_generation.behavior_logps),
+                decoded_text=decoded,
+                action_parse_status=parse_status,  # type: ignore[arg-type]
                 tool=tool,
             )
         )

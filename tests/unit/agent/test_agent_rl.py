@@ -8,7 +8,7 @@ import torch
 from torch import nn
 
 from nanopt.agent.rl_records import AgentRlAction, AgentRlEpisode, AgentRlGroup
-from nanopt.agent.rl_rollout import agent_rl_seed
+from nanopt.agent.rl_rollout import agent_rl_seed, has_unexecuted_timeout_generation
 from nanopt.agent.rl_trainer import (
     build_agent_rl_optimizer,
     build_credit_assignment_study,
@@ -118,6 +118,15 @@ def test_agent_rl_seed_uses_every_rollout_coordinate() -> None:
         )
         == 5
     )
+
+
+def test_timeout_alignment_retains_exactly_one_unexecuted_generation() -> None:
+    assert not has_unexecuted_timeout_generation(3, 3, "model_finish")
+    assert has_unexecuted_timeout_generation(4, 3, "timeout")
+    with pytest.raises(RuntimeError, match="generation count differs"):
+        has_unexecuted_timeout_generation(4, 3, "policy_failure")
+    with pytest.raises(RuntimeError, match="generation count differs"):
+        has_unexecuted_timeout_generation(5, 3, "timeout")
 
 
 def test_agent_rl_group_rejects_mixed_snapshots() -> None:
