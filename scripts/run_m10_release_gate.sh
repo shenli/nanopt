@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build and validate v0.1 from a clean checkout and a fresh locked environment.
+# Build and validate the current release from a clean checkout and a fresh locked environment.
 
 set -euo pipefail
 
@@ -52,11 +52,19 @@ python_command="${fresh_venv}/bin/python"
 "${fresh_venv}/bin/mkdocs" build --strict --site-dir "${evidence_root}/site"
 VIRTUAL_ENV="${fresh_venv}" "${uv_command}" build --out-dir "${evidence_root}/dist"
 
+shopt -s nullglob
+wheel_files=("${evidence_root}"/dist/nanopt-*.whl)
+shopt -u nullglob
+if [[ ${#wheel_files[@]} -ne 1 ]]; then
+  echo "Expected exactly one NanoPT wheel, found ${#wheel_files[@]}." >&2
+  exit 2
+fi
+
 package_venv="${evidence_root}/package-venv"
 "${uv_command}" venv "${package_venv}" --python 3.11
 "${uv_command}" pip install \
   --python "${package_venv}/bin/python" \
-  "${evidence_root}/dist/nanopt-0.1.0-py3-none-any.whl"
+  "${wheel_files[0]}"
 "${package_venv}/bin/nanopt" --version
 "${package_venv}/bin/nanopt" --help >/dev/null
 "${package_venv}/bin/nanopt" config resolve \
