@@ -17,7 +17,7 @@ losses, data generation, evaluation, or training implementation.
 - Atomic JSON/YAML writers, append-only JSONL streams, sanitized environment/Git metadata, run IDs,
   manifest lifecycle, and the initial run-directory contract.
 - Isolated JSON structured-logging baseline.
-- MkDocs Material site, MathJax configuration and smoke page, formula lint, and strict build.
+- MkDocs Material site, MathJax rendering regression, formula lint, and strict build.
 - Ruff, mypy, pytest/coverage, pre-commit, schema checks, and documented local CPU/docs validation.
 - English README, contribution guide, security policy, code of conduct, citation metadata, ADRs, and
   publication checklist.

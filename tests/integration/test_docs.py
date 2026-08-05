@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 
-def test_strict_docs_build_emits_mathjax_ready_page(tmp_path: Path, project_root: Path) -> None:
+def test_strict_docs_build_emits_mathjax_ready_tutorial(tmp_path: Path, project_root: Path) -> None:
     output = tmp_path / "site"
     subprocess.run(
         [sys.executable, "-m", "mkdocs", "build", "--strict", "--site-dir", str(output)],
@@ -15,10 +15,10 @@ def test_strict_docs_build_emits_mathjax_ready_page(tmp_path: Path, project_root
         text=True,
         timeout=30,
     )
-    html = (output / "foundations/mathjax-smoke/index.html").read_text()
+    html = (output / "tutorials/rl-from-systems-perspective/index.html").read_text()
     mathjax_config = (output / "javascripts/mathjax.js").read_text()
     assert 'class="arithmatex"' in html
-    assert "\\(z_i\\)" in html
+    assert "\\(\\pi_\\theta\\)" in html
     assert "\\[" in html
     assert "tex-mml-chtml.js" in html
     assert 'inlineMath: [["\\\\(", "\\\\)"]]' in mathjax_config

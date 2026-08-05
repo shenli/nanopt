@@ -47,7 +47,6 @@ nav:
       - Chapter map and evidence tiers: course/index.md
       - Reinforcement Learning from a Systems Perspective: tutorials/rl-from-systems-perspective.md
   - Foundations:
-      - MathJax smoke test: foundations/mathjax-smoke.md
       - Tokens, masks, and log probabilities: foundations/tokens-masks-logprobs.md
       - Entropy and KL divergence: foundations/entropy-and-kl.md
       - Model rendering and LoRA: foundations/model-rendering-and-lora.md
