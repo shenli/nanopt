@@ -1,12 +1,14 @@
 window.MathJax = {
   tex: {
-    inlineMath: [["$", "$"]],
-    displayMath: [["$$", "$$"]],
+    // Arithmatex's generic mode emits these delimiters into the generated HTML.
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
     processEscapes: true,
   },
   options: {
-    ignoreHtmlClass: "tex2jax_ignore",
-    processHtmlClass: "tex2jax_process",
+    // Typeset only expressions wrapped by Arithmatex, not dollar signs in prose or code.
+    ignoreHtmlClass: ".*|",
+    processHtmlClass: "arithmatex",
   },
 };
 
