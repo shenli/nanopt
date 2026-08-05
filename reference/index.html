@@ -10,28 +10,28 @@
       
       
       
-        <link rel="canonical" href="https://shenli.github.io/nanopt/agents/task-authoring-and-verification/">
+        <link rel="canonical" href="https://shenli.github.io/nanopt/reference/">
       
       
-        <link rel="prev" href="../from-tool-call-to-trajectory/">
+        <link rel="prev" href="../contributing/hardware/">
       
       
-        <link rel="next" href="../agent-sft/">
+        <link rel="next" href="cli/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Task authoring and verification - NanoPT</title>
+        <title>Reference Library - NanoPT</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -50,7 +50,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#authoring-a-verifiable-miniswe-task" class="md-skip">
+        <a href="#reference-library" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +84,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="NanoPT" class="md-header__button md-logo" aria-label="NanoPT" data-md-component="logo">
+    <a href=".." title="NanoPT" class="md-header__button md-logo" aria-label="NanoPT" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Task authoring and verification
+              Reference Library
             
           </span>
         </div>
@@ -194,7 +194,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="NanoPT" class="md-nav__button md-logo" aria-label="NanoPT" data-md-component="logo">
+    <a href=".." title="NanoPT" class="md-nav__button md-logo" aria-label="NanoPT" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -224,7 +224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -276,7 +276,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../getting-started/" class="md-nav__link ">
+            <a href="../getting-started/" class="md-nav__link ">
               
   
   
@@ -320,7 +320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../course/" class="md-nav__link">
+      <a href="../course/" class="md-nav__link">
         
   
   
@@ -421,7 +421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../foundations/tokens-masks-logprobs/" class="md-nav__link">
+      <a href="../foundations/tokens-masks-logprobs/" class="md-nav__link">
         
   
   
@@ -449,7 +449,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../foundations/entropy-and-kl/" class="md-nav__link">
+      <a href="../foundations/entropy-and-kl/" class="md-nav__link">
         
   
   
@@ -477,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../foundations/model-rendering-and-lora/" class="md-nav__link">
+      <a href="../foundations/model-rendering-and-lora/" class="md-nav__link">
         
   
   
@@ -505,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../foundations/optimization-and-lora/" class="md-nav__link">
+      <a href="../foundations/optimization-and-lora/" class="md-nav__link">
         
   
   
@@ -533,7 +533,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data/synthetic-arithmetic/" class="md-nav__link">
+      <a href="../data/synthetic-arithmetic/" class="md-nav__link">
         
   
   
@@ -561,7 +561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../evaluation/exact-generation-and-reports/" class="md-nav__link">
+      <a href="../evaluation/exact-generation-and-reports/" class="md-nav__link">
         
   
   
@@ -676,7 +676,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sft/completion-only-training/" class="md-nav__link">
+      <a href="../sft/completion-only-training/" class="md-nav__link">
         
   
   
@@ -704,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../preferences/controlled-preferences/" class="md-nav__link">
+      <a href="../preferences/controlled-preferences/" class="md-nav__link">
         
   
   
@@ -732,7 +732,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../preferences/reward-models/" class="md-nav__link">
+      <a href="../preferences/reward-models/" class="md-nav__link">
         
   
   
@@ -760,7 +760,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../preferences/dpo-by-hand/" class="md-nav__link">
+      <a href="../preferences/dpo-by-hand/" class="md-nav__link">
         
   
   
@@ -788,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../preferences/dpo-training/" class="md-nav__link">
+      <a href="../preferences/dpo-training/" class="md-nav__link">
         
   
   
@@ -816,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rl/reinforcement-learning-foundations/" class="md-nav__link">
+      <a href="../rl/reinforcement-learning-foundations/" class="md-nav__link">
         
   
   
@@ -844,7 +844,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rl/reinforce/" class="md-nav__link">
+      <a href="../rl/reinforce/" class="md-nav__link">
         
   
   
@@ -872,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rl/ppo/" class="md-nav__link">
+      <a href="../rl/ppo/" class="md-nav__link">
         
   
   
@@ -900,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grpo-rlvr/advantages-and-clipping/" class="md-nav__link">
+      <a href="../grpo-rlvr/advantages-and-clipping/" class="md-nav__link">
         
   
   
@@ -928,7 +928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grpo-rlvr/exact-rollouts-and-rewards/" class="md-nav__link">
+      <a href="../grpo-rlvr/exact-rollouts-and-rewards/" class="md-nav__link">
         
   
   
@@ -956,7 +956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grpo-rlvr/synchronous-grpo/" class="md-nav__link">
+      <a href="../grpo-rlvr/synchronous-grpo/" class="md-nav__link">
         
   
   
@@ -984,7 +984,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grpo-rlvr/reward-hacking/" class="md-nav__link">
+      <a href="../grpo-rlvr/reward-hacking/" class="md-nav__link">
         
   
   
@@ -1012,7 +1012,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reading/objective-papers/" class="md-nav__link">
+      <a href="../reading/objective-papers/" class="md-nav__link">
         
   
   
@@ -1044,10 +1044,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -1070,11 +1068,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
@@ -1095,7 +1093,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1113,7 +1111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../from-tool-call-to-trajectory/" class="md-nav__link">
+      <a href="../agents/from-tool-call-to-trajectory/" class="md-nav__link">
         
   
   
@@ -1138,37 +1136,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Task authoring and verification
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../agents/task-authoring-and-verification/" class="md-nav__link">
         
   
   
@@ -1184,92 +1155,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#learning-objectives" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Learning objectives
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#task-anatomy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Task anatomy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#public-tests-teach-hidden-tests-judge" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Public tests teach; hidden tests judge
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#authoring-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authoring checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#try-the-suite-locally" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Try the suite locally
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#interpretation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interpretation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1282,7 +1167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-sft/" class="md-nav__link">
+      <a href="../agents/agent-sft/" class="md-nav__link">
         
   
   
@@ -1310,7 +1195,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-rl/" class="md-nav__link">
+      <a href="../agents/agent-rl/" class="md-nav__link">
         
   
   
@@ -1338,7 +1223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security-threat-model/" class="md-nav__link">
+      <a href="../agents/security-threat-model/" class="md-nav__link">
         
   
   
@@ -1437,7 +1322,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pipeline/end-to-end-recipe/" class="md-nav__link">
+      <a href="../pipeline/end-to-end-recipe/" class="md-nav__link">
         
   
   
@@ -1465,7 +1350,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../systems/rollout-infrastructure/" class="md-nav__link">
+      <a href="../systems/rollout-infrastructure/" class="md-nav__link">
         
   
   
@@ -1493,7 +1378,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../systems/production-flywheels/" class="md-nav__link">
+      <a href="../systems/production-flywheels/" class="md-nav__link">
         
   
   
@@ -1521,7 +1406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reading/post-training-systems/" class="md-nav__link">
+      <a href="../reading/post-training-systems/" class="md-nav__link">
         
   
   
@@ -1549,7 +1434,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/rl-from-systems-perspective/" class="md-nav__link">
+      <a href="../tutorials/rl-from-systems-perspective/" class="md-nav__link">
         
   
   
@@ -1646,7 +1531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../extending/contribution-paths/" class="md-nav__link">
+      <a href="../extending/contribution-paths/" class="md-nav__link">
         
   
   
@@ -1674,7 +1559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/algorithms/" class="md-nav__link">
+      <a href="../contributing/algorithms/" class="md-nav__link">
         
   
   
@@ -1702,7 +1587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/tasks/" class="md-nav__link">
+      <a href="../contributing/tasks/" class="md-nav__link">
         
   
   
@@ -1730,7 +1615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/hardware/" class="md-nav__link">
+      <a href="../contributing/hardware/" class="md-nav__link">
         
   
   
@@ -1762,6 +1647,8 @@
       
   
   
+    
+  
   
   
     
@@ -1788,15 +1675,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="./" class="md-nav__link md-nav__link--active">
               
   
   
@@ -1814,13 +1701,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+              <label class="md-nav__link md-nav__link--active" for="__nav_8" id="__nav_8_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1840,7 +1727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/cli/" class="md-nav__link">
+      <a href="cli/" class="md-nav__link">
         
   
   
@@ -1868,7 +1755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/artifacts/" class="md-nav__link">
+      <a href="artifacts/" class="md-nav__link">
         
   
   
@@ -1896,7 +1783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -1924,7 +1811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../glossary/" class="md-nav__link">
+      <a href="../glossary/" class="md-nav__link">
         
   
   
@@ -1979,10 +1866,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#learning-objectives" class="md-nav__link">
+  <a href="#everyday-references" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Learning objectives
+        Everyday references
       
     </span>
   </a>
@@ -1990,10 +1877,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#task-anatomy" class="md-nav__link">
+  <a href="#data-dependencies-and-research" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Task anatomy
+        Data, dependencies, and research
       
     </span>
   </a>
@@ -2001,10 +1888,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#public-tests-teach-hidden-tests-judge" class="md-nav__link">
+  <a href="#validation-reports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Public tests teach; hidden tests judge
+        Validation reports
       
     </span>
   </a>
@@ -2012,10 +1899,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#authoring-checklist" class="md-nav__link">
+  <a href="#architecture-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authoring checklist
+        Architecture decisions
       
     </span>
   </a>
@@ -2023,21 +1910,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#try-the-suite-locally" class="md-nav__link">
+  <a href="#engineering-specifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Try the suite locally
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#interpretation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interpretation
+        Engineering specifications
       
     </span>
   </a>
@@ -2064,81 +1940,99 @@
   
 
 
-<h1 id="authoring-a-verifiable-miniswe-task">Authoring a verifiable MiniSWE task<a class="headerlink" href="#authoring-a-verifiable-miniswe-task" title="Permanent link">&para;</a></h1>
-<h2 id="learning-objectives">Learning objectives<a class="headerlink" href="#learning-objectives" title="Permanent link">&para;</a></h2>
-<p>After this chapter, you should be able to:</p>
+<h1 id="reference-library">Reference Library<a class="headerlink" href="#reference-library" title="Permanent link">&para;</a></h1>
+<p>The course navigation follows the recommended learning sequence. This library collects operational
+references, validation reports, design decisions, and engineering specifications without placing
+them in the primary learner path.</p>
+<p>Use the course chapters to learn a concept. Use this page when you need an exact command, artifact
+contract, measured result, or design rationale.</p>
+<h2 id="everyday-references">Everyday references<a class="headerlink" href="#everyday-references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>describe the trusted and model-visible parts of a task;</li>
-<li>write a small task card with explicit edit and budget boundaries;</li>
-<li>explain public versus hidden verification;</li>
-<li>validate an oracle through the ordinary action protocol;</li>
-<li>recognize task designs that produce ambiguous evidence.</li>
+<li><a href="cli/">CLI reference</a>: implemented commands and their behavioral contracts.</li>
+<li><a href="artifacts/">Run artifact contract</a>: files, hashes, lineage, and resumability guarantees.</li>
+<li><a href="../troubleshooting/">Troubleshooting</a>: common environment, data, and training failures.</li>
+<li><a href="../glossary/">Glossary</a>: project terminology and mathematical notation.</li>
+<li><a href="../13_ACCEPTANCE_CRITERIA/">Acceptance criteria</a>: the checked project-level requirements.</li>
 </ul>
-<h2 id="task-anatomy">Task anatomy<a class="headerlink" href="#task-anatomy" title="Permanent link">&para;</a></h2>
-<p>Every original task in <code>tasks/mini_swe_v1/</code> has four parts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>task-name/
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── task.yaml       # trusted version, hashes, commands, globs, and budgets
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── snapshot/       # the only initial state copied into the episode
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── hidden_tests/   # injected only into a fresh verifier workspace
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└── oracle.patch    # reviewed solution used to validate the environment
-</code></pre></div>
-<p>The suite is intentionally tiny. Each issue isolates one ordinary Python behavior so a learner can
-understand the bug, visible tests, hidden edge case, and solution without first understanding a
-large application.</p>
-<p>The task card is strict and versioned. It names editable paths, protected paths, trusted test
-commands, test counts, and four independent budgets. The <code>snapshot_sha256</code> covers the complete
-visible starting tree. Loading or resetting a task fails if that tree changes without a deliberate
-task-card update.</p>
-<h2 id="public-tests-teach-hidden-tests-judge">Public tests teach; hidden tests judge<a class="headerlink" href="#public-tests-teach-hidden-tests-judge" title="Permanent link">&para;</a></h2>
-<p>Public tests live inside the snapshot. The model may read and run them, but cannot modify them.
-They provide fast feedback about the intended behavior. Hidden tests are copied into a different
-temporary workspace only after the visible submission has been copied there. Their source, path,
-and process output are omitted from observations and trajectories.</p>
-<p>The hidden tests are present in this public educational repository so human readers can audit task
-quality. “Hidden” describes the evaluation boundary: an evaluated policy must not receive those
-files in its workspace or context. A serious benchmark deployment would distribute the verifier
-separately as well.</p>
-<h2 id="authoring-checklist">Authoring checklist<a class="headerlink" href="#authoring-checklist" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Write one precise issue with behavior a human can verify.</li>
-<li>Keep the snapshot small and license all original content as Apache-2.0.</li>
-<li>Put implementation files in <code>editable_globs</code> and tests/metadata in <code>protected_globs</code>.</li>
-<li>Use argv arrays for trusted test commands; never accept a command from the policy.</li>
-<li>Add public examples and genuinely distinct hidden edge cases.</li>
-<li>Set bounded turns, tool calls, test runs, and wall time.</li>
-<li>Compute the immutable snapshot hash and update <code>task.yaml</code>.</li>
-<li>Write an oracle patch that changes only editable files.</li>
-<li>Run the oracle through <code>apply_patch</code>, <code>run_tests</code>, and <code>finish</code>.</li>
-<li>Replay the retained responses from a new reset and compare semantic trajectories.</li>
-</ol>
-<p>A task is not accepted merely because the oracle passes. Security tests must also prove that path
-traversal, symbolic links, protected-test edits, output floods, timeouts, and network attempts are
-blocked or contained.</p>
-<h2 id="try-the-suite-locally">Try the suite locally<a class="headerlink" href="#try-the-suite-locally" title="Permanent link">&para;</a></h2>
-<p>Use the host-backed fake sandbox only for trusted fixtures and learning:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>nanopt<span class="w"> </span>agent<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--policy<span class="w"> </span>oracle<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--backend<span class="w"> </span>fake<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--tasks-root<span class="w"> </span>tasks/mini_swe_v1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--run-id<span class="w"> </span>mini-swe-local
-</code></pre></div>
-<p>This command is portable but <strong>not a security boundary</strong>. The Linux reference run uses Docker:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>nanopt<span class="w"> </span>agent<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--policy<span class="w"> </span>oracle<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--backend<span class="w"> </span>docker<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--tasks-root<span class="w"> </span>tasks/mini_swe_v1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--local-files-only<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--run-id<span class="w"> </span>mini-swe-docker
-</code></pre></div>
-<p>Docker must already contain the exact digest-pinned image from
-<code>configs/experiments/mini_swe_rollout.yaml</code>. NanoPT does not pull it implicitly because a reference
-run should not silently change its execution environment.</p>
-<h2 id="interpretation">Interpretation<a class="headerlink" href="#interpretation" title="Permanent link">&para;</a></h2>
-<p>An oracle score of 1.0 proves the task is solvable through the public protocol and that its hidden
-tests accept the reviewed behavior. It does not prove a language model will discover that behavior,
-nor that the verifier covers every possible implementation. Retaining an unsuccessful capped model
-rollout is useful evidence about the baseline policy and protocol; it is not a failed environment
-validation when the oracle, isolation, and replay gates pass.</p>
+<h2 id="data-dependencies-and-research">Data, dependencies, and research<a class="headerlink" href="#data-dependencies-and-research" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../data/dataset-card/">Synthetic arithmetic dataset card</a></li>
+<li><a href="dependency-license-audit/">Dependency and model license audit</a></li>
+<li><a href="../14_RESEARCH_AND_REFERENCES/">Research and references</a></li>
+</ul>
+<h2 id="validation-reports">Validation reports<a class="headerlink" href="#validation-reports" title="Permanent link">&para;</a></h2>
+<p>These reports bind public claims to commands, environments, artifacts, and known limitations.</p>
+<details class="abstract">
+<summary>Foundation through source-release validation</summary>
+<ul>
+<li><a href="m1-completion-report/">Repository foundation</a></li>
+<li><a href="m2-completion-report/">Core mathematics and tasks</a></li>
+<li><a href="m3-completion-report/">Base-model GPU path</a></li>
+<li><a href="m4-completion-report/">Supervised fine-tuning GPU path</a></li>
+<li><a href="m5-completion-report/">Preference optimization GPU path</a></li>
+<li><a href="m6-completion-report/">GRPO and RLVR GPU path</a></li>
+<li><a href="m7-completion-report/">End-to-end pipeline GPU path</a></li>
+<li><a href="m8-completion-report/">Agent environment and Docker path</a></li>
+<li><a href="m9-completion-report/">Curriculum validation</a></li>
+<li><a href="m10-completion-report/">Source release audit</a></li>
+</ul>
+</details>
+<details class="abstract">
+<summary>Agent-training validation</summary>
+<ul>
+<li><a href="v0.2-agent-sft-report/">Agent SFT validation</a></li>
+<li><a href="v0.3-agent-rl-report/">Mini Agent RL validation</a></li>
+</ul>
+</details>
+<details class="abstract">
+<summary>Release notes</summary>
+<ul>
+<li><a href="v0.1-release-notes/">v0.1.0</a></li>
+<li><a href="v0.2-release-notes/">v0.2.0 — Agent SFT</a></li>
+<li><a href="v0.3-release-notes/">v0.3.0 — Mini Agent RL</a></li>
+</ul>
+</details>
+<h2 id="architecture-decisions">Architecture decisions<a class="headerlink" href="#architecture-decisions" title="Permanent link">&para;</a></h2>
+<p>The ADRs explain why a boundary exists and which alternatives were rejected.</p>
+<details class="abstract">
+<summary>Architecture decision records</summary>
+<ul>
+<li><a href="../adr/0000-project-identity/">Project identity</a></li>
+<li><a href="../adr/0001-foundation-boundaries/">Foundation boundaries</a></li>
+<li><a href="../adr/0002-run-artifact-writes/">Run artifact writes</a></li>
+<li><a href="../adr/0003-local-validation/">Local validation</a></li>
+<li><a href="../adr/0004-reference-pytorch-wheel/">Reference PyTorch wheel</a></li>
+<li><a href="../adr/0005-sft-schedule-and-checkpoints/">SFT schedule and checkpoints</a></li>
+<li><a href="../adr/0006-controlled-preferences-and-reference-cache/">Preferences and reference cache</a></li>
+<li><a href="../adr/0007-synchronous-exact-token-grpo/">Synchronous exact-token GRPO</a></li>
+<li><a href="../adr/0008-resumable-hash-linked-pipeline/">Resumable hash-linked pipeline</a></li>
+<li><a href="../adr/0009-structured-mini-swe-sandbox/">Structured MiniSWE sandbox</a></li>
+<li><a href="../adr/0010-exact-token-agent-sft/">Exact-token Agent SFT</a></li>
+<li><a href="../adr/0011-fresh-exact-token-agent-grpo/">Fresh exact-token Agent GRPO</a></li>
+<li><a href="../adr/0012-resumable-rollout-control-plane/">Resumable rollout control plane</a></li>
+</ul>
+</details>
+<h2 id="engineering-specifications">Engineering specifications<a class="headerlink" href="#engineering-specifications" title="Permanent link">&para;</a></h2>
+<p>These documents describe the complete project contract. They are useful to contributors and
+reviewers, but they are not required reading for the course.</p>
+<details class="abstract">
+<summary>Project and subsystem specifications</summary>
+<ul>
+<li><a href="../00_VISION_AND_SCOPE/">Vision and scope</a></li>
+<li><a href="../01_PRODUCT_REQUIREMENTS/">Product requirements</a></li>
+<li><a href="../02_TECHNICAL_ARCHITECTURE/">Technical architecture</a></li>
+<li><a href="../03_REPOSITORY_BLUEPRINT/">Repository blueprint</a></li>
+<li><a href="../04_CONFIGURATION_AND_CLI/">Configuration and CLI</a></li>
+<li><a href="../05_ALGORITHM_SPECIFICATIONS/">Algorithm specifications</a></li>
+<li><a href="../06_DATA_AND_TASKS/">Data and tasks</a></li>
+<li><a href="../07_AGENT_ENVIRONMENT/">Agent environment</a></li>
+<li><a href="../08_HARDWARE_AND_PERFORMANCE/">Hardware and performance</a></li>
+<li><a href="../09_EVALUATION_AND_REPORTING/">Evaluation and reporting</a></li>
+<li><a href="../10_TESTING_CI_AND_SECURITY/">Testing and security</a></li>
+<li><a href="../16_ARCHITECTURAL_DECISIONS/">Architectural decisions</a></li>
+<li><a href="../17_RISKS_AND_OPEN_QUESTIONS/">Risks and open questions</a></li>
+</ul>
+</details>
 
 
 
@@ -2168,7 +2062,7 @@ validation when the oracle, isolation, and replay gates pass.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../from-tool-call-to-trajectory/" class="md-footer__link md-footer__link--prev" aria-label="Previous: From tool call to trajectory">
+          <a href="../contributing/hardware/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hardware profile contributions">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2178,20 +2072,20 @@ validation when the oracle, isolation, and replay gates pass.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                From tool call to trajectory
+                Hardware profile contributions
               </div>
             </div>
           </a>
         
         
           
-          <a href="../agent-sft/" class="md-footer__link md-footer__link--next" aria-label="Next: Agent SFT and exact action masks">
+          <a href="cli/" class="md-footer__link md-footer__link--next" aria-label="Next: CLI">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Agent SFT and exact action masks
+                CLI
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2228,12 +2122,12 @@ validation when the oracle, isolation, and replay gates pass.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "navigation.footer", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.indexes", "navigation.footer", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../../javascripts/mathjax.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
