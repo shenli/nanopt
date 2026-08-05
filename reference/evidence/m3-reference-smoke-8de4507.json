@@ -1,0 +1,31 @@
+{
+  "dataset": {
+    "fingerprint": "83225e59551f147cdd90e854570dec56dd386a96b7c9175c514bd0033d7315ff",
+    "records": 128
+  },
+  "git_commit": "8de4507234b51c3f105e1418f99c3d51ac59fee9",
+  "hardware": {
+    "driver_version": "560.35.03",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "profile": "rtx_4070_ti_super_16gb",
+    "runtime_version": "12.6"
+  },
+  "runs": [
+    {
+      "representative": false,
+      "run_id": "calibration",
+      "samples_sha256": "3636bb1fa50b71cbb6e6e5d68449e621e0933ab72b864165830a2d679aa18e91",
+      "summary_sha256": "90a282e159218c2d3d5d0cfbdb1877ca23a7a6fcdff9414774fb94a702715c53",
+      "task_count": 2
+    },
+    {
+      "representative": true,
+      "run_id": "reference-base",
+      "samples_sha256": "e89322f163e4801ac1da1cd429ddc96e6edef47d71e01bb4b46a5dac7d7ef7f9",
+      "summary_sha256": "b3f1b9965f64895c05129a4e6e3e6405bc2721cf1e9a9bd6d9472b96b07c27bf",
+      "task_count": 44
+    }
+  ],
+  "schema_version": 1,
+  "status": "m3_reference_smoke_passed"
+}

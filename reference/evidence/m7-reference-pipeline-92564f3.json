@@ -1,0 +1,70 @@
+{
+  "checksums": {
+    "files": 177,
+    "manifest_sha256": "a21fb97b109949a06031e0ea4e9774e2b2bae6734b4af1092137f5e03a0c594c"
+  },
+  "dataset": {
+    "fingerprint": "83225e59551f147cdd90e854570dec56dd386a96b7c9175c514bd0033d7315ff",
+    "records": 128
+  },
+  "evaluation": {
+    "base": {
+      "accuracy": 0.0,
+      "examples": 44,
+      "parse_rate": 0.0
+    },
+    "dpo": {
+      "accuracy": 0.8409090909090909,
+      "examples": 44,
+      "parse_rate": 0.9545454545454546
+    },
+    "grpo": {
+      "accuracy": 0.8863636363636364,
+      "examples": 44,
+      "parse_rate": 0.9545454545454546
+    },
+    "sft": {
+      "accuracy": 0.8636363636363636,
+      "examples": 44,
+      "parse_rate": 0.9545454545454546
+    }
+  },
+  "git_commit": "92564f3abd3bfa353ab92587ddbc09892c9b13de",
+  "hardware": {
+    "driver_version": "560.35.03",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "profile": "rtx_4070_ti_super_16gb",
+    "runtime_version": "12.6"
+  },
+  "pipeline": {
+    "failed_attempts": 0,
+    "final_checkpoint_sha256": "00ce1095a4f6863aafcdc77b68f69385197b339454bb26687974ba4cf1e038a2",
+    "manifest_sha256": "6ccd8ac381a9f4c73609b6f152195f83ca08df00003d4f03cc42875bab3ae1e3",
+    "phase_peak_reserved_bytes": {
+      "base_eval": 2642411520,
+      "dpo": 4026531840,
+      "dpo_calibration": 2059403264,
+      "dpo_eval": 2575302656,
+      "eval_calibration": 2529165312,
+      "grpo": 7954497536,
+      "grpo_calibration": 3481272320,
+      "grpo_eval": 2575302656,
+      "grpo_eval_repeat": 2575302656,
+      "load_calibration": 1216348160,
+      "sft": 3076521984,
+      "sft_calibration": 1587544064,
+      "sft_eval": 2575302656
+    },
+    "run_id": "reference",
+    "stages": 15,
+    "total_wall_seconds": 222.680947591085
+  },
+  "repeat": {
+    "exact_generation_match": true,
+    "first_samples_sha256": "75973d028f37b9f46dc8d9910b6940fe60a2a78310207b40ff087848082c2e56",
+    "normalized_generation_sha256": "b4ddf6ae3d4cb6f661a1388511717db8374fa869f97606cce8b2c7a14c901006",
+    "repeat_samples_sha256": "5265b4622735c43b7b66be8a67cd4b43a24b6646146be01527ed9db1347deae5"
+  },
+  "schema_version": 1,
+  "status": "m7_reference_pipeline_passed"
+}

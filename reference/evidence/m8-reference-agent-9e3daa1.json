@@ -1,0 +1,44 @@
+{
+  "checksums": {
+    "files": 38,
+    "manifest_sha256": "251e42c7be124c881caba8193310cdfc00ae10e6d339c3888ce62238ec6b95f0"
+  },
+  "git_commit": "9e3daa1b29c34616e5c5b9c32926ad322ecce909",
+  "hardware": {
+    "docker_version": "29.5.0",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "profile": "rtx_4070_ti_super_16gb"
+  },
+  "model_baseline": {
+    "finish_reason": "budget_exhausted",
+    "policy_violations": 2,
+    "run_manifest_sha256": "9e3a3f91f6f0e0f9935135cf38299bdcf9e44ba7c879d8db75ad9720bb6490ab",
+    "score": 0.3,
+    "steps": 2,
+    "trajectory_sha256": "cb9a91e17c6d342d493b1b83ba1b80982abc92dd8a0486e54d2b049f7a852d9b"
+  },
+  "oracle": {
+    "mean_score": 1.0,
+    "run_manifest_sha256": "bac69d65a88ba94509063d3ed88e1257938bb1690afa083e7de2c793da906b1c",
+    "trajectories_sha256": "e3375fd8b7a02d7d315bb379fda8989148100bb9abd81acdcd6b8a8bbd015c85",
+    "wall_seconds": 15.289577228017151
+  },
+  "sandbox": {
+    "capabilities_dropped": true,
+    "gpu_hidden": true,
+    "image": "python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93",
+    "network_none": true,
+    "non_root": true,
+    "root_read_only": true,
+    "security_probes_sha256": "bf514a4f67c4e1f782fadabb7664ae6dd80c9f624e662bd282544396868b1d15",
+    "separate_hidden_workspace": true
+  },
+  "schema_version": 1,
+  "status": "m8_reference_agent_passed",
+  "task_suite": {
+    "exact_replays": 5,
+    "id": "mini_swe_v1",
+    "oracle_solved": 5,
+    "tasks": 5
+  }
+}

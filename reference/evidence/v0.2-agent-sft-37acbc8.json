@@ -1,0 +1,42 @@
+{
+  "behavior": {
+    "adapted_train_action_validity": 1.0,
+    "adapted_train_score": 1.0,
+    "base_train_action_validity": 0.0,
+    "held_out_action_validity": 1.0,
+    "held_out_score": 1.0,
+    "held_out_solved": 1,
+    "snapshot_train_action_validity": 0.75,
+    "snapshot_train_score": 0.3
+  },
+  "checksums": {
+    "files": 87,
+    "manifest_sha256": "d2440694fa6744c7385008b0ea616893329c879480e4d4a8640e0ce8aa8f6645"
+  },
+  "dataset": {
+    "exact_replays": 10,
+    "max_sequence_tokens": 2646,
+    "recovery_examples": 5,
+    "sha256": "8fca734754384796e7347e543585d9fa886a1a1fa806ff97d56da5ce85f7d38b",
+    "train_examples": 24,
+    "validation_examples": 6
+  },
+  "git_commit": "37acbc8302c3c334bea35c8686e63cf26822795d",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "hard_limit_gib": 15.2,
+    "peak_reserved_gib": 13.943359375,
+    "profile": "rtx_4070_ti_super_16gb"
+  },
+  "schema_version": 1,
+  "status": "v0_2_agent_sft_passed",
+  "training": {
+    "adapter_sha256": "23c13948f721ab2f7d653b5d25db7e93d68fa86dd7d4aefa0d900041e98a396d",
+    "final_validation_nll": 0.3634281763650852,
+    "final_validation_token_accuracy": 0.9497206663952193,
+    "initial_validation_nll": 1.2404094421663763,
+    "initial_validation_token_accuracy": 0.7653631348183701,
+    "optimizer_steps": 36,
+    "run_manifest_sha256": "cf98df493148095bd6cafd87e6ebfa43e97483cf1ce7843df8375179c8e0a8a0"
+  }
+}

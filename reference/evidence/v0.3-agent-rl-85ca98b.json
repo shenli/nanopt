@@ -1,0 +1,123 @@
+{
+  "artifacts": {
+    "checksums_file_count": 19,
+    "checksums_manifest_sha256": "e6530e66d3942b1ffa1c5a87d7335e401b03f5f20b136b6fed86c8e1c17979af",
+    "run_manifest_sha256": "e9a1c31d7978f8531e896cc3e0c103d97c8bf35412708db53a8ec8f132601c2f"
+  },
+  "credit_assignment": {
+    "active_tokens_by_tool": {
+      "apply_patch": 1440,
+      "finish": 294,
+      "invalid_action": 779,
+      "list_files": 357,
+      "read_file": 599,
+      "run_tests": 180
+    },
+    "all_actions_active_tokens": 3649,
+    "episodes": 16,
+    "schema_version": 1,
+    "successful_episodes": 8,
+    "terminal_action_active_tokens": 340,
+    "terminal_token_fraction": 0.09317621266100301
+  },
+  "git_commit": "85ca98b5006e98ab019a4bcd704cf37c6fccebd1",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "hard_limit_gib": 15.2,
+    "peak_reserved_gib": 14.09375,
+    "profile": "rtx_4070_ti_super_16gb"
+  },
+  "schema_version": 1,
+  "selection": {
+    "final_training_policy_version": 4,
+    "parent_policy_selectable": false,
+    "selected_policy_version": 1,
+    "selection_rule": "highest_post_update_validation_reward_then_earliest",
+    "validation_rewards_by_policy_version": [
+      1.0,
+      1.0,
+      0.2333333333333333,
+      1.0,
+      0.0
+    ]
+  },
+  "staleness": {
+    "final_policy_version": 4,
+    "fresh": {
+      "active_tokens": 1140,
+      "approximate_ess_fraction": 0.9998800754547119,
+      "collected_policy_version": 3,
+      "label": "fresh",
+      "max_abs_log_ratio": 0.2270798683166504,
+      "mean_abs_log_ratio": 0.001607908750884235,
+      "policy_lag": 1,
+      "scored_policy_version": 4,
+      "used_for_update": false
+    },
+    "schema_version": 1,
+    "stale": {
+      "active_tokens": 1081,
+      "approximate_ess_fraction": 0.9812726378440857,
+      "collected_policy_version": 0,
+      "label": "stale",
+      "max_abs_log_ratio": 3.4122962951660156,
+      "mean_abs_log_ratio": 0.028174569830298424,
+      "policy_lag": 4,
+      "scored_policy_version": 4,
+      "used_for_update": false
+    }
+  },
+  "status": "v0_3_agent_rl_passed",
+  "tool_budget": {
+    "points": [
+      {
+        "action_validity_rate": 1.0,
+        "checkpoint": "reference",
+        "mean_hidden_outcome_reward": 0.3333333333333333,
+        "solved": 0,
+        "tasks": 1,
+        "tool_budget": 2
+      },
+      {
+        "action_validity_rate": 1.0,
+        "checkpoint": "reference",
+        "mean_hidden_outcome_reward": 1.0,
+        "solved": 1,
+        "tasks": 1,
+        "tool_budget": 5
+      },
+      {
+        "action_validity_rate": 1.0,
+        "checkpoint": "agent_rl",
+        "mean_hidden_outcome_reward": 0.3333333333333333,
+        "solved": 0,
+        "tasks": 1,
+        "tool_budget": 2
+      },
+      {
+        "action_validity_rate": 1.0,
+        "checkpoint": "agent_rl",
+        "mean_hidden_outcome_reward": 1.0,
+        "solved": 1,
+        "tasks": 1,
+        "tool_budget": 5
+      }
+    ],
+    "schema_version": 1,
+    "task_ids": ["merge_without_mutation"]
+  },
+  "training": {
+    "action_validity_rate": 0.9125,
+    "actions": 80,
+    "adapter_sha256": "009d67b7fc98df7878b85a25da88969a84f3adff69f1327b13cbde83038a0871",
+    "degenerate_group_fraction": 0.0,
+    "episodes": 16,
+    "final_validation_reward": 1.0,
+    "groups": 4,
+    "initial_validation_reward": 1.0,
+    "iterations": 4,
+    "mean_reward": 0.6718750000000001,
+    "optimizer_steps": 20,
+    "parent_adapter_sha256": "23c13948f721ab2f7d653b5d25db7e93d68fa86dd7d4aefa0d900041e98a396d"
+  }
+}

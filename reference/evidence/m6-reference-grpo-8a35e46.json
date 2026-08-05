@@ -1,0 +1,146 @@
+{
+  "calibration": {
+    "completions": 2,
+    "correctness_rate": 0.5,
+    "degenerate_group_fraction": 0.0,
+    "grpo_adapter_sha256": "38fc5c30a2723a7b1686f95a6e5df975bea20fd17bcef0622d636828a5fe7adf",
+    "iterations": 1,
+    "maximum_ratio_p95": 1.0839964151382446,
+    "mean_clip_fraction": 0.0,
+    "mean_reward": 0.550000011920929,
+    "optimizer_steps": 1,
+    "parent_dpo_adapter_sha256": "b5bb5a8b7421f283a457533d6185e64fedc95d30dab536f082042833cd9036ab",
+    "parser_success_rate": 0.5,
+    "peak_reserved_bytes": 3474980864,
+    "representative": false,
+    "reward_hacking": {
+      "cases": 5,
+      "sha256": "964aba44f2dc6b0807ca5a5eba2ed75533f05ac9455f7df1c2da36d891351031"
+    },
+    "run_id": "calibration-grpo",
+    "trajectories": 1,
+    "trajectories_sha256": "d1f6318d304cc7795fdd3c895b3c6b0b2d7ac9e7c28362a7e1dba98e0be9caad"
+  },
+  "dataset": {
+    "fingerprint": "83225e59551f147cdd90e854570dec56dd386a96b7c9175c514bd0033d7315ff",
+    "records": 128
+  },
+  "evaluation": {
+    "dpo": {
+      "accuracy": 0.8409090909090909,
+      "parse_rate": 0.9545454545454546,
+      "representative": true,
+      "run_id": "dpo-eval",
+      "samples_sha256": "d1c6eeae0c54c459868ec04da6d906da7752193adad0922908c0fd47cd7c2c75",
+      "splits": {
+        "test_compositional": {
+          "accuracy": 0.75,
+          "correct": 9,
+          "count": 12
+        },
+        "test_format_attack": {
+          "accuracy": 0.875,
+          "correct": 7,
+          "count": 8
+        },
+        "test_iid": {
+          "accuracy": 0.9166666666666666,
+          "correct": 11,
+          "count": 12
+        },
+        "test_range": {
+          "accuracy": 0.8333333333333334,
+          "correct": 10,
+          "count": 12
+        }
+      },
+      "summary_sha256": "38d57dc2d079d997d358c17c52e30e2b3ef162a7b862484a02bd2a333679f078",
+      "task_count": 44
+    },
+    "grpo": {
+      "accuracy": 0.8863636363636364,
+      "parse_rate": 0.9545454545454546,
+      "representative": true,
+      "run_id": "grpo-eval",
+      "samples_sha256": "c3347fd714371f6bbd22456905ae3496d9159bdd039037acbd09c3a0949f26af",
+      "splits": {
+        "test_compositional": {
+          "accuracy": 0.8333333333333334,
+          "correct": 10,
+          "count": 12
+        },
+        "test_format_attack": {
+          "accuracy": 0.875,
+          "correct": 7,
+          "count": 8
+        },
+        "test_iid": {
+          "accuracy": 0.9166666666666666,
+          "correct": 11,
+          "count": 12
+        },
+        "test_range": {
+          "accuracy": 0.9166666666666666,
+          "correct": 11,
+          "count": 12
+        }
+      },
+      "summary_sha256": "437a1ec39f76f8798683d442f433bd10d40e188907553521206258717c534470",
+      "task_count": 44
+    },
+    "improved_primary_splits": [
+      "test_compositional",
+      "test_range"
+    ]
+  },
+  "git_commit": "8a35e467393b69717f27878354d720d2f4060086",
+  "hardware": {
+    "driver_version": "560.35.03",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "profile": "rtx_4070_ti_super_16gb",
+    "runtime_version": "12.6"
+  },
+  "schema_version": 1,
+  "status": "m6_reference_grpo_passed",
+  "targets": {
+    "group_size": 4,
+    "iterations": 12,
+    "maximum_degenerate_group_fraction": 0.5,
+    "maximum_mean_clip_fraction": 0.1,
+    "maximum_overall_accuracy_regression": 0.05,
+    "maximum_overall_parse_regression": 0.05,
+    "maximum_ratio_p95": 1.5,
+    "maximum_reward_hacking_correctness_credit": 0.0,
+    "minimum_improved_primary_splits": 1,
+    "minimum_rollout_correctness_rate": 0.15,
+    "minimum_rollout_parser_success_rate": 0.15,
+    "primary_splits": [
+      "test_iid",
+      "test_compositional",
+      "test_range"
+    ],
+    "prompt_batch_size": 1
+  },
+  "training": {
+    "completions": 48,
+    "correctness_rate": 0.25,
+    "degenerate_group_fraction": 0.3333333333333333,
+    "grpo_adapter_sha256": "c7bc40faa0fbecc7f35dee54f25a19b0768dae08eaacec4540149b9c7e241e24",
+    "iterations": 12,
+    "maximum_ratio_p95": 1.093529224395752,
+    "mean_clip_fraction": 0.0018272883025929332,
+    "mean_reward": 0.2770833397905032,
+    "optimizer_steps": 12,
+    "parent_dpo_adapter_sha256": "b5bb5a8b7421f283a457533d6185e64fedc95d30dab536f082042833cd9036ab",
+    "parser_success_rate": 0.2708333333333333,
+    "peak_reserved_bytes": 7948206080,
+    "representative": true,
+    "reward_hacking": {
+      "cases": 5,
+      "sha256": "964aba44f2dc6b0807ca5a5eba2ed75533f05ac9455f7df1c2da36d891351031"
+    },
+    "run_id": "grpo",
+    "trajectories": 12,
+    "trajectories_sha256": "1e93f29726f41397256a4baf8aed82123064d10a3d25851836b5234d7112f7f6"
+  }
+}

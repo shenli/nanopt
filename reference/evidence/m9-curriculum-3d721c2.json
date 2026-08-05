@@ -1,0 +1,47 @@
+{
+  "course": {
+    "course_fingerprint": "564a0930e009f2eb58c70c096173ae9f0c50d1b6ffeda09c3fdd9fda465b7d01",
+    "numbered_chapters": 20,
+    "prerequisite_chapters": 1
+  },
+  "full_evidence_sha256": "4ee0bbdacd8f277d22e07e8fce2d65c83ff220dbeab0e537f806e2aa1b85f353",
+  "git_commit": "3d721c2bf596304b5cfa515f52d81cfde2a30376",
+  "labs": {
+    "cpu_labs": 18,
+    "declared_uses": 29,
+    "executed_local_labs": 20,
+    "execution_records_sha256": "0c10cae5c0f8f6965cf84fa1d4ce79e2a509c9267526b2c64f3f060e7d9b2961",
+    "reference_declarations": 7,
+    "systems_simulations": 2,
+    "total_execution_seconds": 28.782215499086305,
+    "unique_local_labs": 20
+  },
+  "reference_evidence": {
+    "docs/reference/evidence/m3-reference-smoke-8de4507.json": {
+      "sha256": "2e6b1fadaa81255f6ecc9129d127d8e95ee461cbe687992be7b0615e568f0440",
+      "status": "m3_reference_smoke_passed"
+    },
+    "docs/reference/evidence/m4-reference-sft-05bd73a.json": {
+      "sha256": "4bb27cf476e5c098e3e1218dda3dd4a954db07ee825a28b95735ffee067b0d06",
+      "status": "m4_reference_sft_passed"
+    },
+    "docs/reference/evidence/m5-reference-dpo-e8ef422.json": {
+      "sha256": "03f6a6674cde652e55689a612ca769889bdba648ccdb037e218fedd728861471",
+      "status": "m5_reference_dpo_passed"
+    },
+    "docs/reference/evidence/m6-reference-grpo-8a35e46.json": {
+      "sha256": "79e03d38510183d91b7e982b75532679750b726ea43e1931025904e1b80deb5c",
+      "status": "m6_reference_grpo_passed"
+    },
+    "docs/reference/evidence/m7-reference-pipeline-92564f3.json": {
+      "sha256": "cabebed62b67316284aa5e26e45328fddf9985e5c55ca9ddafe66993ae8829b7",
+      "status": "m7_reference_pipeline_passed"
+    },
+    "docs/reference/evidence/m8-reference-agent-9e3daa1.json": {
+      "sha256": "1f4f650b6513a4f090131c2628e397e9e82873212b535192603ae88eccc2f01f",
+      "status": "m8_reference_agent_passed"
+    }
+  },
+  "schema_version": 1,
+  "status": "m9_curriculum_passed"
+}

@@ -1,0 +1,82 @@
+{
+  "candidate": {
+    "git_commit": "574582abd481545b724607f66e1ec014563cf95a",
+    "tag": "v0.1.0",
+    "version": "0.1.0"
+  },
+  "curriculum": {
+    "course_fingerprint": "564a0930e009f2eb58c70c096173ae9f0c50d1b6ffeda09c3fdd9fda465b7d01",
+    "cpu_labs": 18,
+    "declared_uses": 29,
+    "evidence_sha256": "7b5ee3726e4679bab8d0bc5f57d9f6ac6b144da0020a7005ced7131aba1dd3e2",
+    "executed_local_labs": 20,
+    "execution_records_sha256": "33bea19ef5f681b7a14674fcbc73b79a6195f31239d1818192b87e0e893a650d",
+    "numbered_chapters": 20,
+    "prerequisite_chapters": 1,
+    "systems_simulations": 2
+  },
+  "local_release_gate": {
+    "distributions": {
+      "nanopt-0.1.0-py3-none-any.whl": {
+        "bytes": 171782,
+        "files": 104,
+        "sha256": "663254fe9e4e9cf494b45f7ceff9654f95d1faa6ac47b1a96c452625549b5a7b"
+      },
+      "nanopt-0.1.0.tar.gz": {
+        "bytes": 454286,
+        "files": 379,
+        "sha256": "5d8d2241476f1cf9ef408723e7a438b8d2b3debb4b35c7b3e39471df8f45c933"
+      }
+    },
+    "evidence_sha256": "355abd4af36c9552f0b39998ff220daf74deeedcb1e0175161e2124f6ccaf45f",
+    "github_actions_workflows": 0,
+    "installed_distributions_audited": 85,
+    "model_profile_sha256": "76e56b9e68fa531968e8d607fa8fd6ed663bbe34cdeafc4dc47c654ffd9cfca5",
+    "public_text_files_scanned": 372,
+    "public_tree_manifest_sha256": "82ac26f131c685d639f205ee6223952db9fb1cda06cc772ad0e8ffd7e0ce69e4",
+    "reference_targets_sha256": "d18a44aeb14ca51e69bb9c6f446a0464ccea851824c0eec82869a47ca6f5c0d0",
+    "tests_passed": 400,
+    "tests_skipped": 1,
+    "tracked_files": 378,
+    "uv_lock_sha256": "935542e8ab951f69b02ecb6df56bf8a5f40fc5a64bc3d9c964e9990afd761a04"
+  },
+  "model": {
+    "license": "Apache-2.0",
+    "model_id": "Qwen/Qwen3-0.6B-Base",
+    "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+    "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+  },
+  "publication": {
+    "generated_datasets": "not_distributed",
+    "model_adapters": "not_distributed",
+    "package_index": "deferred_pending_owner_credentials_and_trademark_review",
+    "public_announcement": "deferred_until_repository_is_public"
+  },
+  "reference_agent": {
+    "docker_version": "29.5.0",
+    "evidence_sha256": "3403710bc85cc6d64196fb40c56c04ebbd0d73c007bc0b97d1795be1be9b345e",
+    "exact_replays": 5,
+    "model_baseline_score": 0.3,
+    "oracle_mean_score": 1.0,
+    "oracle_solved": 5,
+    "sandbox_probes_passed": true,
+    "tasks": 5
+  },
+  "reference_pipeline": {
+    "accuracy": {
+      "base": 0.0,
+      "dpo": 0.8409090909090909,
+      "grpo": 0.8863636363636364,
+      "sft": 0.8636363636363636
+    },
+    "evidence_sha256": "489a422e522642b3baa1cf6afa628d574d4878ce6679e9654fc2182766b01aae",
+    "exact_repeated_generation": true,
+    "failed_attempts": 0,
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "maximum_peak_reserved_bytes": 7954497536,
+    "stages": 15,
+    "total_wall_seconds": 221.91441811365075
+  },
+  "schema_version": 1,
+  "status": "v0_1_release_passed_with_disclosed_publication_limitations"
+}
