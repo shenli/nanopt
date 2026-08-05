@@ -4,6 +4,9 @@ NanoPT shows how a small base language model becomes an assistant, a reasoner, a
 agent. Equations lead to tested tensor code; tensor code leads to single-GPU experiments; every
 reported claim leads back to inspectable artifacts.
 
+[Start the course](getting-started/index.md){ .md-button .md-button--primary }
+[Read the systems tutorial](tutorials/rl-from-systems-perspective.md){ .md-button }
+
 ## What you can learn here
 
 - causal token coordinates, masks, log probabilities, entropy, and KL;
