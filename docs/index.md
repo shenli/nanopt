@@ -15,7 +15,7 @@ reported claim leads back to inspectable artifacts.
 - fresh exact-token Mini Agent RL with policy-age, credit, and tool-budget studies;
 - resumable-rollout state, policy synchronization, cache, and admission simulations.
 
-Start with the [prerequisites](getting-started/prerequisites.md), then use the
+Start with [Getting Started](getting-started/index.md), then use the
 [23-chapter course map](course/index.md) to pair each chapter with its executable lab.
 
 ## Agent RL on one consumer GPU

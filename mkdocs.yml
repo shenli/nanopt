@@ -36,13 +36,7 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Getting Started:
-      - Overview: getting-started/index.md
-      - Prerequisites: getting-started/prerequisites.md
-      - Installation: getting-started/installation.md
-      - Configuration: getting-started/configuration.md
-      - Environment diagnosis: getting-started/doctor.md
-      - Publishing documentation: getting-started/publishing-docs.md
+  - Getting Started: getting-started/index.md
   - Course:
       - Chapter map and evidence tiers: course/index.md
       - Reinforcement Learning from a Systems Perspective: tutorials/rl-from-systems-perspective.md

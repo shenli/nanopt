@@ -46,6 +46,20 @@ fresh-environment curriculum gate:
 ./scripts/run_m9_curriculum_gate.sh
 ```
 
+## Documentation preview
+
+Preview documentation changes locally before opening a pull request:
+
+```bash
+uv sync --frozen --extra docs
+uv run python scripts/lint_formulas.py docs
+uv run mkdocs build --strict
+uv run mkdocs serve
+```
+
+Open `http://127.0.0.1:8000/nanopt/`. Publishing the generated site is a maintainer operation;
+contributors should not commit `site/` or push directly to `gh-pages`.
+
 ## Pull requests
 
 Keep pull requests milestone-sized. Describe scope and non-scope, architecture decisions, commands

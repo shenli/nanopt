@@ -1,8 +1,8 @@
 schema_version: 1
 prerequisite:
   id: -1
-  title: Python, tensors, probability, and autograd
-  path: docs/getting-started/prerequisites.md
+  title: Getting started
+  path: docs/getting-started/index.md
   labs:
     - tier: cpu
       command: uv run python labs/00_prerequisites.py

@@ -152,7 +152,7 @@ for the end-to-end walkthrough.
 The [23-chapter course map](docs/course/index.md) links each idea to source code, a CPU lab, and the
 appropriate evidence tier. A useful route is:
 
-1. [Prerequisites](docs/getting-started/prerequisites.md)
+1. [Getting Started](docs/getting-started/index.md)
 2. [Tokens, masks, and log probabilities](docs/foundations/tokens-masks-logprobs.md)
 3. [Completion-only SFT](docs/sft/completion-only-training.md)
 4. [DPO](docs/preferences/dpo-training.md)

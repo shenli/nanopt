@@ -11,7 +11,7 @@ After reading this map, you should be able to:
 
 ## How to use the course
 
-Start with the [prerequisites](../getting-started/prerequisites.md). For each chapter, read the linked
+Start with [Getting Started](../getting-started/index.md). For each chapter, read the linked
 implementation only after doing the numerical example. Run the local lab before the validation
 command; the small lab teaches the invariant, while the linked evidence measures the complete
 pinned path.
