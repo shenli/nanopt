@@ -51,15 +51,15 @@ nav:
       - Completion-only training: sft/completion-only-training.md
       - Controlled preference data: preferences/controlled-preferences.md
       - Reward models: preferences/reward-models.md
-      - DPO margins and loss: preferences/dpo-by-hand.md
-      - Cached-reference DPO training: preferences/dpo-training.md
       - RL foundations: rl/reinforcement-learning-foundations.md
       - REINFORCE: rl/reinforce.md
       - PPO and actor-critic: rl/ppo.md
-      - Advantages and clipping: grpo-rlvr/advantages-and-clipping.md
-      - Exact rollouts and rewards: grpo-rlvr/exact-rollouts-and-rewards.md
-      - Synchronous GRPO: grpo-rlvr/synchronous-grpo.md
+      - DPO margins and loss: preferences/dpo-by-hand.md
+      - Cached-reference DPO training: preferences/dpo-training.md
       - Reward hacking and verifiers: grpo-rlvr/reward-hacking.md
+      - Exact rollouts and rewards: grpo-rlvr/exact-rollouts-and-rewards.md
+      - Advantages and clipping: grpo-rlvr/advantages-and-clipping.md
+      - Synchronous GRPO: grpo-rlvr/synchronous-grpo.md
       - Objective paper guide: reading/objective-papers.md
   - Part III — Agent Training:
       - From tool call to trajectory: agents/from-tool-call-to-trajectory.md
