@@ -1036,26 +1036,11 @@ probability-ratio objective.
 The learning equations assume that states, actions, rewards, and behavior policies mean what their
 records say. The experience system exists to make those assumptions true at scale.
 
-```text
-                    policy model
-                         │ response
-                         ▼
-                    agent harness
-             prompt · parsing · memory
-                         │ action
-                         ▼
-                     environment
-             tools · sandbox · world state
-                         │ observation
-                         └──────────────┐
-                                        ▼
-task service → scheduler → trajectory store → verifier
-                                        │ admitted experience
-                                        ▼
-                                      trainer
-                                        │ new weights
-                                        └────────────→ policy model
-```
+![An experience system connects resettable tasks, policy-driven environment interaction, verification, trajectory storage, admission, and training](../assets/diagrams/experience-system.svg)
+
+_The trainer is downstream of an admission boundary, not directly downstream of model text. A
+trajectory becomes training experience only after its world transition, outcome, and behavior
+identity have been retained and checked._
 
 The model proposes an action. The harness makes it executable. The environment performs a real
 transition. The verifier measures the world. The trajectory store preserves identity and lineage.
@@ -1274,6 +1259,11 @@ $$
 An admission service can inspect each action's behavior version, whether the episode mixes versions,
 maximum lag, snapshot consistency, verifier validity, termination status, and privacy or safety
 labels. It records an accept or reject decision with a reason.
+
+![A rollout control plane separates policy publication, resumable generation, experience admission, and training](../assets/diagrams/rollout-control-plane.svg)
+
+_Generation throughput is upstream of the decision that matters to learning: whether a complete,
+policy-identified trajectory satisfies the trainer's current admission contract._
 
 This separation preserves expensive trajectories for analysis, debugging, SFT mining, or future
 research without pretending that every record satisfies the current optimizer's assumptions.

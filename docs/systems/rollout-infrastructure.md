@@ -68,6 +68,12 @@ Synchronizing only between complete actions makes later actions newer, but inval
 KV state and produces a mixed-policy episode. The [systems-perspective tutorial](../tutorials/rl-from-systems-perspective.md)
 traces both cases from task snapshot through training admission.
 
+![A rollout control plane publishes policy versions, checkpoints partial work, admits valid experience, and rejects stale or mixed-policy trajectories](../assets/diagrams/rollout-control-plane.svg)
+
+_The admission check separates generation from training. A resumable rollout is useful only when
+its tokens, RNG, stop state, budgets, cache identity, and behavior-policy identity remain bound
+together._
+
 ## Common mistakes
 
 - Measuring average latency while hiding the long tail.

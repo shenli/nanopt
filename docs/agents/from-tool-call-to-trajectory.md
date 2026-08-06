@@ -15,19 +15,10 @@ After this chapter, you should be able to:
 A coding agent is not just a language model with a long prompt. It is a stateful loop whose
 transitions must be specified and audited:
 
-```text
-immutable snapshot
-        │ reset + hash check
-        ▼
-visible workspace ──► observation ──► one JSON action
-        ▲                                   │
-        │                                   ▼
-        └──────── trusted allow-listed tool + budget charge
-                                                │
-                                  finish, timeout, or exhaustion
-                                                ▼
-                              separate public + hidden verification
-```
+![A coding-agent trajectory from immutable snapshot through strict actions, workspace transitions, and separate verification](../assets/diagrams/agent-trajectory.svg)
+
+_Invalid actions still consume budget and become structured trajectory evidence. Termination only
+starts verification; it does not itself imply success._
 
 [`MiniSWEEnvironment`](https://github.com/shenli/nanopt/blob/main/src/nanopt/agent/environment.py)
 owns this loop. A reset copies only the task's `snapshot/` directory into a fresh temporary

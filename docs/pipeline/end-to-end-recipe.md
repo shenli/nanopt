@@ -28,6 +28,11 @@ useful. A completed child has its own resolved config, environment record, metri
 and run manifest. The parent pipeline manifest records the child's manifest hash and the input and
 output checkpoint hashes.
 
+![Base, SFT, DPO, and GRPO stages connected by checkpoint hashes, evaluations, and a parent pipeline manifest](../assets/diagrams/pipeline-lineage.svg)
+
+_Every training edge carries an exact checkpoint identity. Evaluation binds to that same identity,
+and the parent manifest retains stage attempts before it derives the final comparison._
+
 ## Run the recipe
 
 First create the deterministic task file:

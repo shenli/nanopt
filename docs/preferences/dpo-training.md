@@ -17,6 +17,11 @@ adapter. Their initial margins therefore match and each pair begins with loss $l
 scores every pair under the frozen SFT adapter, then clones that adapter under the name `dpo` and
 makes only the clone trainable.
 
+![An accepted SFT adapter splits into a frozen cached reference and a trainable DPO policy](../assets/diagrams/cached-reference-dpo.svg)
+
+_Both roles start from the same SFT checkpoint. Reference values are fingerprinted and cached;
+gradients flow only through the live policy scores into the DPO adapter._
+
 For pair batch size $B$, the rendered chosen and rejected tensors each contain:
 
 ```text

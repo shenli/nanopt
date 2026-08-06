@@ -21,6 +21,17 @@ Start with [Getting Started](../getting-started/index.md), then repeat the same 
 CPU labs teach mechanisms; they do not replace model training. Consumer-GPU checkpoints prove that
 the connected system loads, trains, evaluates, and stays within the measured memory envelope.
 
+## How the post-training methods relate
+
+The documentation order teaches the traditional reward-model-and-PPO route before DPO, because DPO
+is easier to understand as an alternative to that route. The executable NanoPT pipeline can still
+take the shorter SFT → DPO → GRPO path.
+
+![Post-training methods branch from SFT into traditional reward-model PPO, direct preference optimization, and verified online GRPO](../assets/diagrams/post-training-path.svg)
+
+_The branches share foundations but consume different evidence: preference pairs for DPO, learned
+scores for traditional PPO, and fresh verified rollouts for GRPO._
+
 ## Consumer-GPU checkpoints
 
 The supported path uses the pinned small base model and was measured on one consumer GPU with 16 GB

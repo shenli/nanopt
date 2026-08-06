@@ -29,6 +29,12 @@ The next iteration samples again from the updated policy. There is no replay buf
 reference recipe uses one update epoch, so old log probabilities always identify the immediately
 preceding behavior policy.
 
+![A synchronous GRPO iteration samples fresh completions, freezes exact rollout evidence, verifies rewards, computes advantages, and updates once](../assets/diagrams/synchronous-grpo-loop.svg)
+
+_The batch boundary is part of the algorithm: exact actions and behavior log probabilities are
+frozen before scoring, used for one update, and then discarded before policy $\pi_{k+1}$ samples
+again._
+
 ## Coordinate shift during collation
 
 For prompt length $P$ and completion length $T$, stored action log probabilities have length $T$.

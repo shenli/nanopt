@@ -39,6 +39,11 @@ Both now have a causal prediction length of $T-1$. The first input token has no 
 the returned tensor because there is no earlier logits position that predicts it. The final logits
 position is unused because its next token is not present in `input_ids`.
 
+![Full-token coordinates aligned with shifted causal-prediction coordinates](../assets/diagrams/token-coordinate-shift.svg)
+
+_Read each dashed arrow downward: token position $j+1$ becomes the target selected from logits row
+$j$. The action mask follows the target token, so it is sliced with `[:, 1:]` exactly once._
+
 | Quantity | Shape | Coordinate meaning |
 |---|---:|---|
 | `logits` | `[B, T, V]` | distribution produced at every input position |
