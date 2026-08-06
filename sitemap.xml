@@ -2,346 +2,346 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://shenli.github.io/nanopt/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/00_VISION_AND_SCOPE/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/01_PRODUCT_REQUIREMENTS/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/02_TECHNICAL_ARCHITECTURE/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/03_REPOSITORY_BLUEPRINT/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/04_CONFIGURATION_AND_CLI/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/05_ALGORITHM_SPECIFICATIONS/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/06_DATA_AND_TASKS/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/07_AGENT_ENVIRONMENT/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/08_HARDWARE_AND_PERFORMANCE/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/09_EVALUATION_AND_REPORTING/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/10_TESTING_CI_AND_SECURITY/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/13_ACCEPTANCE_CRITERIA/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/14_RESEARCH_AND_REFERENCES/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/16_ARCHITECTURAL_DECISIONS/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/17_RISKS_AND_OPEN_QUESTIONS/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/glossary/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/troubleshooting/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0000-project-identity/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0001-foundation-boundaries/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0002-run-artifact-writes/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0003-local-validation/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0004-reference-pytorch-wheel/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0005-sft-schedule-and-checkpoints/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0006-controlled-preferences-and-reference-cache/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0007-synchronous-exact-token-grpo/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0008-resumable-hash-linked-pipeline/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0009-structured-mini-swe-sandbox/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0010-exact-token-agent-sft/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0011-fresh-exact-token-agent-grpo/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/adr/0012-resumable-rollout-control-plane/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/agents/agent-rl/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/agents/agent-sft/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/agents/from-tool-call-to-trajectory/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/agents/security-threat-model/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/agents/task-authoring-and-verification/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/contributing/algorithms/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/contributing/hardware/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/contributing/tasks/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/course/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/data/dataset-card/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/data/synthetic-arithmetic/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/evaluation/exact-generation-and-reports/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/extending/contribution-paths/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/foundations/entropy-and-kl/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/foundations/model-rendering-and-lora/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/foundations/optimization-and-lora/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/foundations/tokens-masks-logprobs/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/getting-started/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/grpo-rlvr/advantages-and-clipping/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/grpo-rlvr/exact-rollouts-and-rewards/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/grpo-rlvr/reward-hacking/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/grpo-rlvr/synchronous-grpo/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/pipeline/end-to-end-recipe/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/preferences/controlled-preferences/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/preferences/dpo-by-hand/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/preferences/dpo-training/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/preferences/reward-models/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reading/objective-papers/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reading/post-training-systems/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/artifacts/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/cli/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/dependency-license-audit/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m1-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m10-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m2-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m3-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m4-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m5-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m6-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m7-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m8-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/m9-completion-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/v0.1-release-notes/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/v0.2-agent-sft-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/v0.2-release-notes/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/v0.3-agent-rl-report/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/reference/v0.3-release-notes/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/rl/ppo/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/rl/reinforce/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/rl/reinforcement-learning-foundations/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/sft/completion-only-training/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/systems/production-flywheels/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/systems/rollout-infrastructure/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
     <url>
          <loc>https://shenli.github.io/nanopt/tutorials/rl-from-systems-perspective/</loc>
-         <lastmod>2026-08-05</lastmod>
+         <lastmod>2026-08-06</lastmod>
     </url>
 </urlset>

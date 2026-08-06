@@ -404,6 +404,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#consumer-gpu-checkpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consumer-GPU checkpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#evidence-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1990,6 +2012,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#consumer-gpu-checkpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consumer-GPU checkpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#evidence-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2052,169 +2096,247 @@
 <li>trace the Base → SFT → DPO → GRPO lineage before changing a checkpoint.</li>
 </ul>
 <h2 id="how-to-use-the-course">How to use the course<a class="headerlink" href="#how-to-use-the-course" title="Permanent link">&para;</a></h2>
-<p>Start with <a href="../getting-started/">Getting Started</a>. For each chapter, read the linked
-implementation only after doing the numerical example. Run the local lab before the validation
-command; the small lab teaches the invariant, while the linked evidence measures the complete
-pinned path.</p>
+<p>Start with <a href="../getting-started/">Getting Started</a>, then repeat the same learning loop:</p>
+<ol>
+<li><strong>Read</strong> the concept and follow its small numerical example.</li>
+<li><strong>Run the concept lab</strong> on CPU to inspect the invariant without model-download or hardware noise.</li>
+<li><strong>Run the integrated checkpoint</strong> on a consumer GPU when the concept joins a complete model path.</li>
+<li><strong>Inspect the artifacts and retained evidence</strong> instead of trusting a final scalar alone.</li>
+</ol>
+<p>CPU labs teach mechanisms; they do not replace model training. Consumer-GPU checkpoints prove that
+the connected system loads, trains, evaluates, and stays within the measured memory envelope.</p>
+<h2 id="consumer-gpu-checkpoints">Consumer-GPU checkpoints<a class="headerlink" href="#consumer-gpu-checkpoints" title="Permanent link">&para;</a></h2>
+<p>The supported path uses the pinned small base model and was measured on one consumer GPU with 16 GB
+VRAM. Run these scripts from a clean checkout. They create fresh locked environments and write
+reviewable outputs under the ignored <code>artifacts/tmp/</code> tree. Agent checkpoints also require Docker
+and the pinned sandbox image.</p>
+<table>
+<thead>
+<tr>
+<th>Checkpoint</th>
+<th>What you run</th>
+<th>What it proves</th>
+<th>Retained evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base model and evaluation</td>
+<td><code>./scripts/run_m3_reference_smoke.sh</code></td>
+<td>Model loading, exact generation, parsing, and protected evaluation</td>
+<td><a href="../reference/m3-completion-report/">Base-model report</a></td>
+</tr>
+<tr>
+<td>Supervised fine-tuning</td>
+<td><code>./scripts/run_m4_reference_sft.sh</code></td>
+<td>Completion-only LoRA training and adapter evaluation</td>
+<td><a href="../reference/m4-completion-report/">SFT report</a></td>
+</tr>
+<tr>
+<td>Direct Preference Optimization</td>
+<td><code>./scripts/run_m5_reference_dpo.sh SFT_ADAPTER_DIR</code></td>
+<td>Preference construction, reference cache, DPO update, and comparison</td>
+<td><a href="../reference/m5-completion-report/">DPO report</a></td>
+</tr>
+<tr>
+<td>GRPO and RLVR</td>
+<td><code>./scripts/run_m6_reference_grpo.sh DPO_ADAPTER_DIR</code></td>
+<td>Fresh exact-token rollouts, grouped advantages, clipped updates, and evaluation</td>
+<td><a href="../reference/m6-completion-report/">GRPO report</a></td>
+</tr>
+<tr>
+<td>Complete math pipeline</td>
+<td><code>./scripts/run_m7_reference_pipeline.sh</code></td>
+<td>Fresh Base → SFT → DPO → GRPO lineage and resumability</td>
+<td><a href="../reference/m7-completion-report/">Pipeline report</a></td>
+</tr>
+<tr>
+<td>Agent environment</td>
+<td><code>./scripts/run_m8_reference_agent.sh</code></td>
+<td>Model tool use, hidden verification, Docker isolation, and security probes</td>
+<td><a href="../reference/m8-completion-report/">Agent-environment report</a></td>
+</tr>
+<tr>
+<td>Agent SFT</td>
+<td><code>./scripts/run_v0_2_agent_sft.sh</code></td>
+<td>Replay-linked demonstrations, exact action masks, training, and Docker evaluation</td>
+<td><a href="../reference/v0.2-agent-sft-report/">Agent SFT report</a></td>
+</tr>
+<tr>
+<td>Mini Agent RL</td>
+<td><code>./scripts/run_v0_3_agent_rl.sh AGENT_SFT_ADAPTER</code></td>
+<td>Grouped agent rollouts, hidden outcomes, fresh-data admission, and policy selection</td>
+<td><a href="../reference/v0.3-agent-rl-report/">Agent RL report</a></td>
+</tr>
+</tbody>
+</table>
+<p><code>SFT_ADAPTER_DIR</code>, <code>DPO_ADAPTER_DIR</code>, and <code>AGENT_SFT_ADAPTER</code> are outputs from the preceding
+checkpoint. The complete math-pipeline script is the simplest way to reproduce Base through GRPO
+without manually passing those boundaries.</p>
+<h2 id="chapter-roadmap">Chapter roadmap<a class="headerlink" href="#chapter-roadmap" title="Permanent link">&para;</a></h2>
+<p>The last column makes each small exercise's destination explicit. “Integrated later” means the
+concept is exercised inside the named consumer-GPU checkpoint rather than receiving a redundant
+standalone model run.</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: right;">Chapter</th>
 <th>Topic</th>
-<th>Main lesson</th>
-<th>Practice and validation</th>
+<th>Concept practice</th>
+<th>Consumer-GPU connection</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: right;">0</td>
 <td>Course map and lineage</td>
-<td>This page</td>
-<td>Local CPU · lab 18</td>
+<td>CPU · lab 18</td>
+<td>Complete math pipeline</td>
 </tr>
 <tr>
 <td style="text-align: right;">1</td>
 <td><a href="../foundations/tokens-masks-logprobs/">Tokens and log probabilities</a></td>
-<td>Causal coordinates and masks</td>
-<td>Local CPU · labs 01–02</td>
+<td>CPU · labs 01–02</td>
+<td>Used by every model checkpoint</td>
 </tr>
 <tr>
 <td style="text-align: right;">2</td>
 <td><a href="../foundations/optimization-and-lora/">Optimization and LoRA</a></td>
-<td>Explicit update scope</td>
-<td>Local CPU · lab 19</td>
+<td>CPU · lab 19</td>
+<td>Integrated into SFT, DPO, GRPO, and agent training</td>
 </tr>
 <tr>
 <td style="text-align: right;">3</td>
 <td><a href="../evaluation/exact-generation-and-reports/">Evaluation before training</a></td>
-<td>Parse, correctness, and samples first</td>
-<td>Local CPU · lab 06 · <a href="../reference/m3-completion-report/">GPU validation</a></td>
+<td>CPU · lab 06</td>
+<td>Base model and evaluation</td>
 </tr>
 <tr>
 <td style="text-align: right;">4</td>
 <td><a href="../sft/completion-only-training/">Supervised fine-tuning</a></td>
-<td>Completion-only LoRA</td>
-<td>Local CPU · lab 07 · <a href="../reference/m4-completion-report/">GPU validation</a></td>
+<td>CPU · lab 07</td>
+<td>Supervised fine-tuning</td>
 </tr>
 <tr>
 <td style="text-align: right;">5</td>
 <td><a href="../preferences/controlled-preferences/">Preference data</a></td>
-<td>Controlled chosen/rejected pairs</td>
-<td>Local CPU · lab 08</td>
+<td>CPU · lab 08</td>
+<td>Integrated into DPO</td>
 </tr>
 <tr>
 <td style="text-align: right;">6</td>
 <td><a href="../preferences/reward-models/">Reward models</a></td>
-<td>Pairwise scalar ranking</td>
-<td>Local CPU · lab 11</td>
+<td>CPU · lab 11</td>
+<td>Optional background; the NanoPT DPO path needs no trained reward model</td>
 </tr>
 <tr>
 <td style="text-align: right;">7</td>
 <td><a href="../preferences/dpo-training/">DPO</a></td>
-<td>Policy/reference margins</td>
-<td>Local CPU · lab 03 · <a href="../reference/m5-completion-report/">GPU validation</a></td>
+<td>CPU · lab 03</td>
+<td>Direct Preference Optimization</td>
 </tr>
 <tr>
 <td style="text-align: right;">8</td>
 <td><a href="../rl/reinforcement-learning-foundations/">RL foundations</a></td>
-<td>State, action, return, on-policy data</td>
-<td>Local CPU examples</td>
+<td>Worked CPU examples</td>
+<td>Integrated into GRPO and Agent RL</td>
 </tr>
 <tr>
 <td style="text-align: right;">9</td>
 <td><a href="../rl/reinforce/">REINFORCE</a></td>
-<td>Score-function gradient</td>
-<td>Local CPU · lab 12</td>
+<td>CPU · lab 12</td>
+<td>Score-function principle used by GRPO and Agent RL</td>
 </tr>
 <tr>
 <td style="text-align: right;">10</td>
 <td><a href="../rl/ppo/">PPO</a></td>
-<td>Ratios and clipped local updates</td>
-<td>Local CPU · lab 13</td>
+<td>CPU · lab 13</td>
+<td>Clipped-ratio principle used by GRPO and Agent RL</td>
 </tr>
 <tr>
 <td style="text-align: right;">11</td>
 <td><a href="../grpo-rlvr/synchronous-grpo/">RLVR and GRPO</a></td>
-<td>Grouped exact-token updates</td>
-<td>Local CPU · labs 04/09 · <a href="../reference/m6-completion-report/">GPU validation</a></td>
+<td>CPU · labs 04/09</td>
+<td>GRPO and RLVR</td>
 </tr>
 <tr>
 <td style="text-align: right;">12</td>
 <td><a href="../grpo-rlvr/reward-hacking/">Reward hacking</a></td>
-<td>Parser/verifier attack surface</td>
-<td>Local CPU · lab 14</td>
+<td>CPU · lab 14</td>
+<td>Verifiers exercised by GRPO and agent checkpoints</td>
 </tr>
 <tr>
 <td style="text-align: right;">13</td>
 <td><a href="../agents/from-tool-call-to-trajectory/">From single-turn to agents</a></td>
-<td>Stateful tool trajectories</td>
-<td>Local CPU · lab 10 · <a href="../reference/m8-completion-report/">Docker validation</a></td>
+<td>CPU · lab 10</td>
+<td>Agent environment, Agent SFT, and Agent RL</td>
 </tr>
 <tr>
 <td style="text-align: right;">14</td>
 <td><a href="../agents/task-authoring-and-verification/">Verifiable agent tasks</a></td>
-<td>Reset and hidden verification</td>
-<td>Local CPU · lab 17 · <a href="../reference/m8-completion-report/">Docker validation</a></td>
+<td>CPU · lab 17</td>
+<td>Agent environment, Agent SFT, and Agent RL</td>
 </tr>
 <tr>
 <td style="text-align: right;">15</td>
 <td><a href="../agents/agent-sft/">Agent SFT</a></td>
-<td>Exact multi-turn action masks and replay lineage</td>
-<td>Local CPU · lab 20 · <a href="../reference/v0.2-agent-sft-report/">GPU + Docker validation</a></td>
+<td>CPU · lab 20</td>
+<td>Agent SFT</td>
 </tr>
 <tr>
 <td style="text-align: right;">16</td>
 <td><a href="../agents/agent-rl/">Mini Agent RL</a></td>
-<td>Hidden outcomes, policy age, and multi-turn credit</td>
-<td>Local CPU · lab 21 · <a href="../reference/v0.3-agent-rl-report/">GPU + Docker validation</a></td>
+<td>CPU · lab 21</td>
+<td>Mini Agent RL</td>
 </tr>
 <tr>
 <td style="text-align: right;">17</td>
 <td><a href="../systems/rollout-infrastructure/">Rollout infrastructure</a></td>
-<td>Long tails, partial work, staleness</td>
-<td>Local systems simulation · lab 15</td>
+<td>Systems simulation · lab 15</td>
+<td>Informs rollout design; makes no standalone GPU-throughput claim</td>
 </tr>
 <tr>
 <td style="text-align: right;">18</td>
 <td><a href="../systems/production-flywheels/">Production flywheels</a></td>
-<td>Privacy and fixed-eval boundaries</td>
-<td>Local systems simulation · lab 16</td>
+<td>Systems simulation · lab 16</td>
+<td>Data-control design rather than model training</td>
 </tr>
 <tr>
 <td style="text-align: right;">19</td>
 <td><a href="../reading/post-training-systems/">Reading modern systems</a></td>
-<td>Compare reports without filling gaps</td>
 <td>Reading guide</td>
+<td>Interpret the checkpoint reports and external systems</td>
 </tr>
 <tr>
 <td style="text-align: right;">20</td>
 <td><a href="../pipeline/end-to-end-recipe/">End-to-end pipeline</a></td>
-<td>Hash-linked resumable stages</td>
-<td><a href="../reference/m7-completion-report/">End-to-end GPU validation</a></td>
+<td>CPU · lab 18</td>
+<td>Complete math pipeline</td>
 </tr>
 <tr>
 <td style="text-align: right;">21</td>
 <td><a href="../extending/contribution-paths/">Extending NanoPT</a></td>
-<td>Add one auditable vertical slice</td>
 <td>Contributor exercise</td>
+<td>Depends on the hardware claim introduced by the contribution</td>
 </tr>
 <tr>
 <td style="text-align: right;">22</td>
 <td><a href="../tutorials/rl-from-systems-perspective/">Reinforcement Learning from a Systems Perspective</a></td>
-<td>Experience, resume state, weights, cache, and admission</td>
-<td>Local systems simulation · lab 22</td>
+<td>Systems simulation · lab 22</td>
+<td>Control-plane mechanics; intentionally not a GPU benchmark</td>
 </tr>
 </tbody>
 </table>
 <h2 id="evidence-tiers">Evidence tiers<a class="headerlink" href="#evidence-tiers" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Local CPU</strong> labs run without a model download or GPU and are checked by the local curriculum
-  gate.</li>
+<li><strong>Concept lab</strong> means a small CPU exercise that exposes the equation, data shape, or systems
+  invariant directly.</li>
+<li><strong>Consumer-GPU checkpoint</strong> means a complete model-level run with hardware diagnosis, artifacts,
+  and a measured memory envelope.</li>
 <li><strong>Systems simulation</strong> labs replace cluster mechanisms with deterministic counters; they do not
   claim cluster throughput.</li>
-<li><strong>GPU smoke</strong> commands exercise a small real-model path but are non-representative.</li>
-<li><strong>Validated GPU/Docker</strong> commands were executed on the named reference environment and are bound to compact evidence
-  under <code>docs/reference/evidence/</code>.</li>
+<li><strong>Retained evidence</strong> is a reviewed result from a clean reference run. It shows that the path ran
+  under the recorded environment; learners should generate their own artifacts when reproducing it.</li>
 <li><strong>Stretch</strong> work is optional and cannot expand published support claims.</li>
 </ul>
 <h2 id="inspect-lineage-first">Inspect lineage first<a class="headerlink" href="#inspect-lineage-first" title="Permanent link">&para;</a></h2>
@@ -2226,7 +2348,10 @@ and GRPO checkpoint metrics in the <a href="../reference/m7-completion-report/">
 The report is a result of artifacts, not a substitute for them.</p>
 <h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Pick one metric in the end-to-end evidence and trace it to the chapter that defines its semantics.</li>
+<li>Pick one metric in the end-to-end evidence and trace it to the concept lab that defines its
+   semantics.</li>
+<li>Choose one consumer-GPU checkpoint and list the artifacts you would inspect before accepting its
+   headline result.</li>
 <li>Explain why a CPU lab can validate an equation but cannot validate a 16 GB hardware claim.</li>
 <li>Name the artifact that prevents an adapter from silently changing between pipeline stages.</li>
 </ol>
