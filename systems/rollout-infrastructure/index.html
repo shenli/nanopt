@@ -2160,6 +2160,10 @@ publication, external prefix-cache identity, and admission decisions. Run:</p>
 Synchronizing only between complete actions makes later actions newer, but invalidates old-policy
 KV state and produces a mixed-policy episode. The <a href="../../tutorials/rl-from-systems-perspective/">systems-perspective tutorial</a>
 traces both cases from task snapshot through training admission.</p>
+<p><img alt="A rollout control plane publishes policy versions, checkpoints partial work, admits valid experience, and rejects stale or mixed-policy trajectories" src="../../assets/diagrams/rollout-control-plane.svg" /></p>
+<p><em>The admission check separates generation from training. A resumable rollout is useful only when
+its tokens, RNG, stop state, budgets, cache identity, and behavior-policy identity remain bound
+together.</em></p>
 <h2 id="common-mistakes">Common mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Measuring average latency while hiding the long tail.</li>

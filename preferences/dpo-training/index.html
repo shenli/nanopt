@@ -2079,6 +2079,9 @@
 adapter. Their initial margins therefore match and each pair begins with loss <span class="arithmatex">\(log 2\)</span>. NanoPT first
 scores every pair under the frozen SFT adapter, then clones that adapter under the name <code>dpo</code> and
 makes only the clone trainable.</p>
+<p><img alt="An accepted SFT adapter splits into a frozen cached reference and a trainable DPO policy" src="../../assets/diagrams/cached-reference-dpo.svg" /></p>
+<p><em>Both roles start from the same SFT checkpoint. Reference values are fingerprinted and cached;
+gradients flow only through the live policy scores into the DPO adapter.</em></p>
 <p>For pair batch size <span class="arithmatex">\(B\)</span>, the rendered chosen and rejected tensors each contain:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>input_ids:      [B, sequence]
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>attention_mask: [B, sequence]

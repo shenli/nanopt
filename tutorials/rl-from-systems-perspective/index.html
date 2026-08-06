@@ -4191,35 +4191,20 @@ probability-ratio objective.</p>
 <h2 id="part-iii-the-experience-system">Part III — The experience system<a class="headerlink" href="#part-iii-the-experience-system" title="Permanent link">&para;</a></h2>
 <p>The learning equations assume that states, actions, rewards, and behavior policies mean what their
 records say. The experience system exists to make those assumptions true at scale.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>                    policy model
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>                         │ response
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>                         ▼
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>                    agent harness
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>             prompt · parsing · memory
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>                         │ action
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                         ▼
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>                     environment
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>             tools · sandbox · world state
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>                         │ observation
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>                         └──────────────┐
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>                                        ▼
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>task service → scheduler → trajectory store → verifier
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>                                        │ admitted experience
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>                                        ▼
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>                                      trainer
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>                                        │ new weights
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>                                        └────────────→ policy model
-</code></pre></div>
+<p><img alt="An experience system connects resettable tasks, policy-driven environment interaction, verification, trajectory storage, admission, and training" src="../../assets/diagrams/experience-system.svg" /></p>
+<p><em>The trainer is downstream of an admission boundary, not directly downstream of model text. A
+trajectory becomes training experience only after its world transition, outcome, and behavior
+identity have been retained and checked.</em></p>
 <p>The model proposes an action. The harness makes it executable. The environment performs a real
 transition. The verifier measures the world. The trajectory store preserves identity and lineage.
 The admission layer determines whether the trainer may consume the result.</p>
 <h3 id="a-training-task-is-a-resettable-world-not-a-prompt">A training task is a resettable world, not a prompt<a class="headerlink" href="#a-training-task-is-a-resettable-world-not-a-prompt" title="Permanent link">&para;</a></h3>
 <p>To compare repeated attempts, each rollout must begin from a semantically identical initial state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>snapshot H
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── reset → rollout A workspace
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>├── reset → rollout B workspace
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>├── reset → rollout C workspace
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>└── reset → rollout D workspace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>snapshot H
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>├── reset → rollout A workspace
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>├── reset → rollout B workspace
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>├── reset → rollout C workspace
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>└── reset → rollout D workspace
 </code></pre></div>
 <p>If rollout B inherits rollout A's edit, their rewards no longer isolate policy behavior. A
 group-relative advantage would treat an environment difference as an action-quality difference.</p>
@@ -4270,18 +4255,18 @@ agent behavior from memorization of one scaffold.</p>
 <p>These choices are curriculum design expressed as infrastructure.</p>
 <h3 id="a-trajectory-store-is-not-a-chat-log-bucket">A trajectory store is not a chat-log bucket<a class="headerlink" href="#a-trajectory-store-is-not-a-chat-log-bucket" title="Permanent link">&para;</a></h3>
 <p>A readable transcript is valuable for humans, but a training-quality trajectory may also require:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>task and immutable snapshot identity
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>environment and harness versions
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>exact prompt and sampled token IDs
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>current-action masks
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>sampling configuration
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>behavior-policy version and weight hash
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>FP32 behavior log probabilities
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>tool requests and state transitions
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>checkpoint, pause, and resume events
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>termination reason
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>verifier evidence and reward breakdown
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>privacy, safety, and admission labels
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>task and immutable snapshot identity
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>environment and harness versions
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>exact prompt and sampled token IDs
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>current-action masks
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>sampling configuration
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>behavior-policy version and weight hash
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>FP32 behavior log probabilities
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>tool requests and state transitions
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>checkpoint, pause, and resume events
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>termination reason
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>verifier evidence and reward breakdown
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>privacy, safety, and admission labels
 </code></pre></div>
 <p>The store has to associate asynchronous verifier results with the right execution, preserve partial
 and resumed trajectories, enforce data-age rules, and trace a final reward back to every action.
@@ -4290,10 +4275,10 @@ This is closer to an event-sourced execution database than a collection of JSONL
 or policy weights and still produce plausible-looking loss curves.</p>
 <h3 id="long-horizon-agents-turn-latency-into-a-learning-problem">Long-horizon agents turn latency into a learning problem<a class="headerlink" href="#long-horizon-agents-turn-latency-into-a-learning-problem" title="Permanent link">&para;</a></h3>
 <p>Synchronous RL often follows this rhythm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>generate a rollout batch
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>→ wait for every rollout
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>→ compute rewards and advantages
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>→ update the policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>generate a rollout batch
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>→ wait for every rollout
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>→ compute rewards and advantages
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>→ update the policy
 </code></pre></div>
 <p>Agent durations have a long tail. One task ends in seconds; another runs for an hour. Waiting for
 the slowest trajectory leaves rollout and training resources idle. Dropping it wastes the hardest
@@ -4306,19 +4291,19 @@ than the final half.</p>
 <h3 id="a-resumable-rollout-checkpoint-has-two-halves">A resumable rollout checkpoint has two halves<a class="headerlink" href="#a-resumable-rollout-checkpoint-has-two-halves" title="Permanent link">&para;</a></h3>
 <p>Saving conversation text is insufficient. A valid checkpoint pairs model execution state with world
 execution state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>partial rollout checkpoint
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>├── model state
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>│   ├── exact prompt token IDs
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>│   ├── sampling RNG state or counter
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│   ├── parser and safe-stop state
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│   ├── behavior-policy version and hash
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│   ├── generation configuration
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│   └── prefix-cache identity
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>└── world state
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    ├── immutable task snapshot
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    ├── current workspace or sandbox snapshot
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    ├── event cursor
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    └── remaining budgets
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>partial rollout checkpoint
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>├── model state
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│   ├── exact prompt token IDs
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│   ├── sampling RNG state or counter
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│   ├── parser and safe-stop state
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>│   ├── behavior-policy version and hash
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>│   ├── generation configuration
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>│   └── prefix-cache identity
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>└── world state
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    ├── immutable task snapshot
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    ├── current workspace or sandbox snapshot
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    ├── event cursor
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    └── remaining budgets
 </code></pre></div>
 <p>Restore only the model half and its context may describe files that do not exist. Restore only the
 world half and the model may need to prefill a huge history—or continue from the wrong token or RNG
@@ -4351,7 +4336,7 @@ K = f_\theta(x_{1:P}).
 \]</div>
 <p>The same tokens under v0 and v1 generally produce different keys and values. A correct external
 cache identity must include both:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>cache key = hash(policy weights, exact prompt token IDs)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>cache key = hash(policy weights, exact prompt token IDs)
 </code></pre></div>
 <p>Keying only by tokens can return numerically invalid state after a weight update. A friendly version
 label is also insufficient unless it is immutably bound to the actual weights.</p>
@@ -4368,6 +4353,9 @@ can afford to finish—and indirectly the training distribution.</p>
 <p>An admission service can inspect each action's behavior version, whether the episode mixes versions,
 maximum lag, snapshot consistency, verifier validity, termination status, and privacy or safety
 labels. It records an accept or reject decision with a reason.</p>
+<p><img alt="A rollout control plane separates policy publication, resumable generation, experience admission, and training" src="../../assets/diagrams/rollout-control-plane.svg" /></p>
+<p><em>Generation throughput is upstream of the decision that matters to learning: whether a complete,
+policy-identified trajectory satisfies the trainer's current admission contract.</em></p>
 <p>This separation preserves expensive trajectories for analysis, debugging, SFT mining, or future
 research without pretending that every record satisfies the current optimizer's assumptions.</p>
 <p>It also prevents a subtle organizational failure: the rollout team reports a large volume of
@@ -4392,17 +4380,17 @@ cost, user edits, accepted patches, reopened work, and safety incidents. These s
 even when the original world cannot be retained.</p>
 <p>Without that world, however, a new policy cannot take a different action and observe the result.
 The practical flywheel is therefore not:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>user transcript → PPO
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>user transcript → PPO
 </code></pre></div>
 <p>It is:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>authorized production signals
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>→ privacy review and failure mining
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>→ reconstruct the task in an open, internal, mock, or otherwise authorized environment
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>→ build public and hidden verification
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>→ collect fresh rollouts from the current policy
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>→ admit valid experience
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>→ train and evaluate
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>→ deploy gradually and observe new failures
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>authorized production signals
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>→ privacy review and failure mining
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>→ reconstruct the task in an open, internal, mock, or otherwise authorized environment
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>→ build public and hidden verification
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>→ collect fresh rollouts from the current policy
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>→ admit valid experience
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>→ train and evaluate
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>→ deploy gradually and observe new failures
 </code></pre></div>
 <p>The original session says what should be taught. The reconstructed environment makes repeated
 learning possible.</p>
@@ -4416,12 +4404,12 @@ patterns, without moving private data or irreversible side effects into the trai
 <p>Rising training reward does not prove general capability. The policy may overfit the task generator,
 harness, public verifier, or reward model.</p>
 <p>A credible evaluation stack separates:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>training tasks
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>→ fixed held-out tasks
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>→ dynamic hidden tasks
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>→ out-of-distribution tasks and harnesses
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>→ safety and cost regressions
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>→ human trajectory review
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>training tasks
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>→ fixed held-out tasks
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>→ dynamic hidden tasks
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>→ out-of-distribution tasks and harnesses
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>→ safety and cost regressions
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>→ human trajectory review
 </code></pre></div>
 <p>Promotion from checkpoint to production should remain staged: fixed evaluation, hidden evaluation,
 safety review, shadow traffic, canary deployment, monitored rollout, and a tested rollback path.</p>
@@ -4435,17 +4423,17 @@ to bursty traffic, but the team cannot safely let an untested policy explore arb
 changes in production.</p>
 <h3 id="decision-layer">Decision layer<a class="headerlink" href="#decision-layer" title="Permanent link">&para;</a></h3>
 <p>The team first defines a decision every fifteen seconds. Its observation is:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>request rate over 15 s
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>queue depth
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>p50 / p95 / p99 latency
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>error rate
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>running, pending, and draining replicas
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>CPU and memory by replica
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>time since the last scaling action
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>deployment and traffic-profile identifiers
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>request rate over 15 s
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>queue depth
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>p50 / p95 / p99 latency
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>error rate
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>running, pending, and draining replicas
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>CPU and memory by replica
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>time since the last scaling action
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>deployment and traffic-profile identifiers
 </code></pre></div>
 <p>The action is a bounded replica delta:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>{-2, -1, 0, +1, +2}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>{-2, -1, 0, +1, +2}
 </code></pre></div>
 <p>The environment is not Kubernetes alone. It includes the workload generator, service binary,
 startup delay, load balancer, cluster capacity, metrics delay, and failure injection. Together those
@@ -4479,14 +4467,14 @@ log probability. If it uses a value-based controller, the replay buffer records 
 collected each transition and constrains out-of-distribution actions.</p>
 <h3 id="experience-layer">Experience layer<a class="headerlink" href="#experience-layer" title="Permanent link">&para;</a></h3>
 <p>The task generator samples more than a single daily traffic curve:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gradual ramps
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudden bursts
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>regional imbalance
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>cold image pulls
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>one slow dependency
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>partial node loss
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>new service versions with different CPU cost
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>noisy or delayed metrics
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gradual ramps
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudden bursts
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>regional imbalance
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>cold image pulls
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>one slow dependency
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>partial node loss
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>new service versions with different CPU cost
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>noisy or delayed metrics
 </code></pre></div>
 <p>Reset means restoring the service version, replica state, cache-warmth assumptions, random seeds,
 and traffic-trace position. Without reset fidelity, one rollout may begin with warm caches while
@@ -4500,12 +4488,12 @@ reward: maximum error bursts, oscillation, recovery after node loss, and behavio
 missing. A separate cost model checks that the simulator did not teach an unrealistic startup time.</p>
 <h3 id="deployment-layer">Deployment layer<a class="headerlink" href="#deployment-layer" title="Permanent link">&para;</a></h3>
 <p>The policy does not immediately control production. It progresses through:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>offline trace replay
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>→ simulator evaluation
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>→ shadow recommendations beside the threshold controller
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>→ canary service with strict replica bounds
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>→ limited production traffic
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>→ broader rollout with automatic fallback
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>offline trace replay
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>→ simulator evaluation
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>→ shadow recommendations beside the threshold controller
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>→ canary service with strict replica bounds
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>→ limited production traffic
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>→ broader rollout with automatic fallback
 </code></pre></div>
 <p>During shadowing, the system logs what the learned policy <em>would</em> have done, but those observations
 are off-policy because the threshold controller still determines the real replica count. They are
@@ -4524,32 +4512,32 @@ identity, cache invalidation, synchronization boundaries, and admission.</p>
 throughput. Its purpose is to turn systems invariants into records you can inspect and tests you can
 break.</p>
 <p>Run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>labs/22_resumable_rollouts.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>labs/22_resumable_rollouts.py
 </code></pre></div>
 <p>The output compares the two weight-synchronization rules:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>mode              mixed  stale  cache hit/miss  recomputed prompt tokens
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>episode_boundary      0      1     3/0                           0
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>action_boundary       1      1     0/3                          42
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>Resumable-rollout systems lab passed.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>mode              mixed  stale  cache hit/miss  recomputed prompt tokens
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>episode_boundary      0      1     3/0                           0
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>action_boundary       1      1     0/3                          42
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Resumable-rollout systems lab passed.
 </code></pre></div>
 <p>Keeping episode weights produces a single-policy but stale trajectory and reuses all three cached
 prefixes. Updating at action boundaries produces newer later actions, but the episode mixes policy
 versions; all three old-policy cache entries miss, causing 42 synthetic prompt tokens to be
 recomputed.</p>
 <p>Retain the complete artifact bundle with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>uv<span class="w"> </span>run<span class="w"> </span>nanopt<span class="w"> </span>systems<span class="w"> </span>simulate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span>--experiment<span class="w"> </span>resumable_rollouts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span>--run-id<span class="w"> </span>systems-tutorial
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>uv<span class="w"> </span>run<span class="w"> </span>nanopt<span class="w"> </span>systems<span class="w"> </span>simulate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span>--experiment<span class="w"> </span>resumable_rollouts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span>--run-id<span class="w"> </span>systems-tutorial
 </code></pre></div>
 <p>Inspect the evidence in this order:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>artifacts/runs/systems-tutorial/
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>├── summary.json
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>├── admission_decisions.jsonl
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>├── weight_sync_events.jsonl
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>├── partial_checkpoints.jsonl
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>├── actions.jsonl
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>├── report.md
-<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>└── run_manifest.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>artifacts/runs/systems-tutorial/
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>├── summary.json
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>├── admission_decisions.jsonl
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>├── weight_sync_events.jsonl
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>├── partial_checkpoints.jsonl
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>├── actions.jsonl
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>├── report.md
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>└── run_manifest.json
 </code></pre></div>
 <p>Start with <code>summary.json</code>, then find <code>trajectory-1</code> in <code>admission_decisions.jsonl</code>. Under the
 episode-boundary rule, all eight actions use v0 and finish three versions stale. Under the
@@ -4652,7 +4640,7 @@ the final checkpoint pass evaluation outside the training harness?</p>
 important problem.</p>
 <h2 id="rl-is-the-design-of-a-world">RL is the design of a world<a class="headerlink" href="#rl-is-the-design-of-a-world" title="Permanent link">&para;</a></h2>
 <p>Supervised learning begins with a target:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>input x → desired output y
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>input x → desired output y
 </code></pre></div>
 <p>Reinforcement learning begins one layer earlier. We must create a world in which a policy can act,
 decide what it may observe, define how actions change state, determine when an episode ends, measure

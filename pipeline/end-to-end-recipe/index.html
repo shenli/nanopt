@@ -2131,6 +2131,9 @@
 useful. A completed child has its own resolved config, environment record, metrics, samples, report,
 and run manifest. The parent pipeline manifest records the child's manifest hash and the input and
 output checkpoint hashes.</p>
+<p><img alt="Base, SFT, DPO, and GRPO stages connected by checkpoint hashes, evaluations, and a parent pipeline manifest" src="../../assets/diagrams/pipeline-lineage.svg" /></p>
+<p><em>Every training edge carries an exact checkpoint identity. Evaluation binds to that same identity,
+and the parent manifest retains stage attempts before it derives the final comparison.</em></p>
 <h2 id="run-the-recipe">Run the recipe<a class="headerlink" href="#run-the-recipe" title="Permanent link">&para;</a></h2>
 <p>First create the deterministic task file:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>nanopt<span class="w"> </span>data<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>

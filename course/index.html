@@ -404,6 +404,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-the-post-training-methods-relate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the post-training methods relate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#consumer-gpu-checkpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2012,6 +2023,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-the-post-training-methods-relate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the post-training methods relate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#consumer-gpu-checkpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2105,6 +2127,13 @@
 </ol>
 <p>CPU labs teach mechanisms; they do not replace model training. Consumer-GPU checkpoints prove that
 the connected system loads, trains, evaluates, and stays within the measured memory envelope.</p>
+<h2 id="how-the-post-training-methods-relate">How the post-training methods relate<a class="headerlink" href="#how-the-post-training-methods-relate" title="Permanent link">&para;</a></h2>
+<p>The documentation order teaches the traditional reward-model-and-PPO route before DPO, because DPO
+is easier to understand as an alternative to that route. The executable NanoPT pipeline can still
+take the shorter SFT → DPO → GRPO path.</p>
+<p><img alt="Post-training methods branch from SFT into traditional reward-model PPO, direct preference optimization, and verified online GRPO" src="../assets/diagrams/post-training-path.svg" /></p>
+<p><em>The branches share foundations but consume different evidence: preference pairs for DPO, learned
+scores for traditional PPO, and fresh verified rollouts for GRPO.</em></p>
 <h2 id="consumer-gpu-checkpoints">Consumer-GPU checkpoints<a class="headerlink" href="#consumer-gpu-checkpoints" title="Permanent link">&para;</a></h2>
 <p>The supported path uses the pinned small base model and was measured on one consumer GPU with 16 GB
 VRAM. Run these scripts from a clean checkout. They create fresh locked environments and write

@@ -2240,6 +2240,9 @@ is the vocabulary size. Logits at position <span class="arithmatex">\(t\)</span>
 <p>Both now have a causal prediction length of <span class="arithmatex">\(T-1\)</span>. The first input token has no log probability in
 the returned tensor because there is no earlier logits position that predicts it. The final logits
 position is unused because its next token is not present in <code>input_ids</code>.</p>
+<p><img alt="Full-token coordinates aligned with shifted causal-prediction coordinates" src="../../assets/diagrams/token-coordinate-shift.svg" /></p>
+<p><em>Read each dashed arrow downward: token position <span class="arithmatex">\(j+1\)</span> becomes the target selected from logits row
+<span class="arithmatex">\(j\)</span>. The action mask follows the target token, so it is sliced with <code>[:, 1:]</code> exactly once.</em></p>
 <table>
 <thead>
 <tr>

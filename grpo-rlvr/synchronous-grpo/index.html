@@ -2132,6 +2132,10 @@
 <p>The next iteration samples again from the updated policy. There is no replay buffer and the
 reference recipe uses one update epoch, so old log probabilities always identify the immediately
 preceding behavior policy.</p>
+<p><img alt="A synchronous GRPO iteration samples fresh completions, freezes exact rollout evidence, verifies rewards, computes advantages, and updates once" src="../../assets/diagrams/synchronous-grpo-loop.svg" /></p>
+<p><em>The batch boundary is part of the algorithm: exact actions and behavior log probabilities are
+frozen before scoring, used for one update, and then discarded before policy <span class="arithmatex">\(\pi_{k+1}\)</span> samples
+again.</em></p>
 <h2 id="coordinate-shift-during-collation">Coordinate shift during collation<a class="headerlink" href="#coordinate-shift-during-collation" title="Permanent link">&para;</a></h2>
 <p>For prompt length <span class="arithmatex">\(P\)</span> and completion length <span class="arithmatex">\(T\)</span>, stored action log probabilities have length <span class="arithmatex">\(T\)</span>.
 The full training sequence has length <span class="arithmatex">\(P+T\)</span>. After causal shifting, its prediction coordinates have

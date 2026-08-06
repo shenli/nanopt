@@ -2077,28 +2077,19 @@
 <h2 id="the-environment-is-a-state-machine">The environment is a state machine<a class="headerlink" href="#the-environment-is-a-state-machine" title="Permanent link">&para;</a></h2>
 <p>A coding agent is not just a language model with a long prompt. It is a stateful loop whose
 transitions must be specified and audited:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>immutable snapshot
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │ reset + hash check
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        ▼
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>visible workspace ──► observation ──► one JSON action
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        ▲                                   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        │                                   ▼
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        └──────── trusted allow-listed tool + budget charge
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                                                │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                                  finish, timeout, or exhaustion
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                                                ▼
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                              separate public + hidden verification
-</code></pre></div>
+<p><img alt="A coding-agent trajectory from immutable snapshot through strict actions, workspace transitions, and separate verification" src="../../assets/diagrams/agent-trajectory.svg" /></p>
+<p><em>Invalid actions still consume budget and become structured trajectory evidence. Termination only
+starts verification; it does not itself imply success.</em></p>
 <p><a href="https://github.com/shenli/nanopt/blob/main/src/nanopt/agent/environment.py"><code>MiniSWEEnvironment</code></a>
 owns this loop. A reset copies only the task's <code>snapshot/</code> directory into a fresh temporary
 workspace and checks its SHA-256 against the task card. The model receives the issue, available
 tools, remaining budgets, prior action/result transcript, and latest result. It never receives the
 trusted hidden-test directory.</p>
 <p>The policy returns exactly one JSON object. For example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;read_file&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/range_utils.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;start_line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;end_line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">}</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;read_file&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src/range_utils.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;start_line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;end_line&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
 </code></pre></div>
 <p><a href="https://github.com/shenli/nanopt/blob/main/src/nanopt/agent/records.py"><code>parse_action</code></a>
 validates that object against a strict discriminated union. Unknown fields, unknown tools, prose
@@ -2134,7 +2125,7 @@ generated token IDs before decoding the JSON view. This preserves the action ide
 Agent SFT or Agent RL. The environment-only validation never computes an agent loss,
 backpropagates, or updates a checkpoint. Its reports say <strong>evaluation only</strong> for that reason.</p>
 <p>Run the CPU lab:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>labs/10_mini_swe_environment.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>labs/10_mini_swe_environment.py
 </code></pre></div>
 <p>Then inspect the concrete contracts in this order:</p>
 <ol>
